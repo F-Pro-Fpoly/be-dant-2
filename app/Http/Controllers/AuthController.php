@@ -16,13 +16,35 @@ class AuthController extends Controller
             'email' => 'required|min:8|max:255|unique:users|email',
             'password' => 'required|min:8|max:255',
             'address' => 'required|min:5|max:255',
-            'phone' => 'required|min:10|max:11',
+            'phone' => 'required|min:10|max:10',
         ],[
+            //name
             'name.required' => 'Họ và tên không được bỏ trống', 
-            'name.min' => 'Họ và tên quá ngắn',
-            'name.max' => 'Họ và tên quá dài',
-            'username.unique' => 'Username đã tồn tại',
-            'email.unique' => 'Email đã tồn tại'
+            'name.min' => 'Họ và tên quá ngắn!(Tối thiểu 8 ký tự)',
+            'name.max' => 'Họ và tên quá dài!(Tối đa 255 ký tự)',
+            // username
+            'username.required' => 'Username không được bỏ trống', 
+            'username.min' => 'Username quá ngắn!(Tối thiểu 8 ký tự)',
+            'username.max' => 'Username quá dài!(Tối đa 255 ký tự)',
+            'username.unique' => 'Username đã tồn tại!(Sử dụng một Username khác)',
+            // email
+            'email.required' => 'Email không được bỏ trống', 
+            'email.min' => 'Email quá ngắn!(Tối thiểu 8 ký tự)',
+            'email.max' => 'Email quá dài!(Tối đa 255 ký tự)',
+            'email.unique' => 'Email đã tồn tại!(Sử dụng một Email khác)',
+            'email.email' => 'Email chưa đúng định dạng(Kiểm tra lại Email)',
+            // password
+            'password.required' => 'Mật khẩu không được bỏ trống', 
+            'password.min' => 'Mật khẩu quá ngắn!(Tối thiểu 8 ký tự)',
+            'password.max' => 'Mật khẩu quá dài!(Tối đa 255 ký tự)',
+            // address
+            'address.required' => 'Địa chỉ không được bỏ trống', 
+            'address.min' => 'Địa chỉ quá ngắn!(Tối thiểu 5 ký tự)',
+            'address.max' => 'Địa chỉ quá dài!(Tối đa 255 ký tự)',
+            // phone
+            'phone.required' => 'Số điện thoại không được bỏ trống', 
+            'phone.min' => 'Số điện thoại quá ngắn!(Tối thiểu 10 ký tự)',
+            'phone.max' => 'Số điện thoại quá dài!(Tối đa 10 ký tự)',
         ]);
 
         if($validator->fails()) {
