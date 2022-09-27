@@ -15,8 +15,8 @@ class AuthController extends Controller
             'username' => 'required|min:8|max:255|unique:users',
             'email' => 'required|min:8|max:255|unique:users|email',
             'password' => 'required|min:8|max:255',
-            'address' => 'required|min:5|max:255',
-            'phone' => 'required|min:10|max:10',
+            // 'address' => 'required|min:5|max:255',
+            // 'phone' => 'required|min:10|max:10',
         ],[
             //name
             'name.required' => 'Họ và tên không được bỏ trống', 
@@ -37,14 +37,14 @@ class AuthController extends Controller
             'password.required' => 'Mật khẩu không được bỏ trống', 
             'password.min' => 'Mật khẩu quá ngắn!(Tối thiểu 8 ký tự)',
             'password.max' => 'Mật khẩu quá dài!(Tối đa 255 ký tự)',
-            // address
-            'address.required' => 'Địa chỉ không được bỏ trống', 
-            'address.min' => 'Địa chỉ quá ngắn!(Tối thiểu 5 ký tự)',
-            'address.max' => 'Địa chỉ quá dài!(Tối đa 255 ký tự)',
-            // phone
-            'phone.required' => 'Số điện thoại không được bỏ trống', 
-            'phone.min' => 'Số điện thoại quá ngắn!(Tối thiểu 10 ký tự)',
-            'phone.max' => 'Số điện thoại quá dài!(Tối đa 10 ký tự)',
+            // // address
+            // 'address.required' => 'Địa chỉ không được bỏ trống', 
+            // 'address.min' => 'Địa chỉ quá ngắn!(Tối thiểu 5 ký tự)',
+            // 'address.max' => 'Địa chỉ quá dài!(Tối đa 255 ký tự)',
+            // // phone
+            // 'phone.required' => 'Số điện thoại không được bỏ trống', 
+            // 'phone.min' => 'Số điện thoại quá ngắn!(Tối thiểu 10 ký tự)',
+            // 'phone.max' => 'Số điện thoại quá dài!(Tối đa 10 ký tự)',
         ]);
 
         if($validator->fails()) {
