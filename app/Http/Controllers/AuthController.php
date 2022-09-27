@@ -15,6 +15,8 @@ class AuthController extends Controller
             'username' => 'required|min:8|max:255|unique:users',
             'email' => 'required|min:8|max:255|unique:users|email',
             'password' => 'required|min:8|max:255',
+            'address' => 'required|min:5|max:255',
+            'phone' => 'required|min:10|max:11',
         ],[
             'name.required' => 'Họ và tên không được bỏ trống', 
             'name.min' => 'Họ và tên quá ngắn',
@@ -39,6 +41,8 @@ class AuthController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'password'=> Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
                 'role_id' => 3,
                 'active' => 1
             ]);
