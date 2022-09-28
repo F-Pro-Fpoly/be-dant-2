@@ -66,7 +66,8 @@ class AuthController extends Controller
                 'address' => $request->address,
                 'phone' => $request->phone,
                 'role_id' => 3,
-                'active' => 1
+                'active' => 1,
+                'avatar' => 'https://cdn-icons-png.flaticon.com/512/219/219983.png'
             ]);
 
             $arrRes = [
@@ -80,8 +81,10 @@ class AuthController extends Controller
                 'message' => "Lỗi phía server",
                 'data' => $th->getMessage()
             ];
+
+            $status = 500;
         }
-        return response()->json($arrRes, 201);
+        return response()->json($arrRes, $status ?? 201);
     }
 
 
