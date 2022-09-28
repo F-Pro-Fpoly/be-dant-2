@@ -23,6 +23,29 @@ $router->post('/login', 'AuthController@login');
 // $router->get('/quangdu', function() {
 //     return "Quang Dự";
 // });
+// $router::prefix('admin')->group(function ($router) {
+//     $router->post('/roles', 'AdminController@roles');
+// });
+$router->group(['prefix' => 'admin/roles'], function ($router){
+    $router->get('/test', 'RolesController@test');
+    $router->get('/list', 'RolesController@listRoles');
+    $router->get('/list/{id}', 'RolesController@listRoles_ID');
+    $router->post('/add', 'RolesController@addRoles');
+    $router->post('/update/{id}', 'RolesController@updateRoles');
+    $router->delete('/delete/{id}', 'RolesController@deleteRoles');
+
+});
+// national
+$router->group(['prefix' => 'admin/national'], function ($router){
+    $router->get('/test', 'NationalController@test');
+    $router->get('/list', 'NationalController@listNational');
+    $router->get('/list/{id}', 'NationalController@listNational_ID');
+    $router->post('/add', 'NationalController@addNational');
+    $router->post('/update/{id}', 'NationalController@updateNational');
+    $router->delete('/delete/{id}', 'NationalController@deleteNational');
+
+});
+
 
 $api = app('Dingo\Api\Routing\Router');
 
