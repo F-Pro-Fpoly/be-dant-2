@@ -24,6 +24,11 @@ class Role extends BaseModel{
     public function users(){
         return $this->hasMany(User::class, 'role_id');
     }
+
+    public function searchRole($input = []){
+        $data = $this->search($input, [], 5);
+        return $data;
+    }
 }
 
 ?>
