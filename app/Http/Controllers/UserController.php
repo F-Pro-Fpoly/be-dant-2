@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\InsertUserRequest;
+use App\Http\Transformer\User\UserTransformer;
 use App\Http\Validators\User\InsertUserValidate;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -41,8 +42,14 @@ class UserController extends BaseController
 
     }
 
-    public function listUser() {
-        // Kiểm tra null 
-        // ['code', '=', 'djhjdsgd']
+
+    public function listUser(Request $request) {
+
+        $input = $request->all();
+        $user = new User();
+        $data = $user->searchUser($input);
+        return $this->response->paginator($data, new UserTransformer);
     }
+
+
 }
