@@ -20,8 +20,6 @@ class BaseModel extends Model
             }
         }
 
-        // dd(123);
-
         $query = $query->where(function($query) use ($input) {
 
             foreach($input as $key => $val){
