@@ -58,7 +58,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     }
 
     public function searchUser($input = []){
-        $data = $this->search($input, [], 5);
+        if(!empty($input['email'])){
+            $dataInput[] = [
+                'email' , "like", "%".$input['email']."%"
+            ];
+        }
+        $data = $this->search($dataInput, [], 5);
         return $data;
     }
 }
