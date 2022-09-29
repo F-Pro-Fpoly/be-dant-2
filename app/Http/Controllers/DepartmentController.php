@@ -2,32 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\National;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class NationalController extends Controller
+class DepartmentController extends Controller
 {
-       // add
-       public function addNational(Request $request){
+    // add
+    public function addDepartment(Request $request){
         $validator = Validator::make($request->all(), [
+            'code' => 'required|min:5|max:255|unique:department',
             'name' => 'required|min:5|max:255',
-            'code' => 'required|min:5|max:255|unique:nationals',
-            'slug' => 'required|min:5|max:255'
+            'specialist_id' => 'required',
+            'description' => 'required|min:8|max:255',
         ],[
-            //name
-            'name.required' => 'Tên không được bỏ trống', 
-            'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
-            'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
             //code
             'code.required' => 'Code không được bỏ trống', 
             'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
             'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
             'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)',
-            //slug
-            'slug.required' => 'Code không được bỏ trống', 
-            'slug.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
-            'slug.max' => 'Code quá dài!(Tối đa 255 ký tự)',
+            //name
+            'name.required' => 'Name không được bỏ trống', 
+            'name.min' => 'Name quá ngắn!(Tối thiểu 5 ký tự)',
+            'name.max' => 'Name quá dài!(Tối đa 255 ký tự)',
+            //specialist
+            'specialist.required' => 'Slug không được bỏ trống', 
+            //description
+            'description.required' => 'Description không được bỏ trống', 
+            'description.min' => 'Description quá ngắn!(Tối thiểu 8 ký tự)',
+            'description.max' => 'Description quá dài!(Tối đa 255 ký tự)',
         ]);
         
         if($validator->fails()){
@@ -40,16 +43,17 @@ class NationalController extends Controller
         }
 
         try{
-            $national = National::create([
-                'name' => $request->name,
+            $department = Department::create([
                 'code' => $request->code,
-                'slug' => $request->slug
+                'name' => $request->name,
+                'specialist_id' => $request->specialist_id,
+                'description' => $request->description,
             ]);
 
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Thêm thành công",
-                'data' => []
+                'data' => [$department]
             ];
         } catch(\Throwable $th){
             $arrRes = [
@@ -62,43 +66,44 @@ class NationalController extends Controller
 
     }
     // select all
-    public function listNational(){
-        $national = National::all();
+    public function listDepartment(){
+        $department = Department::all();
         return response()->json([
             'message' => "Truy xuất thành công",
-            'national' => $national, 201
+            'Department' => $department, 201
         ]);
     }
     //select ID
-    public function listNational_ID($id){
-        $national = National::find($id);
+    public function listDepartment_ID($id){
+        $department = Department::find($id);
         return response()->json([
             'message' => "Truy xuất thành công",
-            'national' => $national, 201
+            'Department' => $department, 201
         ]);
     }
     // update
-    public function updateNational(Request $request, $id){
-        $national = National::find($id);
+    public function updateDepartment(Request $request, $id){
+        $department = Department::find($id);
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:5|max:255',
             'code' => 'required|min:5|max:255',
-            // 'code' => 'required|min:5|max:255|unique:nationals',
-            'slug' => 'required|min:5|max:255'
+            'name' => 'required|min:5|max:255',
+            'specialist_id' => 'required',
+            'description' => 'required|min:8|max:255',
         ],[
-             //name
-             'name.required' => 'Tên không được bỏ trống', 
-             'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
-             'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
              //code
              'code.required' => 'Code không được bỏ trống', 
              'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
              'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
-             'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)',
-             //slug
-             'slug.required' => 'Code không được bỏ trống', 
-             'slug.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
-             'slug.max' => 'Code quá dài!(Tối đa 255 ký tự)',
+             //name
+             'name.required' => 'Name không được bỏ trống', 
+             'name.min' => 'Name quá ngắn!(Tối thiểu 5 ký tự)',
+             'name.max' => 'Name quá dài!(Tối đa 255 ký tự)',
+             //specialist
+             'specialist.required' => 'Slug không được bỏ trống', 
+             //description
+             'description.required' => 'Description không được bỏ trống', 
+             'description.min' => 'Description quá ngắn!(Tối thiểu 8 ký tự)',
+             'description.max' => 'Description quá dài!(Tối đa 255 ký tự)',
         ]);
         
         if($validator->fails()){
@@ -111,16 +116,17 @@ class NationalController extends Controller
         }
 
         try{
-            $national->update([
-                'name' => $request->name,
+            $department->update([
                 'code' => $request->code,
-                'slug' => $request->slug
+                'name' => $request->name,
+                'specialist_id' => $request->specialist_id,
+                'description' => $request->description,
             ]);
 
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Update thành công",
-                'data' => [$request->all(), $national]
+                'data' => [$department]
             ];
         } catch(\Throwable $th){
             $arrRes = [
@@ -133,15 +139,15 @@ class NationalController extends Controller
 
     }
     // delete
-    public function deleteNational($id){
-        $national = National::find($id);
-        $national->delete();
+    public function deleteDepartment($id){
+        $department = Department::find($id);
+        $department->delete();
         return response()->json([
             'message' => "Xóa thành công", 201
         ]);
     }
 
     public function test(){
-        return "National";
+        return "Department";
     }
 }

@@ -74,13 +74,20 @@ class RolesController extends Controller
     // update
     public function updateRoles(Request $request, $id){
         $roles = Role::find($id);
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:5|max:255',
+            'code' => 'required|min:5|max:255|unique:roles'
         ],[
             //name
             'name.required' => 'Tên không được bỏ trống', 
             'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
             'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
+           //code
+           'code.required' => 'Code không được bỏ trống', 
+           'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
+           'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
+           'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)'
         ]);
         
         if($validator->fails()){
@@ -93,14 +100,15 @@ class RolesController extends Controller
         }
 
         try{
-            $roles = Role::create([
-                'name' => $request->name,
+            $roles->update([
+                'code' => $request->code,
+                'name' => $request->name
             ]);
 
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Update thành công",
-                'data' => []
+                'data' => [$request->all(), $roles]
             ];
         } catch(\Throwable $th){
             $arrRes = [
