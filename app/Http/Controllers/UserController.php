@@ -42,6 +42,7 @@ class UserController extends BaseController
     }
 
     public function listUser() {
-
+        // Kiểm tra null 
+        // ['code', '=', 'djhjdsgd']
     }
 }

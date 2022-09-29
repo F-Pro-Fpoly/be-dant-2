@@ -57,8 +57,13 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->belongsTo(Role::class);
     }
 
-    public function searchUser($input = []){
-        $data = $this->search($input, [], 5);
+    public function searchUser($input = [], $with = [] , $limit){
+        $dataInput = [];
+        if(!empty($input['code'])){
+            $dataInput[] = ['code', '=', $input['code']];
+        }
+
+        $data = $this->search($dataInput, $with, $limit);
         return $data;
     }
 }
