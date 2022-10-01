@@ -15,9 +15,7 @@ class Role extends BaseModel{
 
     protected $fillable = [
         'name', 
-        'code',
-        'created_at',
-        'updated_at'
+        'code'
     ];
 
 
