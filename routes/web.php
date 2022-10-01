@@ -56,6 +56,14 @@ $router->group(['prefix' => 'admin/department'], function ($router){
     $router->put('/update/{id}', 'DepartmentController@updateDepartment');
     $router->delete('/delete/{id}', 'DepartmentController@deleteDepartment');
 });
+// Schedule
+$router->group(['prefix' => 'admin/schedule'], function ($router){
+    $router->get('/list', 'ScheduleController@listSchedule');
+    $router->get('/list/{id}', 'ScheduleController@listSchedule_ID');
+    $router->post('/add', 'ScheduleController@addSchedule');
+    $router->put('/update/{id}', 'ScheduleController@updateSchedule');
+    $router->delete('/delete/{id}', 'ScheduleController@deleteSchedule');
+});
 
 
 $api = app('Dingo\Api\Routing\Router');
