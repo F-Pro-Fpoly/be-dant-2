@@ -14,7 +14,12 @@ class UserTransformer extends TransformerAbstract
         return [
             'name'=> $user->name,
             'email' => $user->email,
-            'role_name' => $user->role->name
+            'role_name' => $user->role->name,
+            'active' => $user->active,
+            'username' => $user->username,
+            "address" => $user->address ?? null,
+            "phone" => $user->phone ?? null,
+            "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar)
         ];
     }
 }

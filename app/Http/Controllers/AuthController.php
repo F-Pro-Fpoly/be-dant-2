@@ -63,10 +63,11 @@ class AuthController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'password'=> Hash::make($request->password),
-                // 'address' => $request->address,
-                // 'phone' => $request->phone,
+                'address' => $request->address ?? null,
+                'phone' => $request->phone ?? null,
                 'role_id' => 3,
-                'active' => 1
+                'active' => 1,
+                'avatar' => 'https://cdn-icons-png.flaticon.com/512/219/219983.png'
             ]);
 
             $arrRes = [
@@ -80,8 +81,10 @@ class AuthController extends Controller
                 'message' => "Lỗi phía server",
                 'data' => $th->getMessage()
             ];
+
+            $status = 500;
         }
-        return response()->json($arrRes, 201);
+        return response()->json($arrRes, $status ?? 201);
     }
 
 

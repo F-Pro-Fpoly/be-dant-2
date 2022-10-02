@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable, HasFactory;
 
@@ -55,5 +55,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function role(){
         return $this->belongsTo(Role::class);
+    }
+
+
+    public function searchUser($input = []){
+        $dataInput = [];
+        if(!empty($input['email'])){
+            $dataInput[] = [
+                'email' , "like", "%".$input['email']."%"
+            ];
+        }
+        $data = $this->search($dataInput, [], 5);
+        return $data;
     }
 }
