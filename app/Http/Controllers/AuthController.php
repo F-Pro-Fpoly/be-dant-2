@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
+use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -104,10 +107,13 @@ class AuthController extends Controller
 
             return response()->json($arrRes, 402);
         }
-
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
 
         try {
-            if(!$token = auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+            if(!$token = FacadesJWTAuth::attempt($credentials , ['exp' => \Carbon\Carbon::now()->addDays(7)->timestamp] )) {
                 $arrRes = [
                     'errCode'=> 2,
                     'message' => 'Vui lòng kiểm tra email và mật khẩu',
