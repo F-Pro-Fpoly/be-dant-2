@@ -51,5 +51,24 @@ class UserController extends BaseController
         return $this->response->paginator($data, new UserTransformer);
     }
 
+    function deleteUser($id){
+        try {
+            $data = User::find($id);
+            $data->deleted = 1;
+            $data->deleted_by = auth()->user()->id;
+            $data->save();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa khách hàng thành công"
+        ], 200);
+        } catch (\Throwable $th) {
+        return response()->json(
+            [
+                'status' => 500,
+                'message' => $th->getMessage() 
+            ],500
+            );
+       }
+    }
 
 }
