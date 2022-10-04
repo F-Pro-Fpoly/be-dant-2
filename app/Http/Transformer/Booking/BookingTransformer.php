@@ -11,6 +11,7 @@ class BookingTransformer extends TransformerAbstract
 {
     public function transform(Booking $booking)
     {
+        // dd($booking->timeslot);
         return [
             'id'   => $booking->id,
             'code' => $booking->code,
