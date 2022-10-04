@@ -15,7 +15,7 @@ class Timeslot extends BaseModel
     ];
 
     public function booking(){
-        return $this->hasMany(booking::class, 'timeSlot_id');
+        return $this->hasMany(Booking::class, 'timeSlot_id');
     }
     
 }

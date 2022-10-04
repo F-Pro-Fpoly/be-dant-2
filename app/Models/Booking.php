@@ -65,7 +65,7 @@ class Booking extends BaseModel
     }
 
     public function timeslot(){
-        return $this->belongsTo(Timeslot::class);
+        return $this->belongsTo(Timeslot::class, 'timeSlot_id', 'id');
     }
 
 
