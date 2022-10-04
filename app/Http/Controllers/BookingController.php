@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\Booking\BookingTransformer;
 use App\Http\Validators\Booking\InsertBookingValidate;
 use App\Models\Booking;
 use Illuminate\Http\Request;
@@ -39,14 +40,14 @@ class BookingController extends BaseController
         }
 
     }
-    // public function listSick(Request $request)
-    // {
-    //     $input = $request->all();
-    //     $sick = new sick();
-    //     $data = $sick->searchSick($input);
-    //     return $this->response->paginator($data, new SickTransformer);
+    public function listBooking(Request $request)
+    {
+        $input = $request->all();
+        $booking = new Booking();
+        $data = $booking->searchBooking($input);
+        return $this->response->paginator($data, new BookingTransformer);
 
-    // }
+    }
 
     // public function updateSick(Request $request, $id)
     // {

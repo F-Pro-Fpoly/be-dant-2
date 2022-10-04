@@ -50,4 +50,24 @@ class Booking extends BaseModel
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
+
+ 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function department(){
+        return $this->belongsTo(Department::class);
+    }
+
+    public function schedule(){
+        return $this->belongsTo(Schedule::class);
+    }
+
+    public function timeslot(){
+        return $this->belongsTo(Timeslot::class);
+    }
+
+
+
 }
