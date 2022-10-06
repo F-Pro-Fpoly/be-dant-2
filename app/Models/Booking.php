@@ -14,6 +14,7 @@ class Booking extends BaseModel
         'schedule_id',
         'timeSlot_id',
         'user_id',
+        'status_id',
         'created_at',
         'created_by',
         'updated_at',
@@ -50,4 +51,27 @@ class Booking extends BaseModel
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
+
+ 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function department(){
+        return $this->belongsTo(Department::class);
+    }
+
+    public function schedule(){
+        return $this->belongsTo(Schedule::class);
+    }
+
+    public function timeslot(){
+        return $this->belongsTo(Timeslot::class, 'timeSlot_id', 'id');
+    }
+    public function status(){
+        return $this->belongsTo(status::class , 'status_id', 'id');
+    }
+
+
+
 }
