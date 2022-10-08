@@ -5,12 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Specialist extends BaseModel
+<<<<<<< HEAD
+{
+    protected $table = 'specialists';
+=======
 {   
+>>>>>>> 9a565c0ca4b5aad2da5a289b0d1ddabf9e05ebe9
     protected $fillable = [
         'code',
         'name',
         'slug',
         'description',
+<<<<<<< HEAD
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by'
+    ];
+    
+=======
         'created_by',
         'updated_by',
         "deleted_by",
@@ -41,4 +54,5 @@ class Specialist extends BaseModel
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
+>>>>>>> 9a565c0ca4b5aad2da5a289b0d1ddabf9e05ebe9
 }

@@ -1,4 +1,5 @@
 <?php
+
     $api -> group(['prefix' => 'specialist', 'middleware' => 'role:admin'], function ($api) {
         $api->get('/list', 'SpecialistController@listSpecialist');
         $api->post('/add', 'SpecialistController@addSpecialist');
