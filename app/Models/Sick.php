@@ -23,7 +23,7 @@ class Sick extends BaseModel
         $dataInput =[];
         if(!empty($input['name'])){
             $dataInput[] = [
-                'email' , "like", "%".$input['email']."%"
+                'name' , "like", "%".$input['name']."%"
             ];
         }
         if(!empty($input['slug'])){
