@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Specialist extends Model
+class Specialist extends BaseModel
 {
-    protected $table = 'specialist';
+    protected $table = 'specialists';
     protected $fillable = [
         'code',
+        'name',
         'slug',
-        'description'
+        'description',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by'
     ];
+    
 }

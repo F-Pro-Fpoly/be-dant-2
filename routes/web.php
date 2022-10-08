@@ -39,15 +39,7 @@ $router->group(['prefix' => 'admin/national'], function ($router){
     $router->put('/update/{id}', 'NationalController@updateNational');
     $router->delete('/delete/{id}', 'NationalController@deleteNational');
 });
-// Specialist
-$router->group(['prefix' => 'admin/specialist'], function ($router){
-    $router->get('/test', 'SpecialistController@test');
-    $router->get('/list', 'SpecialistController@listSpecialist');
-    $router->get('/list/{id}', 'SpecialistController@listSpecialist_ID');
-    $router->post('/add', 'SpecialistController@addSpecialist');
-    $router->put('/update/{id}', 'SpecialistController@updateSpecialist');
-    $router->delete('/delete/{id}', 'SpecialistController@deleteSpecialist');
-});
+
 // Department
 $router->group(['prefix' => 'admin/department'], function ($router){
     $router->get('/list', 'DepartmentController@listDepartment');

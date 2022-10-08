@@ -6,13 +6,14 @@ use App\Models\Specialist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SpecialistController extends Controller
+class SpecialistController extends BaseController
 {
        // add
        public function addSpecialist(Request $request){
         $validator = Validator::make($request->all(), [
-            'code' => 'required|min:5|max:255|unique:specialist',
+            'code' => 'required|min:5|max:255|unique:specialists',
             'slug' => 'required|min:5|max:255',
+            'name' => 'required|min:5|max:255',
             'description' => 'required|min:8|max:255',
         ],[
             //code
@@ -24,6 +25,10 @@ class SpecialistController extends Controller
             'slug.required' => 'Slug không được bỏ trống', 
             'slug.min' => 'Slug quá ngắn!(Tối thiểu 5 ký tự)',
             'slug.max' => 'Slug quá dài!(Tối đa 255 ký tự)',
+            //Name
+            'name.required' => 'Name không được bỏ trống', 
+            'name.min' => 'Name quá ngắn!(Tối thiểu 5 ký tự)',
+            'name.max' => 'Name quá dài!(Tối đa 255 ký tự)',
             //description
             'description.required' => 'Description không được bỏ trống', 
             'description.min' => 'Description quá ngắn!(Tối thiểu 5 ký tự)',
@@ -42,14 +47,16 @@ class SpecialistController extends Controller
         try{
             $specialist = Specialist::create([
                 'code' => $request->code,
-                'slug' => $request->slug,
+                'name' => $request->name,
+                'slug' => "http://127.0.0.1:8000/specialist/".$request->slug,
                 'description' => $request->description,
+                // "created_by" => auth()->user()->id
             ]);
 
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Thêm thành công",
-                'data' => []
+                'data' => [$specialist]
             ];
         } catch(\Throwable $th){
             $arrRes = [
@@ -58,7 +65,7 @@ class SpecialistController extends Controller
                 'data' => $th->getMessage()
             ];
         }
-        return response()->json($arrRes, 201);
+        return response()->json($arrRes, 200);
 
     }
     // select all
@@ -66,7 +73,7 @@ class SpecialistController extends Controller
         $specialist = Specialist::all();
         return response()->json([
             'message' => "Truy xuất thành công",
-            'specialist' => $specialist, 201
+            'specialist' => $specialist, 200
         ]);
     }
     //select ID
@@ -74,7 +81,7 @@ class SpecialistController extends Controller
         $specialist = Specialist::find($id);
         return response()->json([
             'message' => "Truy xuất thành công",
-            'specialist' => $specialist, 201
+            'specialist' => $specialist, 200
         ]);
     }
     // update
@@ -128,16 +135,18 @@ class SpecialistController extends Controller
                 'data' => $th->getMessage()
             ];
         }
-        return response()->json($arrRes, 201);
+        return response()->json($arrRes, 200);
 
     }
-    // delete
     public function deleteSpecialist($id){
         $specialist = Specialist::find($id);
+        $specialist->deleted =1;
+        // $specialist->deleted_by = auth()->user()->id;
         $specialist->delete();
         return response()->json([
-            'message' => "Xóa thành công", 201
-        ]);
+            'status' => 200,
+            'message' => "Xóa thành công"
+        ], 200);
     }
 
     public function test(){
