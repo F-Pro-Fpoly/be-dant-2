@@ -57,15 +57,18 @@ class UserController extends BaseController
             $data->deleted = 1;
             $data->deleted_by = auth()->user()->id;
             $data->save();
+            $data->delete(); // đã ghi đè delete
             return response()->json([
                 'status' => 200,
-                'message' => "Xóa khách hàng thành công"
+                'message' => "Xóa khách hàng thành công",
+                'data' => $data
         ], 200);
         } catch (\Throwable $th) {
         return response()->json(
             [
                 'status' => 500,
-                'message' => $th->getMessage() 
+                'message' => $th->getMessage(),
+                'data' => $data
             ],500
             );
        }
