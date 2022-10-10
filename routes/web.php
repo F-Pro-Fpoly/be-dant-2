@@ -12,7 +12,7 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-$router->delete('/deleteUser/{id}', 'UserController@deleteUser');
+
 
 $router->get('/', "ExampleController@index");
 
