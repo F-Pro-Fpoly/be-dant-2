@@ -25,8 +25,6 @@ class DepartmentController extends Controller
             'name.required' => 'Name không được bỏ trống', 
             'name.min' => 'Name quá ngắn!(Tối thiểu 5 ký tự)',
             'name.max' => 'Name quá dài!(Tối đa 255 ký tự)',
-            //specialist
-            'specialist.required' => 'Slug không được bỏ trống', 
             //description
             'description.required' => 'Description không được bỏ trống', 
             'description.min' => 'Description quá ngắn!(Tối thiểu 8 ký tự)',
@@ -48,6 +46,7 @@ class DepartmentController extends Controller
                 'name' => $request->name,
                 'specialist_id' => $request->specialist_id,
                 'description' => $request->description,
+                "created_by" => auth()->user()->id
             ]);
 
             $arrRes = [
