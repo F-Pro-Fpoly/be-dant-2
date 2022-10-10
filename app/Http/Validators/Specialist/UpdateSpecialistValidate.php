@@ -5,7 +5,7 @@ namespace App\Http\Validators\Specialist;
 use App\Http\Validators\ValidatorBase;
 
 
-class InsertSpecialistValidate extends ValidatorBase
+class UpdateSpecialistValidate extends ValidatorBase
 {
 
     public function __construct($input)
@@ -21,7 +21,6 @@ class InsertSpecialistValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            'code' => 'required|min:5|max:255|unique:specialists',
             'slug' => 'required|min:5|max:255',
             'name' => 'required|min:5|max:255',
             'description' => 'required|min:8|max:255',
@@ -31,11 +30,6 @@ class InsertSpecialistValidate extends ValidatorBase
     protected function messages()
     {
         return [
-             //code
-             'code.required' => 'Code không được bỏ trống', 
-             'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
-             'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
-             'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)',
              //slug
              'slug.required' => 'Slug không được bỏ trống', 
              'slug.min' => 'Slug quá ngắn!(Tối thiểu 5 ký tự)',
