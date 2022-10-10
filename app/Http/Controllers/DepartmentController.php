@@ -6,7 +6,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentController extends Controller
+class DepartmentController extends BaseController
 {
     // add
     public function addDepartment(Request $request){

@@ -7,6 +7,5 @@ $api -> get('/', function() {
 require_once __DIR__."/user.php";
 require_once __DIR__."/sick.php";
 require_once __DIR__."/vaccine.php";
-require_once __DIR__."/booking.php";
 require_once __DIR__."/specialist.php";
 ?>
