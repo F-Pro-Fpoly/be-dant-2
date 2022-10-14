@@ -54,9 +54,7 @@ class UserController extends BaseController
     function deleteUser($id){
         try {
             $data = User::find($id);
-            $data->deleted = 1;
-            $data->deleted_by = auth()->user()->id;
-            $data->save();
+            $data->delete();
             return response()->json([
                 'status' => 200,
                 'message' => "Xóa khách hàng thành công"
