@@ -32,4 +32,18 @@ class BaseModel extends Model
 
         return $query->paginate($limit);
     }
+    //ghi đè hàm delete
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model)
+        {
+            $model->deleted_by = auth()->user()->id;
+            $model->deleted = 1;
+            $model->save();
+        });
+    }
 }
+
+

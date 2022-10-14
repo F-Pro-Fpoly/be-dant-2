@@ -13,7 +13,6 @@
 |
 */
 
-
 $router->get('/', "ExampleController@index");
 
 $router->post('/register', 'AuthController@register');
