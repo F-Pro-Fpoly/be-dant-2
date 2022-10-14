@@ -66,8 +66,6 @@ $router->group(['prefix' => 'admin/histories'], function ($router){
 
 $api = app('Dingo\Api\Routing\Router');
 
-
-
 $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
     $api->group(['prefix' => 'normal'], function ($api){
         

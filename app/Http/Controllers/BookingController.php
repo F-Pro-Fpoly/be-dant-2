@@ -46,7 +46,6 @@ class BookingController extends BaseController
         $booking = new Booking();
         $data = $booking->searchBooking($input);
         return $this->response->paginator($data, new BookingTransformer);
-
     }
 
     // public function updateSick(Request $request, $id)
