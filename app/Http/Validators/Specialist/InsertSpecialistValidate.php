@@ -22,7 +22,6 @@ class InsertSpecialistValidate extends ValidatorBase
     {
         return [
             'code' => 'required|min:5|max:255|unique:specialists',
-            'slug' => 'required|min:5|max:255',
             'name' => 'required|min:5|max:255',
             'description' => 'required|min:8|max:255',
         ];
@@ -36,10 +35,6 @@ class InsertSpecialistValidate extends ValidatorBase
              'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
              'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
              'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)',
-             //slug
-             'slug.required' => 'Slug không được bỏ trống', 
-             'slug.min' => 'Slug quá ngắn!(Tối thiểu 5 ký tự)',
-             'slug.max' => 'Slug quá dài!(Tối đa 255 ký tự)',
              //Name
              'name.required' => 'Name không được bỏ trống', 
              'name.min' => 'Name quá ngắn!(Tối thiểu 5 ký tự)',

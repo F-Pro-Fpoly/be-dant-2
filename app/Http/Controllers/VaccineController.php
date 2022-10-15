@@ -40,7 +40,6 @@ class VaccineController extends BaseController
                 ],500
                 );
         }
-
     }
     public function listVaccine(Request $request)
     {
@@ -59,13 +58,13 @@ class VaccineController extends BaseController
       try {
             $data = Vaccine::find($id);
             $data->update([
-                'code' => $input['code'],
-                'name' => $input['name'],
-                'slug' => Str::slug($input['name']),
-                "price" => $input['price'],
-                "description" => $input['description'],
-                "sick_id" => $input['sick_id'],
-                "national_id" => $input['national_id'],
+                'code' => $input['code'] ?? $data->code,
+                'name' => $input['name'] ?? $data->name,
+                'slug' => Str::slug($input['name']) ,
+                "price" => $input['price'] ?? $data->price,
+                "description" => $input['description'] ?? $data->description,
+                "sick_id" => $input['sick_id'] ?? $data->sick_id,
+                "national_id" => $input['national_id'] ?? $data->national_id,
                 'updated_by' => auth()->user()->id
             ]);
             return response()->json([
@@ -87,7 +86,7 @@ class VaccineController extends BaseController
     {
        try {
             $data = Vaccine::find($id);
-            $data->deleted =1;
+            $data->deleted = 1;
             $data->deleted_by = auth()->user()->id;
             $data->save();
             $data->delete();
