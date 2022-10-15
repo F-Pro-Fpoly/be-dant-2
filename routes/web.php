@@ -12,9 +12,10 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+use App\Http\Model\User;
 
 
-$router->get('/', "ExampleController@index");
+// $router->get('/', "ExampleController@index");
 
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
