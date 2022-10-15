@@ -15,15 +15,10 @@
 use App\Http\Model\User;
 
 
-$router->get('/', function(){
-	return "hello";
-});
+$router->get('/', "ExampleController@index");
 
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
-$router->get('/login1', function(){
-	return "Logiin";
-});
 
 $router->group(['prefix' => 'admin/roles'], function ($router){
     $router->get('/test', 'RolesController@test');
