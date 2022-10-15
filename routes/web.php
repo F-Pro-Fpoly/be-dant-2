@@ -63,6 +63,11 @@ $router->group(['prefix' => 'admin/histories'], function ($router){
     $router->delete('/delete/{id}', 'HistoriesController@deleteHistories');
 });
 
+$router->post("/auto-pull", function() {
+    $shell = shell_exec("cd /var/www/html/be-dant-2 && git pull origin main");
+    dd($shell);
+});
+
 
 $api = app('Dingo\Api\Routing\Router');
 
