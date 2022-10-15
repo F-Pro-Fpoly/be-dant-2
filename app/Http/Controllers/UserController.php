@@ -37,9 +37,18 @@ class UserController extends BaseController
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
         }
+    }
 
-        
+    public function getUser($id, Request $request){
+        $input = $request->all();
+        try {
+            $user = User::findOrFail($id);
 
+            return $this->response->item($user, new UserTransformer());
+        } catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }
     }
 
 
