@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Transformer\Specialist\SpecialistTransformer;
 use App\Http\Validators\Specialist\InsertSpecialistValidate;
+use App\Http\Validators\Specialist\UpdateSpecialistValidate;
 use App\Models\Specialist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -48,25 +49,42 @@ class SpecialistController extends BaseController
         $data = $Specialist->searchSpecialist($input);
         return $this->response->paginator($data, new SpecialistTransformer);
     }
+
+     // select one
+    public function specialistDetail(Request $request, $id){
+        $input = $request->all();
+        $Specialist =  Specialist::find($id);
+        dd($Specialist);
+        $data = $Specialist->searchSpecialist($input);
+        return $this->response->paginator($data, new SpecialistTransformer);
+    }
    
     // update
     public function updateSpecialist(Request $request, $id){
         $input = $request->all();
-        (new InsertSpecialistValidate($input));
+        (new UpdateSpecialistValidate($input));
  
        try {
-             $data = Specialist::find($id);
-             $data->update([
-                 'code' => $input['code'],
-                 'name' => $input['name'],
-                 'slug' => Str::slug($input['name']),
-                 'description' => $input['description'],
-                 'updated_by' => auth()->user()->id
-             ]);
-             return response()->json([
-                 'status' => 200,
-                 'message' => "Cập nhật chuyên khoa thành công"
-            ], 200);
+            $data = Specialist::find($id);
+            if($data){
+                $data->update([
+                    'code' => $input['code'] ? $input['code'] : $data->code,
+                    'name' => $input['name'] ? $input['name'] : $data->name,
+                    'slug' => Str::slug($input['name']),
+                    'description' => $input['description'] ?? $data->description,
+                    'updated_by' => auth()->user()->id
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật chuyên khoa thành công"
+               ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Không tìm thấy chuyên khoa"
+               ], 200);
+            }
        } catch (\Throwable $th) {
          return response()->json(
              [
