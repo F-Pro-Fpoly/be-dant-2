@@ -70,6 +70,10 @@ $router->post("/auto-pull", function() {
 });
 
 
+$router->get("/hello", function(){
+    return "hello";
+});
+
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
