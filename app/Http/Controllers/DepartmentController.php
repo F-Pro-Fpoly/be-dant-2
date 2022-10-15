@@ -11,7 +11,7 @@ class DepartmentController extends BaseController
     // add
     public function addDepartment(Request $request){
         $validator = Validator::make($request->all(), [
-            'code' => 'required|min:5|max:255|unique:department',
+            'code' => 'required|min:5|max:255|unique:departments',
             'name' => 'required|min:5|max:255',
             'specialist_id' => 'required',
             'description' => 'required|min:8|max:255',
@@ -84,7 +84,7 @@ class DepartmentController extends BaseController
     public function updateDepartment(Request $request, $id){
         $department = Department::find($id);
         $validator = Validator::make($request->all(), [
-            'code' => 'required|min:5|max:255',
+            'code' => 'required|min:5|max:255|unique:departments',
             'name' => 'required|min:5|max:255',
             'specialist_id' => 'required',
             'description' => 'required|min:8|max:255',
