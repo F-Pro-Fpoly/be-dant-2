@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\InsertUserRequest;
 use App\Http\Transformer\User\UserTransformer;
 use App\Http\Validators\User\InsertUserValidate;
+use App\Http\Validators\User\UpdateUserValidate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -68,14 +69,27 @@ class UserController extends BaseController
                 'status' => 200,
                 'message' => "Xóa khách hàng thành công"
         ], 200);
-        } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'status' => 500,
-                'message' => $th->getMessage() 
-            ],500
-            );
+        } catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
        }
+    }
+
+    public function update($id, Request $request) {
+        $input = $request->all();
+        (new UpdateUserValidate($input));
+        try {
+            $user = User::findOrFail($id);
+
+            $user->updateUser($input);
+
+            return response()->json([
+                'message' => "Cập nhập người dùng thành công",
+                'status' => 201
+            ], 201);
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
 }
