@@ -19,6 +19,10 @@ class Specialist extends BaseModel
         'updated_by'
     ];
 
+
+    public function department(){
+        return $this->hasOne(Department::class);
+    }
     public function searchSpecialist($input = []){
         $dataInput =[];
         if(!empty($input['name'])){

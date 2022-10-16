@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\Department\departmentTransformer;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -65,12 +66,11 @@ class DepartmentController extends BaseController
 
     }
     // select all
-    public function listDepartment(){
-        $department = Department::all();
-        return response()->json([
-            'message' => "Truy xuất thành công",
-            'Department' => $department, 201
-        ]);
+    public function listDepartment(Request $request){
+        $input = $request->all();
+        $Department = new Department();
+        $data = $Department->searchDepartment($input);
+        return $this->response->paginator($data, new departmentTransformer);
     }
     //select ID
     public function listDepartment_ID($id){

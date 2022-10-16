@@ -36,7 +36,8 @@ class SpecialistController extends BaseController
             return response()->json(
                 [
                     'status' => 500,
-                    'message' => $th->getMessage() 
+                    'message' => $th->getMessage() ,
+                    'line' => $th->getLine()
                 ],500
             );
         }
@@ -48,17 +49,24 @@ class SpecialistController extends BaseController
         $Specialist = new Specialist();
         $data = $Specialist->searchSpecialist($input);
         return $this->response->paginator($data, new SpecialistTransformer);
+            
     }
-
      // select one
     public function specialistDetail(Request $request, $id){
         $input = $request->all();
         $Specialist =  Specialist::find($id);
-        dd($Specialist);
-        $data = $Specialist->searchSpecialist($input);
-        return $this->response->paginator($data, new SpecialistTransformer);
+        if($Specialist){
+            $data = $Specialist->searchSpecialist($input);
+            return $this->response->paginator($data, new SpecialistTransformer);
+       
+        }
+        else{
+            return response()->json([
+                'status'  => 400,
+                'message' => 'Không tìm thấy chuyên khoa'
+            ],400);
+        }
     }
-   
     // update
     public function updateSpecialist(Request $request, $id){
         $input = $request->all();
