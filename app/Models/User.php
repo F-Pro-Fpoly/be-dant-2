@@ -7,7 +7,9 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
@@ -20,7 +22,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'avatar', 'address', 'phone', 'active', 'role_id'
+        'name', 'email', 'password', 'username', 'avatar', 'address', 'phone', 'active', 'role_id',
+        "created_at", "created_by", "updated_at", "updated_by" ,"deleted", "deleted_at", "deleted_by"
     ];
 
     /**
@@ -70,5 +73,37 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         }
         $data = $this->search($dataInput, [], 5);
         return $data;
+    }
+
+    public function updateUser(array $input = [])
+    {
+        if(count($input) <= 0){
+            throw new HttpException(400, "Cần nhập thông tin update");
+        }
+
+        if(!empty($input['address'])){
+            $this->address = $input['address'];
+        }
+
+        if(!empty($input['phone'])){
+            $this->phone = $input['phone'];
+        }
+        if(!empty($input['password'])){
+            $this->password = Hash::make($input['password']);
+        }
+
+        if(!empty($input['name'])){
+            $this->name = $input['name'];
+        }
+
+        if(!empty($input['role_id'])) {
+            $this->role_id = $input['role_id'];
+        }
+
+        if(!empty($input['active'])) {
+            $this->active = $input['active'];
+        }
+        $this->updated_by = auth()->user()->id;
+        $this->save();
     }
 }
