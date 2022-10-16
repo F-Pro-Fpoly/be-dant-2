@@ -65,8 +65,8 @@ $router->group(['prefix' => 'admin/histories'], function ($router){
 });
 
 $router->post("/auto-pull", function() {
-    $shell = shell_exec("cd C:\laragon\www\Backend && git pull origin main");
-    dd($shell);
+    $shell = shell_exec("cd /var/www/html/be-dant-2 && git pull origin main");
+    return response()->json($shell, 200);
 });
 
 
