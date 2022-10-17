@@ -6,6 +6,7 @@ use App\Http\Transformer\Department\departmentTransformer;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DepartmentController extends BaseController
 {
@@ -74,11 +75,13 @@ class DepartmentController extends BaseController
     }
     //select ID
     public function listDepartment_ID($id){
-        $department = Department::find($id);
-        return response()->json([
-            'message' => "Truy xuất thành công",
-            'Department' => $department, 201
-        ]);
+        try {
+            $department = Department::findOrFail($id);
+            return $this->response->item($department, new departmentTransformer());
+        } catch (\Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }    
     }
     // update
     public function updateDepartment(Request $request, $id){
