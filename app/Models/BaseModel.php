@@ -34,6 +34,14 @@ class BaseModel extends Model
         return $query->paginate($limit);
     }
 
+    public static final function model()
+    {
+        $classStr = get_called_class();
+        /** @var Model $class */
+        $class = new $classStr();
+        return $class::whereNull($class->getTable() . '.deleted_at');
+    }
+    
     public function delete()
     {
         if(Schema::hasColumn($this->table,  "deleted")){
