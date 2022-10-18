@@ -75,16 +75,17 @@ class NationalController extends Controller
         $national = National::find($id);
         if($national){
             return response()->json([
+                'status' => 200,
                 'message' => 'Truy xuất thành công',
                 'data' => [$national]
-            ]);
+            ],200);
         }
         else{
             return response()->json([
                 'status' => 400,
                 'message' => "Không tìm thấy dữ liệu",
                 'data' => $th->getMessage()
-           ], 200);
+           ], 400);
         }
     }
     // update
@@ -131,7 +132,7 @@ class NationalController extends Controller
                 return response()->json([
                     'status'  => 200,
                     'message' => 'Cập nhật thành công',
-                ],400);
+                ],200);
             }
             else{
                 return response()->json([

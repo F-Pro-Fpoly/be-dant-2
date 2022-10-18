@@ -71,6 +71,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'email' , "like", "%".$input['email']."%"
             ];
         }
+        if(!empty($input['name'])) {
+            $dataInput[] = [
+                'name' , "like", "%".$input['name']."%"
+            ];
+        }
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
@@ -102,6 +107,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         if(!empty($input['active'])) {
             $this->active = $input['active'];
+        }else{
+            $this->active = 0;
         }
         $this->updated_by = auth()->user()->id;
         $this->save();

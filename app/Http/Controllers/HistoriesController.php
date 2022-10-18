@@ -77,15 +77,17 @@ class HistoriesController extends Controller
         $histories = Histories::find($id);
         if($histories){
             return response()->json([
+                'status' => 200,
                 'message' => 'Truy xuất thành công',
                 'data' => [$histories]
             ], 200);
         }
         else{
             return response()->json([
+                'status' => 400,
                 'message' => 'Không tìm thấy dữ liệu',
                 'data' => [$histories]
-            ], 500);
+            ], 400);
         }
     }
     // update
@@ -129,15 +131,17 @@ class HistoriesController extends Controller
                     'patient_id' => $request->patient_id,
                 ]);
                 return response()->json([
+                    'status' => 200,
                     'message' => 'Cập nhật thành công',
                     'data' => [$histories]
-                ], 500);
+                ], 200);
             }
             else{
                 return response()->json([
+                    'status' => 400,
                     'message' => 'Không tìm thấy dữ liệu',
                     'data' => $th->getMessage()
-                ], 500);
+                ], 400);
             }
             
         } catch(\Throwable $th){

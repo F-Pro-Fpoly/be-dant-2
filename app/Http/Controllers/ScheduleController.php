@@ -52,11 +52,11 @@ class ScheduleController extends Controller
                 'department_id' => $request->department_id,
             ]);
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Thêm thành công",
+            return response()->json([
+                'status' => 200,
+                'message' => 'Thêm thành công',
                 'data' => [$schedule]
-            ];
+            ], 200);
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -78,16 +78,17 @@ class ScheduleController extends Controller
         $schedule = Schedule::find($id);
         if($schedule){
             return response()->json([
+                'status' => 200,
                 'message' => 'Truy xuất thành công',
                 'data' => [$schedule]
-            ]);
+            ], 200);
         }
         else{
             return response()->json([
                 'status' => 400,
                 'message' => "Không tìm thấy dữ liệu",
                 'data' => $th->getMessage()
-           ], 200);
+           ], 400);
         }
         
     }
@@ -142,7 +143,7 @@ class ScheduleController extends Controller
                     'status' => 400,
                     'message' => "Không tìm thấy bệnh",
                     'data' => $th->getMessage()
-                ], 200);
+                ], 400);
             }
             
         } 

@@ -69,7 +69,7 @@ class SickController extends BaseController
                     'status' => 400,
                     'message' => "Không tìm thấy bệnh",
                     'data' => $th->getMessage()
-               ], 200);
+               ], 400);
             }
         } 
         catch (Exception $th) {

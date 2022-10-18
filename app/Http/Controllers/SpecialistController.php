@@ -93,7 +93,7 @@ class SpecialistController extends BaseController
                     'status' => 400,
                     'message' => "Không tìm thấy chuyên khoa",
                     'data' => $th->getMessage()
-               ], 200);
+               ], 400);
             }
        } 
        catch (Exception $th) {
