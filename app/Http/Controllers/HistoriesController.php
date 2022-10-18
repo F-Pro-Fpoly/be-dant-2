@@ -131,23 +131,12 @@ class HistoriesController extends Controller
                 return response()->json([
                     'message' => 'Cập nhật thành công',
                     'data' => [$histories]
-                ], 500);
-            }
-            else{
-                return response()->json([
-                    'message' => 'Không tìm thấy dữ liệu',
-                    'data' => $th->getMessage()
-                ], 500);
+                ], 200);
             }
             
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+        } catch(Exception $th){
+            throw new HttpException(500, $th->getMessage());
         }
-        return response()->json($arrRes, 201);
     }
     public function deleteHistories(Request $request, $id){
         try {

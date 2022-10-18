@@ -72,20 +72,17 @@ class NationalController extends Controller
     }
     //select ID
     public function listNational_ID($id){
-        $national = National::find($id);
-        if($national){
-            return response()->json([
-                'message' => 'Truy xuất thành công',
-                'data' => [$national]
-            ]);
-        }
-        else{
-            return response()->json([
-                'status' => 400,
-                'message' => "Không tìm thấy dữ liệu",
-                'data' => $th->getMessage()
-           ], 200);
-        }
+        try {
+            $national = National::find($id);
+            if($national){
+                return response()->json([
+                    'message' => 'Truy xuất thành công',
+                    'data' => [$national]
+                ]);
+            }
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }      
     }
     // update
     public function updateNational(Request $request, $id){
@@ -132,23 +129,10 @@ class NationalController extends Controller
                     'status'  => 200,
                     'message' => 'Cập nhật thành công',
                 ],400);
-            }
-            else{
-                return response()->json([
-                    'status'  => 400,
-                    'message' => 'Không tìm thấy dữ liệu',
-                    'data' => $th->getMessage()
-                ],400);
-            }
-            
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+            }     
+        } catch(Exception $th){
+            throw new HttpException(500, $th->getMessage());
         }
-        return response()->json($arrRes, 201);
     }
     // delete
     public function deleteNational($id){

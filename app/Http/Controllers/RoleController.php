@@ -60,35 +60,30 @@ class RoleController extends BaseController
 
     }
     // select all
-<<<<<<< HEAD:app/Http/Controllers/RoleController.php
     public function listRoleAll(){
         $roles = Role::all();
         return response()->json([
             "data" => $roles
         ], 201);
-=======
+    }
     public function listRoles(Request $request){
         $input = $request->all();
         $role = new role();
         $data = $role->searchRole($input);
         return $this->response->paginator($data, new RoleTransformer);
->>>>>>> a9c6d15ec28e9fac1d595c5f0554cc0edc4b812b:app/Http/Controllers/RolesController.php
     }
     //select ID
     public function listRoles_ID($id){
-        $roles = Role::find($id);
-        if($role){
-            return response()->json([
-                'message' => "Truy xuất thành công",
-                'role' => $roles, 201
-            ]);
-        }
-        else{
-            return response()->json([
-                'message' => "Không có dữ liệu",
-                'data' => $th->getMessage(),
-                'role' => $roles, 201
-            ]);
+        try {
+            $roles = Role::find($id);
+            if($roles){
+                return response()->json([
+                    'message' => "Truy xuất thành công",
+                    'role' => $roles, 201
+                ]);
+            }
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
         }
     }
     // update
@@ -130,23 +125,9 @@ class RoleController extends BaseController
                     'message' => "Cập nhật thành công"
             ], 200);
             }
-            else{
-                return response()->json([
-                    'status'  => 400,
-                    'message' => 'Không tìm thấy role',
-                    'data' => $th->getMessage(),
-                ],400);
-            }
-            
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+        } catch(Exception $th){
+            throw new HttpException(500,$th->getMessage());
         }
-        return response()->json($arrRes, 201);
-
     }
     // delete
     public function deleteRoles($id){
