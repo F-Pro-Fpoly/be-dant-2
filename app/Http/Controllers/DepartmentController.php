@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Transformer\Department\departmentTransformer;
 use App\Models\Department;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;

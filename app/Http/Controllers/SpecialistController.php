@@ -6,9 +6,11 @@ use App\Http\Transformer\Specialist\SpecialistTransformer;
 use App\Http\Validators\Specialist\InsertSpecialistValidate;
 use App\Http\Validators\Specialist\UpdateSpecialistValidate;
 use App\Models\Specialist;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SpecialistController extends BaseController
 {
@@ -29,7 +31,7 @@ class SpecialistController extends BaseController
 
                 return response()->json([
                     'status' => 200,
-                    'message' => "Thêm chuyên khoa thành công"
+                    'message' => "Thêm chuyên khoa thành công",
             ], 200);
 
         } catch(\Throwable $th){
@@ -48,8 +50,7 @@ class SpecialistController extends BaseController
         $input = $request->all();
         $Specialist = new Specialist();
         $data = $Specialist->searchSpecialist($input);
-        return $this->response->paginator($data, new SpecialistTransformer);
-            
+        return $this->response->paginator($data, new SpecialistTransformer);            
     }
      // select one
     public function specialistDetail(Request $request, $id){
