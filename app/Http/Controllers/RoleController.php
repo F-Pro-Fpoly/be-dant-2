@@ -6,10 +6,10 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RolesController extends Controller
+class RoleController extends BaseController
 {
        // add
-       public function addRoles(Request $request){
+    public function addRoles(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:5|max:255',
             'code' => 'required|min:5|max:255|unique:roles'
@@ -56,12 +56,11 @@ class RolesController extends Controller
 
     }
     // select all
-    public function listRoles(){
+    public function listRoleAll(){
         $roles = Role::all();
         return response()->json([
-            'message' => "Truy xuất thành công",
-            'role' => $roles, 201
-        ]);
+            "data" => $roles
+        ], 201);
     }
     //select ID
     public function listRoles_ID($id){

@@ -122,6 +122,14 @@ class AuthController extends Controller
                 return response()->json($arrRes, 201);
             }
 
+            if(auth()->user()->active === 0){
+                $arrRes = [
+                    'errCode'=> 2,
+                    'message' => 'Bạn đã bị khóa tài khoản',
+                    'data' => []
+                ];
+                return response()->json($arrRes, 201);
+            }
 
             // auth()->login($token);
             $arrRes = [
