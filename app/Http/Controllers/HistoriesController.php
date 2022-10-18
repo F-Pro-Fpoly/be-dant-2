@@ -144,14 +144,9 @@ class HistoriesController extends Controller
                 ], 400);
             }
             
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+        } catch(Exception $th){
+            throw new HttpException(500, $th->getMessage());
         }
-        return response()->json($arrRes, 201);
     }
     public function deleteHistories(Request $request, $id){
         try {
