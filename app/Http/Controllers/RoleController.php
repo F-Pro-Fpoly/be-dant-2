@@ -65,10 +65,19 @@ class RoleController extends BaseController
     //select ID
     public function listRoles_ID($id){
         $roles = Role::find($id);
-        return response()->json([
-            'message' => "Truy xuất thành công",
-            'role' => $roles, 201
-        ]);
+        if($roles){
+            return response()->json([
+                'status' => 200,
+                'message' => "Truy xuất thành công",
+                'role' => $roles, 201
+            ]);
+        }else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy dữ liệu",
+                'role' => $roles, 400
+            ]);
+        }
     }
     // update
     public function updateRoles(Request $request, $id){
@@ -99,36 +108,44 @@ class RoleController extends BaseController
         }
 
         try{
-            $roles->update([
-                'code' => $request->code,
-                'name' => $request->name
-            ]);
-
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Update thành công",
-                'data' => [$request->all(), $roles]
-            ];
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+            if($roles){
+                $roles->update([
+                    'code' => $request->code,
+                    'name' => $request->name
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật thành công"
+            ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "không tìm thấy dữ liệu"
+            ], 400);
+            }
+        } catch(Exception $th){
+            throw new HttpException(500,$th->getMessage());
         }
-        return response()->json($arrRes, 201);
-
     }
     // delete
     public function deleteRoles($id){
-        $roles = Role::find($id);
-        $roles->delete();
-        return response()->json([
-            'message' => "Xóa thành công", 201
-        ]);
+        try {
+            $data = Role::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa Role thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
     public function test(){
         return "helolo";
     }
 }
+    
+

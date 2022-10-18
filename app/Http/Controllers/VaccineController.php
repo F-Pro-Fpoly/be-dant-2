@@ -7,6 +7,8 @@ use App\Http\Validators\Vaccine\InsertVaccineValidate;
 use App\Models\Vaccine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class VaccineController extends BaseController
 {
@@ -32,13 +34,10 @@ class VaccineController extends BaseController
                 'status' => 200,
                 'message' => "Thêm Vaccine thành công"
            ], 200);
-        } catch (\Throwable $th) {
-           return response()->json(
-                [
-                    'status' => 500,
-                    'message' => $th->getMessage() 
-                ],500
-                );
+        }
+        catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
     }
     public function listVaccine(Request $request)
@@ -47,7 +46,6 @@ class VaccineController extends BaseController
         $vaccine = new Vaccine();
         $data = $vaccine->searchVaccine($input);
         return $this->response->paginator($data, new VaccineTransformer);
-
     }
 
     public function updateVaccine(Request $request, $id)
@@ -57,7 +55,8 @@ class VaccineController extends BaseController
 
       try {
             $data = Vaccine::find($id);
-            $data->update([
+            if($data){
+                $data->update([
                 'code' => $input['code'] ?? $data->code,
                 'name' => $input['name'] ?? $data->name,
                 'slug' => Str::slug($input['name']) ,
@@ -66,41 +65,36 @@ class VaccineController extends BaseController
                 "sick_id" => $input['sick_id'] ?? $data->sick_id,
                 "national_id" => $input['national_id'] ?? $data->national_id,
                 'updated_by' => auth()->user()->id
-            ]);
-            return response()->json([
-                'status' => 200,
-                'message' => "Cập nhật Vaccin thành công"
-           ], 200);
-      } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'status' => 500,
-                'message' => $th->getMessage() 
-            ],500
-            );
-      }
-       
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật Vaccin thành công"
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Không tìm thấy Vaccin",
+                ], 400);
+            }
+      }catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }      
     }
 
     public function deleteVaccine($id)
     {
        try {
             $data = Vaccine::find($id);
-            $data->deleted = 1;
-            $data->deleted_by = auth()->user()->id;
-            $data->save();
             $data->delete();
             return response()->json([
                 'status' => 200,
-                'message' => "Xóa bệnh thành công"
+                'message' => "Xóa Vaccin thành công"
         ], 200);
-       } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'status' => 500,
-                'message' => $th->getMessage() 
-            ],500
-            );
-       }
+       } 
+       catch (Exception $th) {
+        $errors = $th->getMessage();
+        throw new HttpException(500, $errors);
+        }
     }
 }

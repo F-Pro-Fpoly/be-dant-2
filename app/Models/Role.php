@@ -24,7 +24,18 @@ class Role extends BaseModel{
     }
 
     public function searchRole($input = []){
-        $data = $this->search($input, [], 5);
+        $dataInput = [];
+        if(!empty($input['code'])){
+            $dataInput[] = [
+                'code' , "like", "%".$input['code']."%"
+            ];
+        }
+        if(!empty($input['name'])){
+            $dataInput[] = [
+                'name' , "like", "%".$input['name']."%"
+            ];
+        }
+        $data = $this->search($dataInput, [], 5);
         return $data;
     }
 }

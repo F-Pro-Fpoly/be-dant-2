@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Transformer\Department\departmentTransformer;
 use App\Models\Department;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -50,12 +51,11 @@ class DepartmentController extends BaseController
                 'description' => $request->description,
                 "created_by" => auth()->user()->id
             ]);
-
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Thêm thành công",
+            return response()->json([
+                'status' => 200,
+                'message' => 'Thêm thành công',
                 'data' => [$department]
-            ];
+            ], 200);
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -118,18 +118,26 @@ class DepartmentController extends BaseController
         }
 
         try{
-            $department->update([
-                'code' => $request->code,
-                'name' => $request->name,
-                'specialist_id' => $request->specialist_id,
-                'description' => $request->description,
-            ]);
+            if($department){
+                $department->update([
+                    'code' => $request->code,
+                    'name' => $request->name,
+                    'specialist_id' => $request->specialist_id,
+                    'description' => $request->description,
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Thêm thành công',
+                    'data' => [$department]
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => '400',
+                    'message' => 'Không tìm thấy dữ liệu',
+                ], 400);
+            }
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Update thành công",
-                'data' => [$department]
-            ];
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -142,11 +150,17 @@ class DepartmentController extends BaseController
     }
     // delete
     public function deleteDepartment($id){
-        $department = Department::find($id);
-        $department->delete();
-        return response()->json([
-            'message' => "Xóa thành công", 201
-        ]);
+        try {
+            $data = Department::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa Department thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
     public function test(){
