@@ -51,6 +51,7 @@ class DepartmentController extends BaseController
                 "created_by" => auth()->user()->id
             ]);
             return response()->json([
+                'status' => 200,
                 'message' => 'Thêm thành công',
                 'data' => [$department]
             ], 200);
@@ -124,15 +125,16 @@ class DepartmentController extends BaseController
                     'description' => $request->description,
                 ]);
                 return response()->json([
+                    'status' => 200,
                     'message' => 'Thêm thành công',
                     'data' => [$department]
                 ], 200);
             }
             else{
                 return response()->json([
+                    'status' => '400',
                     'message' => 'Không tìm thấy dữ liệu',
-                    'data' => $th->getMessage(),
-                ], 500);
+                ], 400);
             }
 
         } catch(\Throwable $th){

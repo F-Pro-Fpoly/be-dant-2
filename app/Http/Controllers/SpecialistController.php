@@ -64,7 +64,6 @@ class SpecialistController extends BaseController
             return response()->json([
                 'status'  => 400,
                 'message' => 'Không tìm thấy chuyên khoa',
-                'data' => $th->getMessage()
             ],400);
         }
     }
@@ -92,7 +91,6 @@ class SpecialistController extends BaseController
                 return response()->json([
                     'status' => 400,
                     'message' => "Không tìm thấy chuyên khoa",
-                    'data' => $th->getMessage()
                ], 400);
             }
        } 

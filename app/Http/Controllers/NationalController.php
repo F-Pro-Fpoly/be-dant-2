@@ -83,7 +83,6 @@ class NationalController extends Controller
             return response()->json([
                 'status' => 400,
                 'message' => "Không tìm thấy dữ liệu",
-                'data' => $th->getMessage()
            ], 200);
         }
     }
@@ -137,7 +136,6 @@ class NationalController extends Controller
                 return response()->json([
                     'status'  => 400,
                     'message' => 'Không tìm thấy dữ liệu',
-                    'data' => $th->getMessage()
                 ],400);
             }
             

@@ -75,7 +75,6 @@ class VaccineController extends BaseController
                 return response()->json([
                     'status' => 400,
                     'message' => "Không tìm thấy Vaccin",
-                    'data' => $th->getMessage()
                 ], 400);
             }
       }catch (Exception $th) {

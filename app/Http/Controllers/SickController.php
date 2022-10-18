@@ -68,7 +68,6 @@ class SickController extends BaseController
                 return response()->json([
                     'status' => 400,
                     'message' => "Không tìm thấy bệnh",
-                    'data' => $th->getMessage()
                ], 400);
             }
         } 
