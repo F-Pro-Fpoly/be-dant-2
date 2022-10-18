@@ -20,15 +20,7 @@ use App\Http\Model\User;
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
 
-$router->group(['prefix' => 'admin/roles'], function ($router){
-    $router->get('/test', 'RolesController@test');
-    $router->get('/list', 'RolesController@listRoles');
-    $router->get('/list/{id}', 'RolesController@listRoles_ID');
-    $router->post('/add', 'RolesController@addRoles');
-    $router->put('/update/{id}', 'RolesController@updateRoles');
-    $router->delete('/delete/{id}', 'RolesController@deleteRoles');
 
-});
 // national
 $router->group(['prefix' => 'admin/national'], function ($router){
     $router->get('/test', 'NationalController@test');

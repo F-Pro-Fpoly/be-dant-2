@@ -21,9 +21,7 @@ class UpdateUserValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            'email' => "required|min:6|email",
             'name' => "required|min:6",
-            'password' => "required|min:6",
             'role_id' => 'required',
             'active' => 'required'
         ];
@@ -32,11 +30,6 @@ class UpdateUserValidate extends ValidatorBase
     protected function messages()
     {
         return [
-            'email.required' => "Email không được bỏ trống",
-            "email.min" => "Email quá ngắn",
-            'email.email' => "Email không đúng định dạng",
-            "password.required" => "Password không được bỏ trống",
-            "password.min" => "Password quá ngắn",
             "role_id.required" => "Chọn phân quyền"
         ];
     }
