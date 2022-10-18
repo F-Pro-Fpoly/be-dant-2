@@ -7,6 +7,8 @@ use App\Http\Validators\Sick\InsertSickValidate;
 use App\Models\Sick;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SickController extends BaseController
 {
@@ -28,15 +30,11 @@ class SickController extends BaseController
                 'status' => 200,
                 'message' => "Thêm bệnh thành công"
            ], 200);
-        } catch (\Throwable $th) {
-           return response()->json(
-                [
-                    'status' => 500,
-                    'message' => $th->getMessage() 
-                ],500
-                );
         }
-
+        catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+       }
     }
     public function listSick(Request $request)
     {
@@ -54,46 +52,45 @@ class SickController extends BaseController
 
       try {
             $data = Sick::find($id);
-            $data->update([
+            if($data){
+                $data->update([
                 'code' => $input['code'],
                 'name' => $input['name'],
                 'slug' => Str::slug($input['name']),
                 'updated_by' => auth()->user()->id
-            ]);
-            return response()->json([
-                'status' => 200,
-                'message' => "Cập nhật bệnh thành công"
-           ], 200);
-      } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'status' => 500,
-                'message' => $th->getMessage() 
-            ],500
-            );
-      }
-       
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật bệnh thành công"
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Không tìm thấy bệnh",
+                    'data' => $th->getMessage()
+               ], 200);
+            }
+        } 
+        catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }    
     }
 
     public function deleteSick($id)
     {
        try {
             $data = Sick::find($id);
-            $data->deleted =1;
-            $data->deleted_by = auth()->user()->id;
-            $data->save();
             $data->delete();
             return response()->json([
                 'status' => 200,
                 'message' => "Xóa bệnh thành công"
         ], 200);
-       } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'status' => 500,
-                'message' => $th->getMessage() 
-            ],500
-            );
-       }
+       } 
+       catch (Exception $th) {
+        $errors = $th->getMessage();
+        throw new HttpException(500, $errors);
+    }
     }
 }

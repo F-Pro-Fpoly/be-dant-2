@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Transformer\Role\RoleTransformer;
 
 class RoleController extends BaseController
 {
@@ -45,7 +48,8 @@ class RoleController extends BaseController
                 'message' => "Đăng ký thành công",
                 'data' => []
             ];
-        } catch(\Throwable $th){
+        } 
+        catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Lỗi phía server",
@@ -56,19 +60,36 @@ class RoleController extends BaseController
 
     }
     // select all
+<<<<<<< HEAD:app/Http/Controllers/RoleController.php
     public function listRoleAll(){
         $roles = Role::all();
         return response()->json([
             "data" => $roles
         ], 201);
+=======
+    public function listRoles(Request $request){
+        $input = $request->all();
+        $role = new role();
+        $data = $role->searchRole($input);
+        return $this->response->paginator($data, new RoleTransformer);
+>>>>>>> a9c6d15ec28e9fac1d595c5f0554cc0edc4b812b:app/Http/Controllers/RolesController.php
     }
     //select ID
     public function listRoles_ID($id){
         $roles = Role::find($id);
-        return response()->json([
-            'message' => "Truy xuất thành công",
-            'role' => $roles, 201
-        ]);
+        if($role){
+            return response()->json([
+                'message' => "Truy xuất thành công",
+                'role' => $roles, 201
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => "Không có dữ liệu",
+                'data' => $th->getMessage(),
+                'role' => $roles, 201
+            ]);
+        }
     }
     // update
     public function updateRoles(Request $request, $id){
@@ -99,16 +120,24 @@ class RoleController extends BaseController
         }
 
         try{
-            $roles->update([
-                'code' => $request->code,
-                'name' => $request->name
-            ]);
-
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Update thành công",
-                'data' => [$request->all(), $roles]
-            ];
+            if($roles){
+                $roles->update([
+                    'code' => $request->code,
+                    'name' => $request->name
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật thành công"
+            ], 200);
+            }
+            else{
+                return response()->json([
+                    'status'  => 400,
+                    'message' => 'Không tìm thấy role',
+                    'data' => $th->getMessage(),
+                ],400);
+            }
+            
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -121,11 +150,17 @@ class RoleController extends BaseController
     }
     // delete
     public function deleteRoles($id){
-        $roles = Role::find($id);
-        $roles->delete();
-        return response()->json([
-            'message' => "Xóa thành công", 201
-        ]);
+        try {
+            $data = Role::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa National thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
     public function test(){

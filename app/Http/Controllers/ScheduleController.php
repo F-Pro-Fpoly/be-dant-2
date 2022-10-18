@@ -6,6 +6,9 @@ use App\Models\Schedule;
 use AWS\CRT\HTTP\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Transformer\Schedule\ScheduleTransformer;
 
 class ScheduleController extends Controller
 {
@@ -64,20 +67,29 @@ class ScheduleController extends Controller
         return response()->json($arrRes, 201);
     }
      // select all
-    public function listSchedule(){
-        $schedule = Schedule::all();
-        return response()->json([
-            'message' => 'Truy xuất thành công',
-            'data' => [$schedule]
-        ]);
+    public function listSchedule(Request $request){
+        $input = $request->all();
+        $schedule = new Schedule();
+        $data = $schedule->searchSchedule($input);
+        return $this->response->paginator($data, new ScheduleTransformer);
     }
      // select ID
     public function listSchedule_ID(Request $request, $id){
         $schedule = Schedule::find($id);
-        return response()->json([
-            'message' => 'Truy xuất thành công',
-            'data' => [$schedule]
-        ]);
+        if($schedule){
+            return response()->json([
+                'message' => 'Truy xuất thành công',
+                'data' => [$schedule]
+            ]);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy dữ liệu",
+                'data' => $th->getMessage()
+           ], 200);
+        }
+        
     }
     // update
     public function updateSchedule(Request $request, $id){
@@ -112,34 +124,46 @@ class ScheduleController extends Controller
         }
 
         try{
-            $schedule->update([
+            if($schedule){
+                $schedule->update([
                 'code' => $request->code,
                 'date' => $request->date,
                 'description' => $request->description,
                 'department_id' => $request->department_id,
-            ]);
+                ]);
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Update thành công",
-                'data' => [$schedule]
-            ];
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật bệnh thành công"
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Không tìm thấy bệnh",
+                    'data' => $th->getMessage()
+                ], 200);
+            }
+            
+        } 
+        catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
-        return response()->json($arrRes, 201);
     }
     public function deleteSchedule(Request $request, $id){
-        $schedule = Schedule::find($id);
-        $schedule->delete();
-        return response()->json([
-            'message' => 'Xóa thành công',
-            'data' => [$schedule]
-        ]);
+        try {
+            $data = Schedule::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }
     }
 
     

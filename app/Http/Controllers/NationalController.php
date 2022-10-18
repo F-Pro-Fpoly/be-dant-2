@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\National;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Transformer\National\NationalTransformer;
 
 class NationalController extends Controller
 {
@@ -46,11 +49,10 @@ class NationalController extends Controller
                 'slug' => $request->slug
             ]);
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Thêm thành công",
-                'data' => []
-            ];
+            return response()->json([
+                'status' => 200,
+                'message' => "Thêm national thành công"
+            ], 200);
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -62,20 +64,28 @@ class NationalController extends Controller
 
     }
     // select all
-    public function listNational(){
-        $national = National::all();
-        return response()->json([
-            'message' => "Truy xuất thành công",
-            'national' => $national, 201
-        ]);
+    public function listNational(Request $request){
+        $input = $request->all();
+        $national = new national();
+        $data = $national->searchNational($input);
+        return $this->response->paginator($data, new NationalTransformer);
     }
     //select ID
     public function listNational_ID($id){
         $national = National::find($id);
-        return response()->json([
-            'message' => "Truy xuất thành công",
-            'national' => $national, 201
-        ]);
+        if($national){
+            return response()->json([
+                'message' => 'Truy xuất thành công',
+                'data' => [$national]
+            ]);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy dữ liệu",
+                'data' => $th->getMessage()
+           ], 200);
+        }
     }
     // update
     public function updateNational(Request $request, $id){
@@ -111,17 +121,26 @@ class NationalController extends Controller
         }
 
         try{
-            $national->update([
-                'name' => $request->name,
-                'code' => $request->code,
-                'slug' => $request->slug
-            ]);
+            if($national){
+                $national->update([
+                    'name' => $request->name,
+                    'code' => $request->code,
+                    'slug' => $request->slug
+                ]);
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Update thành công",
-                'data' => [$request->all(), $national]
-            ];
+                return response()->json([
+                    'status'  => 200,
+                    'message' => 'Cập nhật thành công',
+                ],400);
+            }
+            else{
+                return response()->json([
+                    'status'  => 400,
+                    'message' => 'Không tìm thấy dữ liệu',
+                    'data' => $th->getMessage()
+                ],400);
+            }
+            
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -130,15 +149,20 @@ class NationalController extends Controller
             ];
         }
         return response()->json($arrRes, 201);
-
     }
     // delete
     public function deleteNational($id){
-        $national = National::find($id);
-        $national->delete();
-        return response()->json([
-            'message' => "Xóa thành công", 201
-        ]);
+        try {
+            $data = National::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa National thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
     public function test(){

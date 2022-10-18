@@ -63,7 +63,8 @@ class SpecialistController extends BaseController
         else{
             return response()->json([
                 'status'  => 400,
-                'message' => 'Không tìm thấy chuyên khoa'
+                'message' => 'Không tìm thấy chuyên khoa',
+                'data' => $th->getMessage()
             ],400);
         }
     }
@@ -90,39 +91,28 @@ class SpecialistController extends BaseController
             else{
                 return response()->json([
                     'status' => 400,
-                    'message' => "Không tìm thấy chuyên khoa"
+                    'message' => "Không tìm thấy chuyên khoa",
+                    'data' => $th->getMessage()
                ], 200);
             }
-       } catch (\Throwable $th) {
-         return response()->json(
-             [
-                 'status' => 500,
-                 'message' => $th->getMessage() 
-             ],500
-             );
-       }
+       } 
+       catch (Exception $th) {
+        throw new HttpException(500, $th->getMessage());
+    }
     }
     // delete
     public function deleteSpecialist($id){
         try {
             $data = Specialist::find($id);
-            $data->deleted = 1;
-            $data->deleted_by = auth()->user()->id;
-            $data->save();
             $data->delete();
             return response()->json([
                 'status' => 200,
                 'message' => "Xóa chuyên khoa thành công"
         ], 200);
-       } catch (\Throwable $th) {
-        return response()->json(
-            [
-                'status' => 500,
-                'message' => $th->getMessage() 
-            ],500
-            );
-       }
-
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
 }

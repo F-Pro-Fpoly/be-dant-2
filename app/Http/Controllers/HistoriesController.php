@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Histories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Transformer\Histories\HistoriesTransformer;
 
 class HistoriesController extends Controller
 {
@@ -39,7 +42,7 @@ class HistoriesController extends Controller
         }
 
         try{
-            $schedule = Histories::create([
+            $histories = Histories::create([
                 'file' => $request->file,
                 'date_examination' => $request->date_examination,
                 'description' => $request->description,
@@ -47,11 +50,12 @@ class HistoriesController extends Controller
                 'patient_id' => $request->patient_id,
             ]);
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Thêm thành công",
-                'data' => [$schedule]
-            ];
+            return response()->json([
+                'status' => 200,
+                'message' => "Thêm histories thành công",
+                'data' => [$histories]
+            ], 200);
+                
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -62,20 +66,27 @@ class HistoriesController extends Controller
         return response()->json($arrRes, 201);
     }
      // select all
-    public function listHistories(){
-        $histories = Histories::all();
-        return response()->json([
-            'message' => 'Truy xuất thành công',
-            'data' => [$histories]
-        ]);
+    public function listHistories(Request $request){
+        $input = $request->all();
+        $histories = new histories();
+        $data = $histories->searchHistories($input);
+        return $this->response->paginator($data, new HistoriesTransformer);
     }
      // select ID
     public function listHistories_ID(Request $request, $id){
         $histories = Histories::find($id);
-        return response()->json([
-            'message' => 'Truy xuất thành công',
-            'data' => [$histories]
-        ]);
+        if($histories){
+            return response()->json([
+                'message' => 'Truy xuất thành công',
+                'data' => [$histories]
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'message' => 'Không tìm thấy dữ liệu',
+                'data' => [$histories]
+            ], 500);
+        }
     }
     // update
     public function updateHistories(Request $request, $id){
@@ -109,19 +120,26 @@ class HistoriesController extends Controller
         }
 
         try{
-            $histories->update([
-                'file' => $request->file,
-                'date_examination' => $request->date_examination,
-                'description' => $request->description,
-                'doctor_id' => $request->doctor_id,
-                'patient_id' => $request->patient_id,
-            ]);
-
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Update thành công",
-                'data' => [$histories]
-            ];
+            if($histories){
+                $histories->update([
+                    'file' => $request->file,
+                    'date_examination' => $request->date_examination,
+                    'description' => $request->description,
+                    'doctor_id' => $request->doctor_id,
+                    'patient_id' => $request->patient_id,
+                ]);
+                return response()->json([
+                    'message' => 'Cập nhật thành công',
+                    'data' => [$histories]
+                ], 500);
+            }
+            else{
+                return response()->json([
+                    'message' => 'Không tìm thấy dữ liệu',
+                    'data' => $th->getMessage()
+                ], 500);
+            }
+            
         } catch(\Throwable $th){
             $arrRes = [
                 'errCode' => 0,
@@ -132,11 +150,16 @@ class HistoriesController extends Controller
         return response()->json($arrRes, 201);
     }
     public function deleteHistories(Request $request, $id){
-        $histories = Histories::find($id);
-        $histories->delete();
-        return response()->json([
-            'message' => 'Xóa thành công',
-            'data' => [$histories]
-        ]);
+        try {
+            $data = Histories::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa histories thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 }
