@@ -34,21 +34,24 @@ class SpecialistController extends BaseController
                     'message' => "Thêm chuyên khoa thành công",
             ], 200);
 
-        } catch(\Throwable $th){
-            return response()->json(
-                [
-                    'status' => 500,
-                    'message' => $th->getMessage() ,
-                    'line' => $th->getLine()
-                ],500
-            );
+        } catch(Exception $th){
+            throw new HttpException(500, $th->getMessage());
         }
 
     }
     // select all
     public function listSpecialist(Request $request){
         $input = $request->all();
+        
         $Specialist = new Specialist();
+        if(!empty($input['get'])){
+            if($input['get'] == 'all'){
+                $Specialist = $Specialist->all();
+                return response()->json([
+                    'data' => $Specialist
+                ], 200);
+            }
+        }
         $data = $Specialist->searchSpecialist($input);
         return $this->response->paginator($data, new SpecialistTransformer);            
     }

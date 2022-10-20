@@ -54,16 +54,10 @@ class DepartmentController extends BaseController
             return response()->json([
                 'status' => 200,
                 'message' => 'Thêm thành công',
-                'data' => [$department]
             ], 200);
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+        } catch(Exception $th){
+            throw new HttpException(500, $th->getMessage());
         }
-        return response()->json($arrRes, 201);
 
     }
     // select all
@@ -77,6 +71,7 @@ class DepartmentController extends BaseController
     public function listDepartment_ID($id){
         try {
             $department = Department::findOrFail($id);
+            
             return $this->response->item($department, new departmentTransformer());
         } catch (\Exception $th) {
             $errors = $th->getMessage();
