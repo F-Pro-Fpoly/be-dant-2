@@ -101,4 +101,18 @@ class PageController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
+    // list page all soft by sort
+    public function listPageNormal(){
+        try {
+            $page = page::orderBy('sort', 'asc')->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $page,
+            ], 200);
+        } 
+        catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+        
+    }
 }

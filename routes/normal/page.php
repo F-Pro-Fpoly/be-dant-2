@@ -5,6 +5,7 @@
         $api->post('/add', 'PageController@addPage');
         $api->put('/edit/{id:[0-9]+}', 'PageController@updatePage');
         $api->delete('/delete/{id:[0-9]+}', 'PageController@deletePage');
+        $api->get('/listNormal', 'PageController@listPageNormal');
     });
 
 ?>
