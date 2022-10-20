@@ -7,15 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends BaseModel
 {
 
-    protected $fillable = ['name', 'code', 'specialist_id', 'description'];
+    protected $fillable = [
+        'name', 'code', 'specialist_id', 'description', 'active',
+        'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_at',
+        'deleted_by', 'deleted'
+    ];
 
     public function booking(){
         return $this->hasMany(booking::class, 'department_id');
     }
 
-    public function Specialist(){
+    public function specialist(){
         return $this->belongsTo(Specialist::class);
     }
+
+    public function user() {
+        return $this->hasOne(User::class, 'deleted_by', 'id');
+    }
+
 
     public function searchDepartment($input = []){
         $dataInput =[];
