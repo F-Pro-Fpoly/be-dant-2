@@ -48,7 +48,7 @@ class RoleController extends BaseController
             }
         }
         $data = $role->searchRole($input);
-        return $this->response()->paginator($data, new RoleTransformer);
+        return $this->response->paginator($data, new RoleTransformer);
     }
     //select ID
     public function listRoles_ID(Request $request, $id){
@@ -56,7 +56,7 @@ class RoleController extends BaseController
         $role = Role::find($id);
         if($role){
             $data = $role->searchRole($input);
-            return $this->response()->paginator($data, new RoleTransformer);
+            return $this->response->paginator($data, new RoleTransformer);
         }
         else{
             return response()->json([

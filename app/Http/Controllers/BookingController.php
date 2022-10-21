@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Transformer\Booking\BookingTransformer;
 use App\Http\Validators\Booking\InsertBookingValidate;
-use App\Http\Validators\Sick\InsertSickValidate;
+use App\Http\Validators\Booking\UpdateBookingValidate;
 use App\Models\Booking;
 use Exception;
 use Illuminate\Http\Request;
@@ -50,20 +50,18 @@ class BookingController extends BaseController
         return $this->response->paginator($data, new BookingTransformer);
     }
 
-    public function updateSick(Request $request, $id){
+    public function updateBooking(Request $request, $id){
        $input = $request->all();
-       (new InsertBookingValidate($input));
+       (new UpdateBookingValidate($input));
 
         try {
             $data = Booking::find($id);
             if($data){
                 $data->update([
                     'code' => $input['code'] ?? $data->code,
-                    "department_id" => $input['department_id'] ??  $data->department_id, 
-                    'schedule_id' => $input['schedule_id'] ?? $data->schedule_id,
-                    'timeSlot_id' => $input['timeSlot_id'] ?? $data->timeSlot_id,
-                    'timeSlot_id' => $input['timeSlot_id'] ?? $data->timeSlot_id,
-                    // "user_id" => auth()->user()->id,
+                    // "department_id" => $input['department_id'] ??  $data->department_id, 
+                    // 'schedule_id' => $input['schedule_id'] ?? $data->schedule_id,
+                    // 'timeSlot_id' => $input['timeSlot_id'] ?? $data->timeSlot_id,
                     'status_id' => $input['status_id'] ?? $data->status_id,
                     'updated_by' => auth()->user()->id
                 ]);
@@ -93,9 +91,9 @@ class BookingController extends BaseController
                 'status' => 200,
                 'message' => "Xóa bệnh thành công"
             ], 200);
-       }
-       catch (Exception $th) {
-        throw new HttpException(500, $th->getMessage());
-    }
+        }
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 }
