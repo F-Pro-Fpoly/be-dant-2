@@ -123,7 +123,6 @@ class SpecialistController extends BaseController
     public function listSpecialistNormal(Request $request){
         try {
             $Specialist = Specialist::model()->where('status',1)->orderBy('slug','ASC')->get();
-            // dd($Specialist);
             return response()->json([
                 'status' => 200,
                 'data' => $Specialist,
