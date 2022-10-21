@@ -24,7 +24,7 @@ class PageController extends BaseController
         try{
             page::create([
                 'name' => $input['name'],
-                'slug' => Str::slug($input['name']),
+                'slug' => $input['slug'],
                 'font' => $input['font'],
                 'status' => $input['status'],
                 'sort' => $input['sort'],
@@ -51,7 +51,7 @@ class PageController extends BaseController
     public function listPage(Request $request){
         $input = $request->all();
         $page = new page();
-        $data = $page->searchPage($input);
+        $data = $page->searchPage($input); 
         return $this->response->paginator($data, new PageTransformer);            
     }
      // select one
@@ -70,10 +70,10 @@ class PageController extends BaseController
         $input = $request->all();
         (new PageUpdatePageValidate($input));
        try {
-            $data = page::findOrFail($id);
+            $data = Page::findOrFail($id);
                 $data->update([
                     'name'  => $input['name'] ??  $data->name,
-                    'slug'  => Str::slug($input['name']),
+                    'slug'  => $input['name'],
                     "font"  => Arr::get($input, 'font', $data->font),
                     "sort"  =>  Arr::get($input, 'sort', $data->sort), 
                     'updated_by' => auth()->user()->id
@@ -90,7 +90,7 @@ class PageController extends BaseController
     // delete
     public function deletePage($id){
         try {
-            $data = page::findOrFail($id);
+            $data = Page::findOrFail($id);
             $data->delete();
             return response()->json([
                 'status' => 200,
@@ -103,8 +103,8 @@ class PageController extends BaseController
     }
     // list page all soft by sort
     public function listPageNormal(){
-        try {
-            $page = page::orderBy('sort', 'asc')->get();
+        try {       
+            $page = Page::model()->where('status',1)->orderBy('sort','ASC')->get();
             return response()->json([
                 'status' => 200,
                 'data' => $page,
