@@ -17,6 +17,7 @@ class PageTransformer extends TransformerAbstract
             'name' => $page->name,
             'slug' => $page->slug,
             'font' => $page->font,
+            'status' => $page->status,
             'sort' => $page->sort,
             'created_at' => date_format($page->created_at, "Y/m/d H:i:s"),
         ];
