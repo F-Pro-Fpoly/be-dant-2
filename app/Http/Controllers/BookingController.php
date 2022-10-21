@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Transformer\Booking\BookingTransformer;
 use App\Http\Validators\Booking\InsertBookingValidate;
+use App\Http\Validators\Sick\InsertSickValidate;
 use App\Models\Booking;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BookingController extends BaseController
 {
@@ -40,61 +43,59 @@ class BookingController extends BaseController
         }
 
     }
-    public function listBooking(Request $request)
-    {
+    public function listBooking(Request $request){
         $input = $request->all();
         $booking = new Booking();
         $data = $booking->searchBooking($input);
         return $this->response->paginator($data, new BookingTransformer);
     }
 
-    // public function updateSick(Request $request, $id)
-    // {
-    //    $input = $request->all();
-    //    (new InsertSickValidate($input));
+    public function updateSick(Request $request, $id){
+       $input = $request->all();
+       (new InsertBookingValidate($input));
 
-    //   try {
-    //         $data = Sick::find($id);
-    //         $data->update([
-    //             'code' => $input['code'],
-    //             'name' => $input['name'],
-    //             'slug' => Str::slug($input['name']),
-    //             'updated_by' => auth()->user()->id
-    //         ]);
-    //         return response()->json([
-    //             'status' => 200,
-    //             'message' => "Cập nhật bệnh thành công"
-    //        ], 200);
-    //   } catch (\Throwable $th) {
-    //     return response()->json(
-    //         [
-    //             'status' => 500,
-    //             'message' => $th->getMessage() 
-    //         ],500
-    //         );
-    //   }
-       
-    // }
+        try {
+            $data = Booking::find($id);
+            if($data){
+                $data->update([
+                    'code' => $input['code'] ?? $data->code,
+                    "department_id" => $input['department_id'] ??  $data->department_id, 
+                    'schedule_id' => $input['schedule_id'] ?? $data->schedule_id,
+                    'timeSlot_id' => $input['timeSlot_id'] ?? $data->timeSlot_id,
+                    'timeSlot_id' => $input['timeSlot_id'] ?? $data->timeSlot_id,
+                    // "user_id" => auth()->user()->id,
+                    'status_id' => $input['status_id'] ?? $data->status_id,
+                    'updated_by' => auth()->user()->id
+                ]);
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Cập nhật đặt lịch thành công"
+               ], 200);
+            }
+            else{
+                return response()->json([
+                    'status'  => 400,
+                    'message' => 'Không tìm thấy lịch đặt',
+                ],400);
+            }
+        } 
+        catch (Exception $th){
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
 
-    // public function deleteSick($id)
-    // {
-    //    try {
-    //         $data = Sick::find($id);
-    //         $data->deleted =1;
-    //         $data->deleted_by = auth()->user()->id;
-    //         $data->save();
-    //         $data->delete();
-    //         return response()->json([
-    //             'status' => 200,
-    //             'message' => "Xóa bệnh thành công"
-    //     ], 200);
-    //    } catch (\Throwable $th) {
-    //     return response()->json(
-    //         [
-    //             'status' => 500,
-    //             'message' => $th->getMessage() 
-    //         ],500
-    //         );
-    //    }
-    // }
+    // delete
+    public function deleteBooking($id){
+        try {
+            $data = Booking::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa bệnh thành công"
+            ], 200);
+       }
+       catch (Exception $th) {
+        throw new HttpException(500, $th->getMessage());
+    }
+    }
 }

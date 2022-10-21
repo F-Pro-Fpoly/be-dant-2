@@ -2,130 +2,97 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\Role\RoleTransformer;
+use App\Http\Validators\Roles\InsertRolesValidate;
+use App\Http\Validators\Roles\UpdateRolesValidate;
 use App\Models\Role;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoleController extends BaseController
 {
        // add
     public function addRoles(Request $request){
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:5|max:255',
-            'code' => 'required|min:5|max:255|unique:roles'
-        ],[
-            //name
-            'name.required' => 'Tên không được bỏ trống', 
-            'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
-            'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
-            //code
-            'code.required' => 'Code không được bỏ trống', 
-            'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
-            'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
-            'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)'
-        ]);
-        
-        if($validator->fails()){
-            $arrRes = [
-                'errCode' => 1,
-                'message' => "Lỗi validate dữ liệu",
-                'data' => $validator->errors()
-            ];
-            return response()->json($arrRes, 402);
-        }
+        $input = $request->all();
+        (new InsertRolesValidate($input));
 
         try{
-            $roles = Role::create([
-                'name' => $request->name,
-                'code' => $request->code,
+            Role::create([
+                'name' => $input['name'],
+                'code' => $input['code'],
+                'created_by' => auth()->user()->id
             ]);
 
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Đăng ký thành công",
-                'data' => []
-            ];
-        } catch(\Throwable $th){
-            $arrRes = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
-        }
-        return response()->json($arrRes, 201);
-
-    }
-    // select all
-    public function listRoleAll(){
-        $roles = Role::all();
-        return response()->json([
-            "data" => $roles
-        ], 201);
-    }
-    //select ID
-    public function listRoles_ID($id){
-        $roles = Role::find($id);
-        if($roles){
             return response()->json([
                 'status' => 200,
-                'message' => "Truy xuất thành công",
-                'role' => $roles, 201
-            ]);
-        }else{
-            return response()->json([
-                'status' => 400,
-                'message' => "Không tìm thấy dữ liệu",
-                'role' => $roles, 400
-            ]);
+                'message' => 'Thêm Roles thành công'
+            ],200);
+        } catch(Exception $th){
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
     }
+    // select all
+    public function listRoleAll(Request $request){
+        $input = $request->all();
+
+        $role = new Role();
+        if(!empty($input['get'])){
+            if($input['get'] == 'all'){
+                $role = $role->all();
+                return response()->json([
+                    'data' => $role
+                ],200);
+            }
+        }
+        $data = $role->searchRole($input);
+        return $this->response()->paginator($data, new RoleTransformer);
+    }
+    //select ID
+    public function listRoles_ID(Request $request, $id){
+        $input = $request->all();
+        $role = Role::find($id);
+        if($role){
+            $data = $role->searchRole($input);
+            return $this->response()->paginator($data, new RoleTransformer);
+        }
+        else{
+            return response()->json([
+                'status'  => 400,
+                'message' => 'Không tìm thấy Role',
+            ],400);
+        }
+        
+        }
     // update
     public function updateRoles(Request $request, $id){
-        $roles = Role::find($id);
+        $input = $request->all();
+        (new UpdateRolesValidate($input));
         
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|min:5|max:255',
-            'code' => 'required|min:5|max:255|unique:roles'
-        ],[
-            //name
-            'name.required' => 'Tên không được bỏ trống', 
-            'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
-            'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
-           //code
-           'code.required' => 'Code không được bỏ trống', 
-           'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
-           'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
-           'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)'
-        ]);
-        
-        if($validator->fails()){
-            $arrRes = [
-                'errCode' => 1,
-                'message' => "Lỗi validate dữ liệu",
-                'data' => $validator->errors()
-            ];
-            return response()->json($arrRes, 402);
-        }
-
         try{
-            if($roles){
-                $roles->update([
-                    'code' => $request->code,
-                    'name' => $request->name
+            $data = Role::find($id);
+            if($data){
+                $data->update([
+                    'code' => $input['code'] ?? $data->code,
+                    'name' => $input['name'] ?? $data->name,
+                    'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
-                    'status' => 200,
-                    'message' => "Cập nhật thành công"
-            ], 200);
+                    'status'  => 200,
+                    'message' => 'Cập nhật Role thành công',
+                ],200);
             }
             else{
                 return response()->json([
-                    'status' => 400,
-                    'message' => "không tìm thấy dữ liệu"
-            ], 400);
+                    'status'  => 400,
+                    'message' => 'Không tìm thấy Role',
+                ],400);
             }
-        } catch(Exception $th){
-            throw new HttpException(500,$th->getMessage());
+        }
+        catch (Exception $th){
+            throw new HttpException(500, $th->getMessage());
         }
     }
     // delete
@@ -141,10 +108,6 @@ class RoleController extends BaseController
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
-    }
-
-    public function test(){
-        return "helolo";
     }
 }
     
