@@ -24,6 +24,7 @@ class SpecialistController extends BaseController
             Specialist::create([
                 'code' => $input['code'],
                 'name' => $input['name'],
+                'status' => $input['status'],
                 'slug' => Str::slug($input['name']),
                 'description' => $input['description'],
                 "created_by" => auth()->user()->id
@@ -84,6 +85,7 @@ class SpecialistController extends BaseController
                     'name' => $input['name'] ? $input['name'] : $data->name,
                     'slug' => Str::slug($input['name']),
                     'description' => $input['description'] ?? $data->description,
+                    'status' => $input['status'] ?? $data->status,
                     'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
@@ -113,6 +115,20 @@ class SpecialistController extends BaseController
         ], 200);
         } 
         catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    // không cần đăng nhập
+    public function listSpecialistNormal(Request $request){
+        try {
+            $Specialist = Specialist::model()->where('status',1)->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $Specialist,
+            ], 200);
+        } 
+        catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
     }
