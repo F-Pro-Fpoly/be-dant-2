@@ -24,6 +24,7 @@ class SpecialistController extends BaseController
             Specialist::create([
                 'code' => $input['code'],
                 'name' => $input['name'],
+                'status' => 1,
                 'slug' => Str::slug($input['name']),
                 'description' => $input['description'],
                 "created_by" => auth()->user()->id
@@ -84,6 +85,7 @@ class SpecialistController extends BaseController
                     'name' => $input['name'] ? $input['name'] : $data->name,
                     'slug' => Str::slug($input['name']),
                     'description' => $input['description'] ?? $data->description,
+                    'status' => $input['status'] ?? $data->status,
                     'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
@@ -119,12 +121,9 @@ class SpecialistController extends BaseController
 
     // không cần đăng nhập
     public function listSpecialistNormal(Request $request){
-        // $input = $request->all();
-        // $Specialist = new Specialist();
-        // $data = $Specialist->searchSpecialist($input);
-        // return $this->response->paginator($data, new SpecialistTransformer); 
         try {
-            $Specialist = Specialist::all();
+            $Specialist = Specialist::model()->where('status',1)->orderBy('slug','ASC')->get();
+            // dd($Specialist);
             return response()->json([
                 'status' => 200,
                 'data' => $Specialist,

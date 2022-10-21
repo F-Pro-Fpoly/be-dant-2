@@ -13,6 +13,7 @@ class Specialist extends BaseModel
         'name',
         'slug',
         'description',
+        'status',
         'created_at',
         'created_by',
         'updated_at',
