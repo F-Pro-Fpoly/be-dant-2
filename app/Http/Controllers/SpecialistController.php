@@ -117,4 +117,22 @@ class SpecialistController extends BaseController
         }
     }
 
+    // không cần đăng nhập
+    public function listSpecialistNormal(Request $request){
+        // $input = $request->all();
+        // $Specialist = new Specialist();
+        // $data = $Specialist->searchSpecialist($input);
+        // return $this->response->paginator($data, new SpecialistTransformer); 
+        try {
+            $Specialist = Specialist::all();
+            return response()->json([
+                'status' => 200,
+                'data' => $Specialist,
+            ], 200);
+        } 
+        catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
 }
