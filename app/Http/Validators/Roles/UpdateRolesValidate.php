@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Validators\Booking;
+namespace App\Http\Validators\Roles;
 
 use App\Http\Validators\ValidatorBase;
 
 
-class InsertBookingValidate extends ValidatorBase
+class UpdateRolesValidate extends ValidatorBase
 {
 
     public function __construct($input)
@@ -21,17 +21,21 @@ class InsertBookingValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            "code" => "required|min:5|max:255|unique:bookings",
+            'name' => 'min:5|max:255',
+            'code' => 'min:5|max:255|unique:roles'
         ];
     }
 
     protected function messages()
     {
         return [
-            'code.required' => 'Không được bỏ trống code',
+            //name
             'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
             'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
-            'code.unique'   => 'Trùng mã code',
+            //code
+            'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
+            'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
+            'code.unique' => 'Code đã tồn tại!(Sử dụng một Code khác)'
         ];
     }
 }
