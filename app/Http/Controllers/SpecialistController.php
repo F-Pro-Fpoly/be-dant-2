@@ -121,15 +121,14 @@ class SpecialistController extends BaseController
 
     // không cần đăng nhập
     public function listSpecialistNormal(Request $request){
+        $input = $request->all();
         try {
-            $Specialist = Specialist::model()->where('status',1)->get();
-            return response()->json([
-                'status' => 200,
-                'data' => $Specialist,
-            ], 200);
+            $data = (new Specialist())->searchSpecialist($input);
+            return $this->response->paginator($data, new SpecialistTransformer);
         } 
         catch (\Exception $th) {
-            throw new HttpException(500, $th->getMessage());
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
     }
 
