@@ -8,6 +8,7 @@ use App\Http\Validators\Specialist\UpdateSpecialistValidate;
 use App\Models\Specialist;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -121,15 +122,25 @@ class SpecialistController extends BaseController
 
     // không cần đăng nhập
     public function listSpecialistNormal(Request $request){
-        $input = $request->all();
+        // $input = $request->all();
+        // try {
+        //     $data = (new Specialist())->searchSpecialist($input);
+        //     return $this->response->paginator($data, new SpecialistTransformer);
+        // } 
+        // catch (\Exception $th) {
+        //     $errors = $th->getMessage();
+        //     throw new HttpException(500, $errors);
+        // }
         try {
-            $data = (new Specialist())->searchSpecialist($input);
-            return $this->response->paginator($data, new SpecialistTransformer);
-        } 
-        catch (\Exception $th) {
+            $data = DB::select('SELECT sp.id, sp.code, sp.name, sp.slug, sp.thumbnail_id, sp.description, fi.id, fi.url as thumbnail_name
+            FROM specialists sp , files fi 
+            WHERE  sp.thumbnail_id = fi.id
+            AND sp.status = 1');
+            return $this->response->item($data, new SpecialistTransformer);
+        } catch (Exception $th) {
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
-        }
+       }
     }
 
 }

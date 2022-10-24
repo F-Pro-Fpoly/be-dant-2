@@ -43,8 +43,8 @@ class File extends BaseModel
         return $data;
     }
 
-    public function specialist(){
-        return $this->hasOne(Specialist::class, 'thumbnail_id');
-    }
+    // public function specialist(){
+    //     return $this->hasOne(Specialist::class, 'thumbnail_id');
+    // }
 
 }

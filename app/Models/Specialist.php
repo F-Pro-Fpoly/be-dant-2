@@ -26,9 +26,9 @@ class Specialist extends BaseModel
         return $this->hasOne(Department::class);
     }
 
-    public function file(){
-        return $this->belongsTo(File::class, 'thumbnail_id');
-    }
+    // public function file(){
+    //     return $this->belongsTo(File::class, 'thumbnail_id');
+    // }
     public function searchSpecialist($input = []){
         $dataInput =[];
         if(!empty($input['name'])){
