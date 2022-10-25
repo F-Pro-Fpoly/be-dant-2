@@ -136,7 +136,10 @@ class SpecialistController extends BaseController
             FROM specialists sp , files fi 
             WHERE  sp.thumbnail_id = fi.id
             AND sp.status = 1');
-            return $this->response->item($data, new SpecialistTransformer);
+            return response()->json([
+                'status' => 200,
+                'message' => $data
+        ], 200);
         } catch (Exception $th) {
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
