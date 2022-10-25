@@ -120,7 +120,7 @@ class SpecialistController extends BaseController
         }
     }
 
-    // không cần đăng nhập
+    // không cần đăng nhập và không paginator
     public function listSpecialistNormal(Request $request){
         // $input = $request->all();
         // try {
@@ -136,7 +136,6 @@ class SpecialistController extends BaseController
             FROM specialists sp , files fi 
             WHERE  sp.thumbnail_id = fi.id
             AND sp.status = 1');
-            dd($data);
             return response()->json([
                 'status' => 200,
                 'message' => $data
