@@ -9,11 +9,13 @@ class Specialist extends BaseModel
 {
     protected $table = 'specialists';
     protected $fillable = [
+        'id',
         'code',
         'name',
         'slug',
         'description',
         'status',
+        'thumbnail_id',
         'created_at',
         'created_by',
         'updated_at',
@@ -24,6 +26,10 @@ class Specialist extends BaseModel
     public function department(){
         return $this->hasOne(Department::class);
     }
+
+    // public function file(){
+    //     return $this->belongsTo(File::class, 'thumbnail_id');
+    // }
     public function searchSpecialist($input = []){
         $dataInput =[];
         if(!empty($input['name'])){
