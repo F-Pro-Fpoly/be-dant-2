@@ -138,7 +138,7 @@ class SpecialistController extends BaseController
             AND sp.status = 1');
             return response()->json([
                 'status' => 200,
-                'message' => $data
+                'data' => $data
         ], 200);
         } catch (Exception $th) {
             $errors = $th->getMessage();
