@@ -9,6 +9,7 @@ class Specialist extends BaseModel
 {
     protected $table = 'specialists';
     protected $fillable = [
+        'id',
         'code',
         'name',
         'slug',

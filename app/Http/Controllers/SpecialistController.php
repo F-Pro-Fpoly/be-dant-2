@@ -132,10 +132,11 @@ class SpecialistController extends BaseController
         //     throw new HttpException(500, $errors);
         // }
         try {
-            $data = DB::select('SELECT sp.id, sp.code, sp.name, sp.slug, sp.thumbnail_id, sp.description, fi.id, fi.url as thumbnail_name
+            $data = DB::select('SELECT sp.id, sp.code, sp.name, sp.slug, sp.description, sp.thumbnail_id, fi.url as thumbnail_name
             FROM specialists sp , files fi 
             WHERE  sp.thumbnail_id = fi.id
             AND sp.status = 1');
+            dd($data);
             return response()->json([
                 'status' => 200,
                 'message' => $data
