@@ -50,9 +50,13 @@ class PageController extends BaseController
     // select all
     public function listPage(Request $request){
         $input = $request->all();
-        $page = new page();
-        $data = $page->searchPage($input); 
-        return $this->response->paginator($data, new PageTransformer);            
+        try {
+            $page = new page();
+            $data = $page->searchPage($input); 
+            return $this->response->paginator($data, new PageTransformer);            
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage()) ;
+        }
     }
      // select one
     public function pageDetail($id){

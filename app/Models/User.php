@@ -76,10 +76,20 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'name' , "like", "%".$input['name']."%"
             ];
         }
+        if(!empty($input['username'])) {
+            $dataInput[] = [
+                'username' , "like", "%".$input['username']."%"
+            ];
+        }
         if(!empty($input['role_code'])) {
             $role_id = Role::where("code", $input['role_code'])->value('id');
             $dataInput[] = [
                 'role_id', '=', $role_id
+            ];
+        }
+        if(!empty($input['department_id'])) {
+            $dataInput[] = [
+                'department_id', '=', null
             ];
         }
         $data = $this->search($dataInput, [], 5);
@@ -110,6 +120,14 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         if(!empty($input['role_id'])) {
             $this->role_id = $input['role_id'];
         }
+
+        if(!empty($input['department_id'])) {
+            $this->department_id = $input['department_id'];
+            if($input['department_id'] == "null") {
+                $this->department_id = null;
+            }
+        }
+        
 
         if(!empty($input['active'])) {
             $this->active = $input['active'];
