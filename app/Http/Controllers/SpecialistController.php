@@ -8,6 +8,7 @@ use App\Http\Validators\Specialist\UpdateSpecialistValidate;
 use App\Models\Specialist;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -24,6 +25,7 @@ class SpecialistController extends BaseController
             Specialist::create([
                 'code' => $input['code'],
                 'name' => $input['name'],
+                'status' => $input['status'],
                 'slug' => Str::slug($input['name']),
                 'description' => $input['description'],
                 "created_by" => auth()->user()->id
@@ -84,6 +86,7 @@ class SpecialistController extends BaseController
                     'name' => $input['name'] ? $input['name'] : $data->name,
                     'slug' => Str::slug($input['name']),
                     'description' => $input['description'] ?? $data->description,
+                    'status' => $input['status'] ?? $data->status,
                     'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
@@ -114,6 +117,20 @@ class SpecialistController extends BaseController
         } 
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    // không cần đăng nhập và không paginator
+    public function listSpecialistNormal(Request $request){
+        $input = $request->all();
+        try {
+            $specialist = new Specialist;
+            $data = $specialist->searchSpecialist($input);
+            return $this->response->collection($data, new SpecialistTransformer);
+        } 
+        catch (\Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
     }
 
