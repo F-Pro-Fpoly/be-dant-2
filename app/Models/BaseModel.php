@@ -11,7 +11,7 @@ class BaseModel extends Model
     use SoftDeletes ;
 
 
-    protected function search($input, $with = [], $limit = null) {
+    protected function search($input, $with = [], $limit = null, $sort = null) {
         $query = $this->make();
         if(empty($input)){
             if(!empty($limit)){
@@ -28,7 +28,11 @@ class BaseModel extends Model
             }
         });
 
-        // dd($query->toSql());
+        if(!empty($sort)){
+            // ['name', 'desc']
+            // dd($query->toSql());
+             $query->orderBy($sort[0], $sort[1]);
+        }
 
         if($limit == null){
             return $query->get();
