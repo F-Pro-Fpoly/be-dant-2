@@ -91,5 +91,24 @@ class UserController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
+    public function updateByName(Request $request) {
+        $input = $request->all();
+        // (new UpdateUserValidate($input));
+        if(!empty($input['name'])) {
+            $id = User::where("name", "like", "%{$input['name']}%")->value('id');
+        }
+        try {
+            // dd($id);
+            $user = User::findOrFail($id);
 
+            $user->updateUser($input);
+
+            return response()->json([
+                'message' => "Cập nhập người dùng thành công",
+                'status' => 201
+            ], 201);
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
 }

@@ -82,6 +82,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'role_id', '=', $role_id
             ];
         }
+        if(!empty($input['department_id'])) {
+            $dataInput[] = [
+                'department_id', '=', null
+            ];
+        }
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
@@ -110,6 +115,14 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         if(!empty($input['role_id'])) {
             $this->role_id = $input['role_id'];
         }
+
+        if(!empty($input['department_id'])) {
+            $this->department_id = $input['department_id'];
+            if($input['department_id'] == "null") {
+                $this->department_id = null;
+            }
+        }
+        
 
         if(!empty($input['active'])) {
             $this->active = $input['active'];

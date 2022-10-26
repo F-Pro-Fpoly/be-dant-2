@@ -5,6 +5,7 @@ $api -> group(['prefix' => 'user', 'middleware' => 'role:admin'], function ($api
     $api->delete('/delete/{id}', 'UserController@deleteUser');
     $api->get('/{id}', 'UserController@getUser');
     $api->put('/update/{id:[0-9]+}', 'UserController@update');
+    $api->put('/updateByName', 'UserController@updateByName');
 });
 
 
