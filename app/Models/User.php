@@ -76,6 +76,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'name' , "like", "%".$input['name']."%"
             ];
         }
+        if(!empty($input['role_code'])) {
+            $role_id = Role::where("code", $input['role_code'])->value('id');
+            $dataInput[] = [
+                'role_id', '=', $role_id
+            ];
+        }
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
