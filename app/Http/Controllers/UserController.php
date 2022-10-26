@@ -94,8 +94,8 @@ class UserController extends BaseController
     public function updateByName(Request $request) {
         $input = $request->all();
         // (new UpdateUserValidate($input));
-        if(!empty($input['name'])) {
-            $id = User::where("name", "like", "%{$input['name']}%")->value('id');
+        if(!empty($input['username'])) {
+            $id = User::where("username", "like", "%{$input['username']}%")->value('id');
         }
         try {
             // dd($id);
