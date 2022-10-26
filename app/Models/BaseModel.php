@@ -11,7 +11,7 @@ class BaseModel extends Model
     use SoftDeletes ;
 
 
-    protected function search($input, $with = [], $limit) {
+    protected function search($input, $with = [], $limit = null) {
         $query = $this->make();
         if(empty($input)){
             if(!empty($limit)){
@@ -30,7 +30,9 @@ class BaseModel extends Model
 
         // dd($query->toSql());
 
-
+        if($limit == null){
+            return $query->get();
+        }
         return $query->paginate($limit);
     }
 
