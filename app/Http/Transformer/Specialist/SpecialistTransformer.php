@@ -17,6 +17,7 @@ class SpecialistTransformer extends TransformerAbstract
             'code' => $spct->code,
             'name' => $spct->name,
             'slug' => $spct->slug,
+            'is_feature' => $spct->is_feature,
             'status' => $spct->status,
             'thumbnail_id' => $spct->thumbnail_id ?? null,
             'thumbnail_name' => $spct->file->url ?? null,
