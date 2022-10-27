@@ -52,4 +52,46 @@ class Department extends BaseModel
         return $data;
     }
 
+    public function updateDepartment(array $input) {
+        if(!empty($input['name'])) {
+            $this->name = $input['name'];
+        }
+        if(!empty($input['specialist_id'])) {
+            $this->specialist_id = $input['specialist_id'];
+        }
+
+        if(!empty($input['description'])) {
+            $this->description = $input['description'];
+        }
+
+        if(!empty($input['active'])) {
+            $this->active = $input['active'];
+        }
+        $department_id = $this->id;
+        // dd($department_id);
+        $users = User::select('id')->where("department_id", $department_id)->get();
+        $user_ids = [];
+        foreach($users as $user) {
+            $user_ids[] = $user->id;
+        }
+        foreach($user_ids as $id) {
+            $us = User::findOrFail($id);
+            $us->department_id = null;
+            $us->save();
+        }
+
+        if(!empty($input['docters'])) {
+            
+            // dd(123);
+            foreach($input['docters'] as $docters) {
+                $user = User::where("username", $docters['doctor_name'])->first();
+                // dd($user);
+                $user->department_id = $department_id;
+                $user->save();
+            }
+        }
+        $this->updated_by = auth()->user()->id;
+        $this->save();
+    }
+
 }
