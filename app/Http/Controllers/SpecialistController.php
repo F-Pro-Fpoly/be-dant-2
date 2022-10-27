@@ -26,6 +26,7 @@ class SpecialistController extends BaseController
                 'code' => $input['code'],
                 'name' => $input['name'],
                 'status' => $input['status'],
+                'is_feature' => $input['is_feature'],
                 'slug' => Str::slug($input['name']),
                 'description' => $input['description'],
                 "created_by" => auth()->user()->id
@@ -84,6 +85,7 @@ class SpecialistController extends BaseController
                 $data->update([
                     'code' => $input['code'] ? $input['code'] : $data->code,
                     'name' => $input['name'] ? $input['name'] : $data->name,
+                    'is_feature' =>$input['is_feature'] ? $input['is_feature'] : $data->is_feature,
                     'slug' => Str::slug($input['name']),
                     'description' => $input['description'] ?? $data->description,
                     'status' => $input['status'] ?? $data->status,
@@ -131,6 +133,21 @@ class SpecialistController extends BaseController
         catch (\Exception $th) {
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
+        }
+    }
+    // top 5 specialist is_feature
+    public function listSpecialistFeature5(Request $request){
+        try {       
+            $page = Specialist::where('is_feature', "=", 1)
+                                ->where('status', '=', 1)
+                                ->orderBy('updated_at','ASC')->limit(5)->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $page,
+            ], 200);
+        } 
+        catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
         }
     }
 

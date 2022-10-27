@@ -14,6 +14,7 @@ class Specialist extends BaseModel
         'name',
         'slug',
         'description',
+        'is_feature',
         'status',
         'thumbnail_id',
         'created_at',
@@ -55,6 +56,11 @@ class Specialist extends BaseModel
         if(!empty($input['status'])){
             $dataInput[] = [
                 'status' , "=" , $input['status']
+            ];
+        }
+        if(!empty($input['is_feature'])){
+            $dataInput[] = [
+                'is_feature' , "=" , $input['is_feature']
             ];
         }
         $data = $this->search($dataInput);
