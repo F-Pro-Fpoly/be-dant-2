@@ -54,7 +54,7 @@ class Specialist extends BaseModel
         }
         if(!empty($input['status'])){
             $dataInput[] = [
-                'status' , "=",$input['status']
+                'status' , "=" , $input['status']
             ];
         }
         $data = $this->search($dataInput);
