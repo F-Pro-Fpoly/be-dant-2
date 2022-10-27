@@ -17,7 +17,9 @@ class departmentTransformer extends TransformerAbstract
         $docters = [];
 
         foreach($users as $item) {
-            $docters [] = $item->name;
+            $docters [] = [
+                'doctor_name' => $item->username
+            ];
         }
 
         return [
