@@ -12,4 +12,6 @@ require_once __DIR__."/booking.php";
 require_once __DIR__."/department.php";
 require_once __DIR__."/role.php";
 require_once __DIR__."/page.php";
+require_once __DIR__."/count.php";
+
 ?>
