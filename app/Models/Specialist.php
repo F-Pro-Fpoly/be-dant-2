@@ -63,7 +63,11 @@ class Specialist extends BaseModel
                 'is_feature' , "=" , $input['is_feature']
             ];
         }
-        $data = $this->search($dataInput);
+        if(!empty($input['limit'])){
+            $data = $this->search($dataInput, [], $input['limit']);
+        }else{
+            $data = $this->search($dataInput);
+        }
         return $data;
     }
 }

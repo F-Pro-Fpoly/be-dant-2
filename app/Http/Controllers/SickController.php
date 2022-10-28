@@ -19,12 +19,12 @@ class SickController extends BaseController
 
         try {
 
-           Sick::create([
-                "code" => $input['code'], 
-                "name" => $input['name'], 
-                "slug" => Str::slug($input['name']),
-                "created_by" => auth()->user()->id
-           ]);
+            Sick::create([
+                    "code" => $input['code'], 
+                    "name" => $input['name'], 
+                    "slug" => Str::slug($input['name']),
+                    "created_by" => auth()->user()->id
+            ]);
 
            return response()->json([
                 'status' => 200,

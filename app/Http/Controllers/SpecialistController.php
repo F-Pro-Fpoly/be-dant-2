@@ -55,6 +55,7 @@ class SpecialistController extends BaseController
                 ], 200);
             }
         }
+        $input['limit'] = 5;
         $data = $Specialist->searchSpecialist($input);
         return $this->response->paginator($data, new SpecialistTransformer);            
     }

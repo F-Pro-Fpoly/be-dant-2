@@ -41,13 +41,13 @@ $router->group(['prefix' => 'admin/department'], function ($router){
     $router->delete('/delete/{id}', 'DepartmentController@deleteDepartment');
 });
 // Schedule
-$router->group(['prefix' => 'admin/schedule'], function ($router){
-    $router->get('/list', 'ScheduleController@listSchedule');
-    $router->get('/list/{id}', 'ScheduleController@listSchedule_ID');
-    $router->post('/add', 'ScheduleController@addSchedule');
-    $router->put('/update/{id}', 'ScheduleController@updateSchedule');
-    $router->delete('/delete/{id}', 'ScheduleController@deleteSchedule');
-});
+// $router->group(['prefix' => 'admin/schedule'], function ($router){
+//     $router->get('/list', 'ScheduleController@listSchedule');
+//     $router->get('/list/{id}', 'ScheduleController@listSchedule_ID');
+//     $router->post('/add', 'ScheduleController@addSchedule');
+//     $router->put('/update/{id}', 'ScheduleController@updateSchedule');
+//     $router->delete('/delete/{id}', 'ScheduleController@deleteSchedule');
+// });
 // Histories
 $router->group(['prefix' => 'admin/histories'], function ($router){
     $router->get('/list', 'HistoriesController@listHistories');
