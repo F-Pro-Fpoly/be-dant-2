@@ -138,9 +138,11 @@ class SpecialistController extends BaseController
     // top 5 specialist is_feature
     public function listSpecialistFeature5(Request $request){
         try {       
-            $page = Specialist::where('is_feature', "=", 1)
-                                ->where('status', '=', 1)
-                                ->orderBy('updated_at','ASC')->limit(5)->get();
+            $page = Specialist::select('specialists.*','files.url as thumbnail_name')
+                            ->join('files', 'files.id', 'specialists.thumbnail_id')
+                            ->where('specialists.is_feature', "=", 1)
+                            ->where('specialists.status', '=', 1)
+                            ->orderBy('specialists.updated_at','ASC')->limit(5)->get();
             return response()->json([
                 'status' => 200,
                 'data' => $page,
