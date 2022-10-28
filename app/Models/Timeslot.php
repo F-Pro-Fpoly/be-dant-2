@@ -11,11 +11,17 @@ class Timeslot extends BaseModel
     protected $fillable = [
         'time_start',
         'time_end',
-        'schedule_id',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'deleted',
+        'deleted_at',
+        'deleted_by'
     ];
 
-    public function booking(){
-        return $this->hasMany(Booking::class, 'timeSlot_id');
-    }
+    // public function booking(){
+    //     return $this->hasMany(Booking::class, 'timeSlot_id');
+    // }
     
 }

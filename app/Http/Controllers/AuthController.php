@@ -113,6 +113,8 @@ class AuthController extends Controller
         ];
 
         try {
+            $myTTL = 2000;
+            FacadesJWTAuth::factory()->setTTL($myTTL);
             if(!$token = FacadesJWTAuth::attempt($credentials , ['exp' => \Carbon\Carbon::now()->addDays(7)->timestamp] )) {
                 $arrRes = [
                     'errCode'=> 2,

@@ -12,13 +12,16 @@ class Booking extends BaseModel
         'code',
         'department_id', 
         'schedule_id',
-        'timeSlot_id',
+        'timeslot_detail_id',
         'user_id',
         'status_id',
         'created_at',
         'created_by',
         'updated_at',
-        'updated_by'
+        'updated_by',
+        'deleted',
+        'deleted_at',
+        'deleted_by'
     ];
 
     public function searchBooking($input = []){
@@ -33,11 +36,11 @@ class Booking extends BaseModel
                 'schedule_id' , "=" ,$input['schedule_id']
             ];
         }
-        if(!empty($input['timeSlot_id'])){
-            $dataInput[] = [
-                'timeSlot_id' , "=" ,$input['timeSlot_id']
-            ];
-        }
+        // if(!empty($input['timeSlot_id'])){
+        //     $dataInput[] = [
+        //         'timeSlot_id' , "=" ,$input['timeSlot_id']
+        //     ];
+        // }
         if(!empty($input['user_id'])){
             $dataInput[] = [
                 'user_id' , "=" ,$input['user_id']
@@ -65,8 +68,8 @@ class Booking extends BaseModel
         return $this->belongsTo(Schedule::class);
     }
 
-    public function timeslot(){
-        return $this->belongsTo(Timeslot::class, 'timeSlot_id', 'id');
+    public function timeslotDetail(){
+        return $this->belongsTo(timeslotDetail::class, 'timeslot_detail_id', 'id');
     }
     public function status(){
         return $this->belongsTo(status::class , 'status_id', 'id');
