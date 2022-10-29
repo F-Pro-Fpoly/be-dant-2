@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Transformer\Schedule\ScheduleTransformer;
+use App\Http\Transformer\TimeSlot\TimeSlotTransformer;
 use App\Http\Validators\Schedule\CreateScheduleValidate;
+use App\Models\Timeslot;
 use App\Models\timeslotDetail;
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 
 class ScheduleController extends BaseController
 {
@@ -163,5 +166,20 @@ class ScheduleController extends BaseController
         }
     }
 
+
+    /**
+     * Api get tất cả timeslot chưa tạo của schedule
+     * 
+     */
+    public function getTimeSlotBySchedule(Request $request, $id) {
+        $input = $request->all();
+        $input['schedule_id'] = $id;
+        try {
+            $timeSlot = (new Timeslot())->searchTimeSlot($input);
+            return $this->response->collection($timeSlot, new TimeSlotTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
     
 }

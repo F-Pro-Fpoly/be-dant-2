@@ -3,6 +3,7 @@ $api->group(['prefix' => 'schedule', 'middleware' => 'role:admin,doctor'],functi
     $api->post("/create", "ScheduleController@addSchedule");
     $api->get("/list", "ScheduleController@listSchedule");
     $api->get("/list-detail", "ScheduleController@listScheduleDetail");
+    $api->get("/list-time-slot-by-schedule/{id:[0-9]+}", "ScheduleController@getTimeSlotBySchedule");
 })
 
 ?>
