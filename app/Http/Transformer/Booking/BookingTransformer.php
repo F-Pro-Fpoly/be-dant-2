@@ -18,8 +18,8 @@ class BookingTransformer extends TransformerAbstract
             'department_name' => $booking->department->name,
             'schedule_name' => $booking->schedule->description,
             'date' => $booking->schedule->date,
-            'timeSlot_start' => $booking->timeslot->time_start,
-            'timeSlot_end' => $booking->timeslot->time_end,
+            'timeSlot_start' => $booking->timeslotDetail->timeslot->time_start,
+            'timeSlot_end' => $booking->timeslotDetail->timeslot->time_end,
             'user_name' => $booking->user->name,
             'status' => $booking->status->name,
         ];
