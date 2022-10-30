@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -55,14 +57,19 @@ class ContactController extends Controller
         }
         return response()->json($array, 201);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+
+    public function deleteContact($id){
+        try {
+            $data = Contact::find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa Contacts thành công"
+        ], 200);
+        } 
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
     /**
