@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Transformer\Schedule\ScheduleTransformer;
 use App\Http\Transformer\TimeSlot\TimeSlotTransformer;
 use App\Http\Validators\Schedule\CreateScheduleValidate;
+use App\Http\Validators\TimeslotDetail\CreateTimeSlotDetailValidate;
 use App\Models\Timeslot;
 use App\Models\timeslotDetail;
 use DateTime;
@@ -181,5 +182,24 @@ class ScheduleController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
-    
+
+    public function addTimeSlotDetailToSchedule(Request $request){
+           // (new CreateTimeSlotDetailValidate($input));
+            try {
+                foreach($request->timeslotDetail as $data) 
+                {
+                    $row = new timeslotDetail();
+                    $row->schedule_id = $request['schedule_id'];
+                    $row->timeslot_id = $data['timeslot_id'];
+                    $row ->status_id = 6;
+                    $row ->status_code = "STILLEMPTY";
+                    $row->save(); 
+                }
+                return response()->json([
+                    'message' => "Thêm thời gian lịch khám thành công"
+                ],200);
+            } catch (\Exception $th) {
+                throw new HttpException(500, $th->getMessage());
+            }  
+     }
 }
