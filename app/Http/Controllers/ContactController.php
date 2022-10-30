@@ -71,16 +71,12 @@ class ContactController extends Controller
             throw new HttpException(500, $th->getMessage());
         }
     }
+    public function listContact(Request $request){
+        $contac = Contact::all();
+        return response()->json([
+            'list-contact' => $contac
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        ]);
     }
 
     /**
