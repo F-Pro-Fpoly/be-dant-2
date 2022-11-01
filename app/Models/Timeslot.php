@@ -24,17 +24,21 @@ class Timeslot extends BaseModel
     // public function booking(){
     //     return $this->hasMany(Booking::class, 'timeSlot_id');
     // }
-    public function timeslotDetail() {
-        return $this->hasMany(TimeslotDetail::class, "timeslot_id" ,"id");
+    // public function timeslotDetail() {
+    //     return $this->hasMany(TimeslotDetail::class, "timeslot_id" ,"id");
+    // }
+
+    public function schedules() {
+        return $this->hasMany(Schedule::class, "timeslot_id" ,"id");       
     }
 
     public function searchTimeSlot(array $input) {
         $query = $this->model();
 
-        if(!empty($input['schedule_id'])) {
-            $schedule_id = $input['schedule_id'];
-            $query->whereDoesntHave('timeslotDetail', function (Builder $query) use ($schedule_id) {
-                $query->where('schedule_id', '=', $schedule_id);
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+            $query->whereDoesntHave('schedules', function (Builder $query) use ($date) {
+                $query->where('date', '=', $date);
             });
         }
 
