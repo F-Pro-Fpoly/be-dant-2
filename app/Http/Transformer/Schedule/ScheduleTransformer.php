@@ -16,6 +16,11 @@ class ScheduleTransformer extends TransformerAbstract
             'code'=> $schedule->code,
             'date' => $schedule->date,
             'description' => $schedule->description,
+            'timeslot_id' => $schedule->timeslot_id,
+            'time_start' => $schedule->timeslot->time_start,
+            'time_end' => $schedule->timeslot->time_end,
+            'status_code' => $schedule->status_code,
+            'status_name' => $schedule->status->name ??null
         ];
     }
 }

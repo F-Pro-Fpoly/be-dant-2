@@ -22,7 +22,7 @@ class CreateScheduleValidate extends ValidatorBase
     {
         return [
             "date" => "required",
-            "department_id" => "required"
+            'timeslot_id' => 'required',
         ];
     }
 

@@ -20,186 +20,62 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ScheduleController extends BaseController
 {
-    // add
-    public function addSchedule(Request $request){
+    public function listSchedule(Request $request) {
         $input = $request->all();
-        (new CreateScheduleValidate($input));
-        /**
-         * {
-         *  "date": "",
-         *  "department_id": 1,
-         *  "description": "dagsgkjsfjgshfui"
-         * }
-         */
-        $date = date("YmdHis", time());
-        $time = new DateTime($input['date']);
         try {
-            $code = "LICH{$date}";
-            // dd(date_format($time, "Y-m-d"));
-            Schedule::create([
-                "code" => $code,
-                "date" => date_format($time, "Y-m-d"),
-                "department_id" => $input['department_id'],
-                "description" => $input['description'] ?? null
-            ]);
-
-            return response()->json([
-                'message' => "Thêm lịch khám thành công"
-            ],200);
+            if(auth()->user()->role_id == 2) {
+                $input['created_by'] = auth()->user()->id;
+            }
+            $schedule = (new Schedule())->searchSchedule($input);
+            // return $schedule;
+            // dd($schedule);
+            return $this->response->collection($schedule, new ScheduleTransformer());
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
     }
-     // select all
-    public function listSchedule(Request $request){
-        $input = $request->all();
-        $schedule = new Schedule();
-        $data = $schedule->searchSchedule($input);
-        return $this->response->paginator($data, new ScheduleTransformer);
-    }
 
-    public function listScheduleDetail(Request $request) {
-        $input = $request->all();
+    public function createSchedule(Request $request) {
+        $input = $request -> all();
+        (new CreateScheduleValidate($input));
+
+        $user_created = auth()->user()->id;
         try {
-            $timeSlotDetail = TimeslotDetail::model();
-            if(!empty($input['schedule_id'])){
-                $timeSlotDetail->where("schedule_id",$input['schedule_id'] );
+            if(is_array($input['timeslot_id'])) {
+                foreach($input['timeslot_id'] as $index => $item) {
+                    $date_time = date("YmdHis", time());
+                    $code = "LICH{$date_time}".rand(0, 1000);
+                    Schedule::create([
+                        'code' => $code,
+                        'date' => $input['date'],
+                        'timeslot_id' => $item,
+                        'status_id' => 6,
+                        'status_code' => "STILLEMPTY",
+                        'description' => null,
+                        'doctor_id' => $user_created,
+                        'created_by' => $user_created
+                    ]);
+                }
             }
-            $timeSlotDetail = $timeSlotDetail->orderBy("id", 'desc')->get();
-            // return response()->json([
-            //     "data" => $timeSlotDetail 
-            // ],200);
 
-            return $this->response->collection($timeSlotDetail, new ScheduleDetailTransformer);
+            return response()->json([
+                'message' => "Thêm lịch thành công"
+            ], 200);
+            
         } catch (\Throwable $th) {
             throw new HttpException(500, $th->getMessage());
         }
     }
-     // select ID
-    public function listSchedule_ID(Request $request, $id){
-        $schedule = Schedule::find($id);
-        if($schedule){
-            return response()->json([
-                'status' => 200,
-                'message' => 'Truy xuất thành công',
-                'data' => [$schedule]
-            ], 200);
-        }
-        else{
-            return response()->json([
-                'status' => 400,
-                'message' => "Không tìm thấy dữ liệu",
-           ], 400);
-        }
-        
-    }
-    // update
-    public function updateSchedule(Request $request, $id){
-        $schedule = Schedule::find($id);
-        $validator = Validator::make($request->all(), [
-            'code' => 'required|min:5|max:255',
-            'date' => 'required',
-            'description' => 'required|min:8|max:255',
-            'department_id' => 'required',
-        ],[
-            //code
-            'code.required' => 'Code không được bỏ trống', 
-            'code.min' => 'Code quá ngắn!(Tối thiểu 5 ký tự)',
-            'code.max' => 'Code quá dài!(Tối đa 255 ký tự)',
-            //date
-            'date.required' => 'Date không được bỏ trống',
-            //description
-            'description.required' => 'Description không được bỏ trống', 
-            'description.min' => 'Description quá ngắn!(Tối thiểu 8 ký tự)',
-            'description.max' => 'Description quá dài!(Tối đa 255 ký tự)',
-            //department
-            'department_id.required' => 'Department không được bỏ trống'
-        ]);
-        
-        if($validator->fails()){
-            $arrRes = [
-                'errCode' => 1,
-                'message' => "Lỗi validate dữ liệu",
-                'data' => $validator->errors()
-            ];
-            return response()->json($arrRes, 402);
-        }
 
-        try{
-            if($schedule){
-                $schedule->update([
-                'code' => $request->code,
-                'date' => $request->date,
-                'description' => $request->description,
-                'department_id' => $request->department_id,
-                ]);
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => "Cập nhật bệnh thành công"
-                ], 200);
-            }
-            else{
-                return response()->json([
-                    'status' => 400,
-                    'message' => "Không tìm thấy bệnh",
-                ], 400);
-            }
-            
-        } 
-        catch (Exception $th) {
-            $errors = $th->getMessage();
-            throw new HttpException(500, $errors);
-        }
-    }
-    public function deleteSchedule(Request $request, $id){
+    public function getTimeslot(Request $request) {
+        $input = $request -> all();
         try {
-            $data = Schedule::find($id);
-            $data->delete();
-            return response()->json([
-                'status' => 200,
-                'message' => "Xóa thành công"
-        ], 200);
-        } 
-        catch (Exception $th) {
-            $errors = $th->getMessage();
-            throw new HttpException(500, $errors);
-        }
-    }
+            $timeslot = (new Timeslot())->searchTimeSlot($input);
 
-
-    /**
-     * Api get tất cả timeslot chưa tạo của schedule
-     * 
-     */
-    public function getTimeSlotBySchedule(Request $request, $id) {
-        $input = $request->all();
-        $input['schedule_id'] = $id;
-        try {
-            $timeSlot = (new Timeslot())->searchTimeSlot($input);
-            return $this->response->collection($timeSlot, new TimeSlotTransformer());
+            return $this->response->collection($timeslot, new TimeSlotTransformer());
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
     }
 
-    public function addTimeSlotDetailToSchedule(Request $request){
-           // (new CreateTimeSlotDetailValidate($input));
-            try {
-                foreach($request->timeslotDetail as $data) 
-                {
-                    $row = new timeslotDetail();
-                    $row->schedule_id = $request['schedule_id'];
-                    $row->timeslot_id = $data['timeslot_id'];
-                    $row ->status_id = 6;
-                    $row ->status_code = "STILLEMPTY";
-                    $row->save(); 
-                }
-                return response()->json([
-                    'message' => "Thêm thời gian lịch khám thành công"
-                ],200);
-            } catch (\Exception $th) {
-                throw new HttpException(500, $th->getMessage());
-            }  
-     }
 }
