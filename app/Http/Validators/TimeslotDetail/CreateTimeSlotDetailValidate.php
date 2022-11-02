@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Validators\Schedule;
+namespace App\Http\Validators\TimeslotDetail;
 
 use App\Http\Validators\ValidatorBase;
 
 
-class CreateScheduleValidate extends ValidatorBase
+class CreateTimeSlotDetailValidate extends ValidatorBase
 {
 
     public function __construct($input)
@@ -21,8 +21,10 @@ class CreateScheduleValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            "date" => "required",
-            'timeslot_id' => 'required',
+            "schedule_id" => "required",
+            "timeslot_id" => "required",
+            "status_id" => "required",
+            "status_code" => "required"
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,5 +24,29 @@ class Timeslot extends BaseModel
     // public function booking(){
     //     return $this->hasMany(Booking::class, 'timeSlot_id');
     // }
+    // public function timeslotDetail() {
+    //     return $this->hasMany(TimeslotDetail::class, "timeslot_id" ,"id");
+    // }
+
+    public function schedules() {
+        return $this->hasMany(Schedule::class, "timeslot_id" ,"id");       
+    }
+
+    public function searchTimeSlot(array $input) {
+        $query = $this->model();
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+            $query->whereDoesntHave('schedules', function (Builder $query) use ($date) {
+                $query->where('date', '=', $date);
+            });
+        }
+
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
+    }
     
 }
