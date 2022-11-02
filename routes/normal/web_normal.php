@@ -12,5 +12,6 @@ $api->post('/file', 'TestController@addImg');
 
 require_once __DIR__."/page.php";
 require_once __DIR__."/Specialist.php";
+require_once __DIR__."/Setting.php";
 
 ?>

@@ -17,5 +17,6 @@ require_once __DIR__."/schedule.php";
 require_once __DIR__."/contact.php";
 require_once __DIR__."/timeslot.php";
 
+require_once __DIR__."/setting.php";
 
 ?>
