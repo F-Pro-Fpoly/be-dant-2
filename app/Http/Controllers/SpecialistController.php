@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Transformer\Specialist\SpecialistTransformer;
 use App\Http\Validators\Specialist\InsertSpecialistValidate;
 use App\Http\Validators\Specialist\UpdateSpecialistValidate;
+use App\Models\File;
 use App\Models\Specialist;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,14 +23,23 @@ class SpecialistController extends BaseController
         (new InsertSpecialistValidate($input));
 
         try{
+            if(!empty($input['file'])) {
+                $file = $request->file('file')->store('images','public');
+                $file = File::create([
+                    'alt' => $input['alt']??null,
+                    'url' => $file,
+                    "created_by" => auth()->user()->id,
+                ]);
+            }
             Specialist::create([
                 'code' => $input['code'],
                 'name' => $input['name'],
-                'status' => $input['status'],
-                'is_feature' => $input['is_feature'],
-                'slug' => Str::slug($input['name']),
-                'description' => $input['description'],
-                "created_by" => auth()->user()->id
+                'status' => $input['status'] ? 1: 0,
+                'is_feature' => $input['is_feature']??0,
+                'slug' => !empty($input['slug'])?$input['slug']:Str::slug($input['name']),
+                'description' => $input['description']??null,
+                "created_by" => auth()->user()->id,
+                'thumbnail_id' => $file->id??null
             ]);
 
                 return response()->json([
@@ -62,18 +72,13 @@ class SpecialistController extends BaseController
      // select one
     public function specialistDetail(Request $request, $id){
         $input = $request->all();
-        $Specialist =  Specialist::find($id);
-        if($Specialist){
-            $data = $Specialist->searchSpecialist($input);
-            return $this->response->paginator($data, new SpecialistTransformer);
-       
+        try {
+            $specialist =  Specialist::findOrFail($id);
+            return $this->response->item($specialist, new SpecialistTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException($th->statusCode, $th->getMessage());         
         }
-        else{
-            return response()->json([
-                'status'  => 400,
-                'message' => 'Không tìm thấy chuyên khoa',
-            ],400);
-        }
+        
     }
     // update
     public function updateSpecialist(Request $request, $id){

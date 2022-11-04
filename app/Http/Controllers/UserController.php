@@ -55,7 +55,6 @@ class UserController extends BaseController
 
 
     public function listUser(Request $request) {
-
         $input = $request->all();
         $user = new User();
         $data = $user->searchUser($input);
