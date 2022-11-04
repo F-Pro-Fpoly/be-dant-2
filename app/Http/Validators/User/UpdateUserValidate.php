@@ -21,16 +21,16 @@ class UpdateUserValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            'name' => "required|min:6",
-            'role_id' => 'required',
-            'active' => 'required'
+            // 'name' => "required|min:6",
+            // 'role_id' => 'required',
+            // 'active' => 'required'
         ];
     }
 
     protected function messages()
     {
         return [
-            "role_id.required" => "Chọn phân quyền"
+            // "role_id.required" => "Chọn phân quyền"
         ];
     }
 }
