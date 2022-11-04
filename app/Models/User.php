@@ -121,6 +121,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         if(!empty($input['role_id'])) {
             $this->role_id = $input['role_id'];
         }
+        if(!empty($input['date'])) {
+            $this->date = $input['date'];
+        }
+        if(!empty($input['gender'])) {
+            $this->gender = $input['gender'];
+        }
 
         if(!empty($input['department_id'])) {
             $this->department_id = $input['department_id'];
