@@ -24,6 +24,7 @@ class InsertSpecialistValidate extends ValidatorBase
             'code' => 'required|min:5|max:255|unique:specialists',
             'name' => 'required|min:5|max:255',
             'description' => 'required|min:8|max:255',
+            'file' => 'required|file' 
         ];
     }
 

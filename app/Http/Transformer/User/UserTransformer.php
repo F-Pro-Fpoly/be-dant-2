@@ -21,7 +21,7 @@ class UserTransformer extends TransformerAbstract
             'username' => $user->username,
             "address" => $user->address ?? null,
             "phone" => $user->phone ?? null,
-            "date" =>  date_format($user->date, "d/m/Y") ?? null,
+            "date" => !empty($user->date) ? date_format(date_create($user->date), "d/m/Y") : null,
             "gender" => $user->gender ?? null,
             "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar)
         ];
