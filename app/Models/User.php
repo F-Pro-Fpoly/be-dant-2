@@ -65,6 +65,14 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->hasMany(booking::class, 'user_id');
     }
 
+    public function specialist(){
+        return $this->belongsTo(Specialist::class, 'specailist_id' ,'id');
+    }
+
+    public function department(){
+        return $this->belongsTo(Department::class, 'department_id' ,'id');
+    }
+
     public function searchUser($input = []){
         $dataInput = [];
         if(!empty($input['email'])){
