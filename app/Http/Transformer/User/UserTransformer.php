@@ -17,11 +17,16 @@ class UserTransformer extends TransformerAbstract
             'email' => $user->email,
             'role_name' => $user->role->name,
             'role_id' => $user->role_id,
+            'role_name' => $user->role->name,
             'active' => $user->active,
             'username' => $user->username,
             "address" => $user->address ?? null,
             "phone" => $user->phone ?? null,
             "date" => !empty($user->date) ? date_format(date_create($user->date), "d/m/Y") : null,
+            'specailist_id' => $user->specailist_id ?? null,
+            'specailist_name' => $user->specialist->name ?? null,
+            'department_id' => $user->department_id ?? null,
+            'department_name' => $user->department->name ??null,
             "gender" => $user->gender ?? null,
             "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar)
         ];

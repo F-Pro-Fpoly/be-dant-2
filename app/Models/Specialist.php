@@ -28,6 +28,10 @@ class Specialist extends BaseModel
         return $this->hasOne(Department::class);
     }
 
+    public function user(){
+        return $this->hasMany(User::class, 'specailist_id' , 'id');
+    }
+
     public function file(){
         return $this->belongsTo(File::class, 'thumbnail_id');
     }
