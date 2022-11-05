@@ -24,7 +24,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     protected $fillable = [
         'name', 'email', 'password', 'username', 'avatar', 'address', 'phone', 'active', 'role_id',
         "created_at", "created_by", "updated_at", "updated_by" ,"deleted", "deleted_at", "deleted_by",
-        "date", "gender"
+        "date", "gender", 'specailist_id', 'specailist_code'
     ];
 
     /**
@@ -87,6 +87,9 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $dataInput[] = [
                 'role_id', '=', $role_id
             ];
+        }
+        if(!empty($input[''])) {
+
         }
         if(!empty($input['department_id'])) {
             $dataInput[] = [

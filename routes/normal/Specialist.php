@@ -3,6 +3,8 @@
     $api -> group(['prefix' => 'specialist'], function ($api) {
         $api->get('/listSpecialist', 'SpecialistController@listSpecialistNormal');
         $api->get('/listSpecialistFeature5', 'SpecialistController@listSpecialistFeature5');
+        $api->get("/list-specialist-client", "SpecialistController@listSpecialistClient");
+        $api->get("/specialist-client/{slug}", "SpecialistController@detailsClient");
     });
 
 ?>

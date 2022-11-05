@@ -16,9 +16,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SpecialistController extends BaseController
 {
-       // add
-       public function addSpecialist(Request $request){
-       
+    // add
+    public function addSpecialist(Request $request){
         $input = $request->all();
         (new InsertSpecialistValidate($input));
 
@@ -86,27 +85,22 @@ class SpecialistController extends BaseController
         (new UpdateSpecialistValidate($input));
  
        try {
-            $data = Specialist::find($id);
+            $data = Specialist::findOrFail($id);
             if($data){
-                $data->update([
-                    'code' => $input['code'] ? $input['code'] : $data->code,
-                    'name' => $input['name'] ? $input['name'] : $data->name,
-                    'is_feature' =>$input['is_feature'] ? $input['is_feature'] : $data->is_feature,
-                    'slug' => Str::slug($input['name']),
-                    'description' => $input['description'] ?? $data->description,
-                    'status' => $input['status'] ?? $data->status,
-                    'updated_by' => auth()->user()->id
-                ]);
+                // $data->update([
+                //     'code' => $input['code'] ? $input['code'] : $data->code,
+                //     'name' => $input['name'] ? $input['name'] : $data->name,
+                //     'is_feature' =>$input['is_feature'] ? $input['is_feature'] : $data->is_feature,
+                //     'slug' => Str::slug($input['name']),
+                //     'description' => $input['description'] ?? $data->description,
+                //     'status' => $input['status'] ?? $data->status,
+                //     'updated_by' => auth()->user()->id,
+                //     ''
+                // ]);
                 return response()->json([
                     'status' => 200,
                     'message' => "Cập nhật chuyên khoa thành công"
                ], 200);
-            }
-            else{
-                return response()->json([
-                    'status' => 400,
-                    'message' => "Không tìm thấy chuyên khoa",
-               ], 400);
             }
        } 
        catch (Exception $th) {
@@ -159,4 +153,27 @@ class SpecialistController extends BaseController
         }
     }
 
+    public function listSpecialistClient(Request $request) {
+        $input = $request->all();
+
+        try {
+            $specialist = new Specialist();
+            $data = $specialist->searchSpecialist($input);
+            return $this->response->paginator($data, new SpecialistTransformer);
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    public function detailsClient(Request $request, $slug) {
+        $input = $request->all();
+
+        try {
+            $id = Specialist::where('slug', $slug)->value('id');
+            $specialist = Specialist::findOrFail($id);
+            return $this->response->item($specialist, new SpecialistTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
 }

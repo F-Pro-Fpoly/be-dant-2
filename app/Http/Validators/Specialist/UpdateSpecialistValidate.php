@@ -21,7 +21,7 @@ class UpdateSpecialistValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            'code' => 'min:5|max:255|unique:specialists',
+            'code' => 'min:5|max:255',
             'name' => 'min:5|max:255',
             'description' => 'min:8|max:255',
         ];
