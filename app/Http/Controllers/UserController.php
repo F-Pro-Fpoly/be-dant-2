@@ -59,7 +59,7 @@ class UserController extends BaseController
         try {
             $user = new User();
             $data = $user->searchUser($input);
-            return $this->response->paginator($data, new UserTransformer);
+            return $this->response->paginator($data, new UserTransformer());
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }

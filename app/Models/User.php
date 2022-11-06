@@ -95,9 +95,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $dataInput[] = [
                 'role_id', '=', $role_id
             ];
-        }
-        if(!empty($input[''])) {
-
+            if(!empty($input['specailist_code'])) {
+                $specailist_id = Specialist::model()->where('code', $input['specailist_code'])->value('id');
+                $dataInput[] = [
+                    'specailist_id', '=', $specailist_id
+                ];
+            }
         }
         if(!empty($input['department_id'])) {
             $dataInput[] = [
