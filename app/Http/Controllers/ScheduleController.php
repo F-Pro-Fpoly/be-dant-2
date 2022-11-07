@@ -71,6 +71,7 @@ class ScheduleController extends BaseController
     public function getTimeslot(Request $request) {
         $input = $request -> all();
         try {
+            $input['doctor_id'] = auth()->user()->id;
             $timeslot = (new Timeslot())->searchTimeSlot($input);
 
             return $this->response->collection($timeslot, new TimeSlotTransformer());
