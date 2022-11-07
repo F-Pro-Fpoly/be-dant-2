@@ -27,7 +27,7 @@ class News extends BaseModel
         'deleted_by'
     ];
 
-    public function searchBooking($input = []){
+    public function searchNews($input = []){
         $dataInput =[];
         if(!empty($input['code'])){
             $dataInput[] = [

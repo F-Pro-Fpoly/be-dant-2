@@ -22,6 +22,9 @@ class InsertNews_categoryValidate extends ValidatorBase
     {
         return [
             "code" => "required|min:5|max:255|unique:news",
+            "slug" => "required|unique:news",
+            "status" => "required",
+            "name" => "required|min:5|max:255",
         ];
     }
 
