@@ -49,7 +49,6 @@ class AuthController extends Controller
             // 'phone.min' => 'Số điện thoại quá ngắn!(Tối thiểu 10 ký tự)',
             // 'phone.max' => 'Số điện thoại quá dài!(Tối đa 10 ký tự)',
         ]);
-
         if($validator->fails()) {
             $arrRes = [
                 'errCode' => 1,
@@ -59,26 +58,29 @@ class AuthController extends Controller
 
             return response()->json($arrRes, 402);
         }
-
+        $input = $request->all();
+        // dd($input);
         try {
-            $user = User::create([
-                'name' => $request->name,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password'=> Hash::make($request->password),
-                'address' => $request->address ?? null,
-                'phone' => $request->phone ?? null,
+            $data = [
+                'name' => $input['name'],
+                'username' => $input['username'],
+                'email' => $input['email'],
+                'password'=> Hash::make($input['password']),
+                'address' => $input['address'] ?? null,
+                'phone' => $input['phone'] ?? null,
                 'role_id' => 3,
                 'active' => 1,
                 'avatar' => 'https://cdn-icons-png.flaticon.com/512/219/219983.png'
-            ]);
+            ];
+            // dd($data);
+            $user = User::create($data);
 
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Đăng ký thành công",
                 'data' => []
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
             $arrRes = [
                 'errCode' => 0,
                 'message' => "Lỗi phía server",
