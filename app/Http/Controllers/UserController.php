@@ -56,9 +56,16 @@ class UserController extends BaseController
 
     public function listUser(Request $request) {
         $input = $request->all();
-        $user = new User();
-        $data = $user->searchUser($input);
-        return $this->response->paginator($data, new UserTransformer);
+        try {
+            $user = new User();
+            $data = $user->searchUser($input);
+            if(!empty($input['add_time_slot'])) {
+                return $this->response->paginator($data, new UserTransformer(true, $input));
+            }
+            return $this->response->paginator($data, new UserTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 
     function deleteUser($id){
@@ -163,4 +170,7 @@ class UserController extends BaseController
             throw new HttpException(500, $errors);
         }
     }
+
+   
+
 }
