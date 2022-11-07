@@ -50,7 +50,7 @@ class Schedule extends BaseModel
             $query->where("created_by", $input['created_by']);
         }
         if(!empty($input['date'])) {
-            // dd($input['date']);
+            // dd($input['date']);    
             $query->where('date', '=', $input['date']);
         }
         if(!empty($input['sort'])) {

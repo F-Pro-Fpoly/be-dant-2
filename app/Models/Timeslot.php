@@ -37,10 +37,15 @@ class Timeslot extends BaseModel
 
         if(!empty($input['date'])) {
             $date = $input['date'];
-            $query->whereDoesntHave('schedules', function (Builder $query) use ($date) {
-                $query->where('date', '=', $date);
+            $doctor_id = $input['doctor_id']??null;
+            $query->where(function($query) use($date, $doctor_id) {
+                $query->whereDoesntHave('schedules', function (Builder $query) use ($date, $doctor_id) {
+                    $query->where('date', '=', $date)->where('doctor_id', $doctor_id);
+                });
             });
         }
+
+        
 
         if(!empty($input['limit'])){
             return $query->limit($input['limit'])->paginate();
