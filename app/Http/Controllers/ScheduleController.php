@@ -15,6 +15,7 @@ use App\Http\Validators\Schedule\CreateScheduleValidate;
 use App\Http\Validators\TimeslotDetail\CreateTimeSlotDetailValidate;
 use App\Models\Timeslot;
 use App\Models\timeslotDetail;
+use App\Models\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -75,6 +76,23 @@ class ScheduleController extends BaseController
             return $this->response->collection($timeslot, new TimeSlotTransformer());
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    public function get_schedule_date_by_doctor(Request $request, $id) {
+        $input = $request->all();
+
+        try {
+            $user = User::findOrFail($id??null);
+            $data_schedule = $user->get_data_schudule([
+                'date' => $input['date']??null
+            ]);
+            // dd($data_schedule);
+            return response()->json([
+                'data' => $data_schedule
+            ], 200);
+        } catch (\Exception $th) {
+            throw new Exception(500, $th->getMessage());
         }
     }
 

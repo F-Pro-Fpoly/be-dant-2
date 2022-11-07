@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -24,7 +26,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     protected $fillable = [
         'name', 'email', 'password', 'username', 'avatar', 'address', 'phone', 'active', 'role_id',
         "created_at", "created_by", "updated_at", "updated_by" ,"deleted", "deleted_at", "deleted_by",
-        "date", "gender", 'specailist_id', 'specailist_code'
+        "date", "gender", 'specailist_id', 'specailist_code', 'user_info'
     ];
 
     /**
@@ -101,7 +103,15 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                     'specailist_id', '=', $specailist_id
                 ];
             }
+            if(!empty($input['specailist_slug'])) {
+                $specailist_id = Specialist::model()->where('slug', $input['specailist_slug'])->value('id');
+                // dd($specailist_id);
+                $dataInput[] = [
+                    'specailist_id', '=', $specailist_id
+                ];
+            }
         }
+
         if(!empty($input['department_id'])) {
             $dataInput[] = [
                 'department_id', '=', null
@@ -157,5 +167,54 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         }
         $this->updated_by = auth()->user()->id;
         $this->save();
+    }
+
+    public function get_data_schudule (array $input = []) {
+        $datetime = new \DateTime('tomorrow');
+        if(isset($input['date'])) {
+            $date = date_format(new DateTime($input['date']), 'Y-m-d');
+            // dd($date);
+        }else{
+            $date = $datetime->format('Y-m-d');
+        }
+        $time_slot = [];
+        $doctor_id = $this->id;
+        $schedule_dates = [];
+        $date_v2 = $datetime->format('Y-m-d');
+        // dd(gettype($date_v2));
+        $schedulesV0 = Schedule::select('date')->where('date', '>=' , $date_v2)->where('doctor_id', $doctor_id)
+            ->groupBy('date')
+            ->limit(5)->get();
+        foreach($schedulesV0 as $scheduleV0) {
+            $schedule_dates[] = [
+                'date' => $scheduleV0->date,
+                'date_format' => date_format(new DateTime($scheduleV0->date), 'D d/m')
+            ];
+        }
+        // dd($schedule_dates);
+
+        $schedules = Schedule::where('date', $date)->where('doctor_id', $doctor_id)
+            ->where('status_code', 'STILLEMPTY')
+            ->get();
+        
+        foreach ($schedules as $key => $schedule) {
+            $time_slot[] = [
+                'time_start' => \Carbon\Carbon::createFromFormat('H:i:s',$schedule->timeslot->time_start)->format('h:i'),
+                'time_end' => \Carbon\Carbon::createFromFormat('H:i:s',$schedule->timeslot->time_end)->format('h:i'),
+                'status_code'=>$schedule->status_code,
+                'status_id' => $schedule->status_id,
+                'id' => $schedule->id
+            ];
+        }
+
+        
+
+        $schudule_data = [
+            'schedule_date' => $date,
+            'schedule_dates' => $schedule_dates,
+            'schedule_data' => $time_slot
+        ];
+
+        return $schudule_data;
     }
 }
