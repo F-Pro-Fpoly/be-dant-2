@@ -7,7 +7,7 @@ use Dingo\Api\Http\Request;
 use Dingo\Api\Transformer\Binding;
 use Dingo\Api\Contract\Transformer\Adapter;
 use League\Fractal\TransformerAbstract;
-
+use Illuminate\Support\Str;
 class UserTransformer extends TransformerAbstract
 {
     protected $is_add_data_doctor = false;
@@ -22,6 +22,7 @@ class UserTransformer extends TransformerAbstract
         $data = [
             "id" => $user->id,
             'name'=> $user->name,
+            "slug_name" => Str::slug($user->name),
             'email' => $user->email,
             'role_name' => $user->role->name,
             'role_id' => $user->role_id,
@@ -30,7 +31,7 @@ class UserTransformer extends TransformerAbstract
             'username' => $user->username,
             "address" => $user->address ?? null,
             "phone" => $user->phone ?? null,
-            "date" => !empty($user->date) ? date_format(date_create($user->date), "d/m/Y") : null,
+            "date" => !empty($user->date) ? date_format(date_create($user->date), "Y-m-d") : null,
             'specailist_id' => $user->specailist_id ?? null,
             'specailist_name' => $user->specialist->name ?? null,
             'department_id' => $user->department_id ?? null,
