@@ -21,9 +21,20 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
-
+            if(!empty($input['file'])) {
+                $file = $request->file('file')->store('images','public');
+            }
            News::create([
-                //code thêm
+                'code' => $input['code'],
+                'slug' => $input['slug'],
+                'featured' => $input['featured'],
+                'status' => $input['status'],
+                'category_id' => $input['category_id'],
+                'name' => $input['name'],
+                'file' => 'images'.$input['file'],
+                'content' => $input['content'],
+                'views' => 0,
+                'created_by' => auth()->user()->id
            ]);
 
            return response()->json([
@@ -54,15 +65,42 @@ class NewsController extends BaseController
         return $this->response->paginator($data, new News_categoryTransformer);
     }
 
+    function getNewsID($id){
+        $data = News::where('id',$id)->where('status', 1)->first();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy một tin thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin này"
+           ], 400);
+        }
+    }
+
     public function updateNews(Request $request, $id){
        $input = $request->all();
        (new UpdateNewsValidate($input));
 
         try {
+            if(!empty($input['file'])) {
+                $file = $request->file('file')->store('images','public');
+            }
             $data = News::find($id);
             if($data){
                 $data->update([
-                    //code chỉnh sửa
+                    'slug' => $input['slug'],
+                    'featured' => $input['featured'],
+                    'status' => $input['status'],
+                    'category_id' => $input['category_id'],
+                    'name' => $input['name'],
+                    'file' => 'images'.$input['file'],
+                    'content' => $input['content'],
+                    'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
                     'status' => 200,
