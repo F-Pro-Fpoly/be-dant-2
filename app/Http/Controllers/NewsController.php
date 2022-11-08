@@ -7,6 +7,7 @@ use App\Http\Validators\News\InsertNewsValidate;
 use App\Http\Validators\News\UpdateNewsValidate;
 use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
+use App\Models\File;
 use App\Models\News_category;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,10 +22,27 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
+            if(!empty($input['file'])) {
+                $file = $request->file('file')->store('images','public');
+                $file = File::create([
+                    'alt' => $input['alt']??null,
+                    'url' => $file,
+                    "created_by" => auth()->user()->id,
+                ]);
+            }
 
            News::create([
-                //code thêm
-           ]);
+            'code'        =>    $input['code'],
+            'slug'        =>    $input['slug'],
+            'featured'    =>    $input['featured'],
+            'status'      =>    $input['status'] ? 1: 2,
+            'category_id' =>    $input['category_id'],
+            'name'        =>    $input['name'],
+            'content'     =>    $input['content'],
+            'view'        =>    $input['view'],
+
+
+        ]);
 
            return response()->json([
                 'status' => 200,

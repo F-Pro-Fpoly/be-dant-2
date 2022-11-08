@@ -7,6 +7,8 @@ use App\Http\Validators\News\InsertNewsValidate;
 use App\Http\Validators\News\UpdateNewsValidate;
 use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
+use App\Http\Validators\News_category\InsertNews_categoryValidate;
+use App\Http\Validators\News_category\UpdateNews_categoryValidate;
 use App\Models\News_category;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,13 +24,21 @@ class News_categoryController extends BaseController
 
         try {
 
-           News_category::create([
-                //code thêm
+          $news_cate = News_category::create([
+            'code'        =>    $input['code'],
+            'slug'        =>    $input['slug'],
+            'status'      =>    $input['status'],
+            'name'        =>    $input['name'],
+            'created_by'  =>    auth()->user()->id,
+        
+
            ]);
 
            return response()->json([
                 'status' => 200,
-                'message' => "Thêm tin thành công"
+                'message' => "Thêm tin thành công",
+                'data' => [$news_cate]
+
            ], 200);
         } catch (\Throwable $th) {
            return response()->json(
@@ -62,11 +72,17 @@ class News_categoryController extends BaseController
             $data = News_category::find($id);
             if($data){
                 $data->update([
-                    //code chỉnh sửa
+                'code' => $input['code'] ?? $data->code,
+                'slug' => $input['slug'] ?? $data->slug,
+                'status' => $input['status'] ?? $data->status,
+                'name' => $input['name'] ?? $data->name,
+                'updated_by' => auth()->user()->id,
+
                 ]);
                 return response()->json([
                     'status' => 200,
-                    'message' => "Cập nhật đặt tin thành công"
+                    'message' => "Cập nhật đặt tin thành công",
+
                ], 200);
             }
             else{

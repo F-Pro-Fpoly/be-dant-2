@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class News_category extends BaseModel
 {
     use HasFactory;
-    protected $table = 'News_category';
+    protected $table = 'news_category';
     protected $fillable = [
         'code',
         'slug', 
