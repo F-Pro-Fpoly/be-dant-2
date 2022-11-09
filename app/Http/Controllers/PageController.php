@@ -72,14 +72,14 @@ class PageController extends BaseController
     // update
     public function updatePage(Request $request, $id){
         $input = $request->all();
-        (new PageUpdatePageValidate($input));
+        // (new PageUpdatePageValidate($input));
        try {
             $data = Page::findOrFail($id);
                 $data->update([
-                    'name'  => $input['name'] ??  $data->name,
-                    'slug'  => $input['name'],
-                    "font"  => Arr::get($input, 'font', $data->font),
-                    "sort"  =>  Arr::get($input, 'sort', $data->sort), 
+                    'name'  => Arr::get($input, 'name', $data->name),
+                    'slug'  => Str::slug($input['name']),
+                    "font"      => Arr::get($input, 'font', $data->font),
+                    "status"    => Arr::get($input, 'status', $data->status), 
                     'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
@@ -119,4 +119,6 @@ class PageController extends BaseController
         }
         
     }
+
+    
 }
