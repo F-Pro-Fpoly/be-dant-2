@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class Contact extends BaseModel
 {
     protected $table = 'contacts';
     protected $fillable = [
