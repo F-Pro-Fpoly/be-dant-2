@@ -84,8 +84,9 @@ class UserController extends BaseController
 
     public function update($id, Request $request) {
         $input = $request->all();
-        (new UpdateUserValidate($input));
+        (new UpdateUserValidate($input));    
         try {
+
             $user = User::findOrFail($id);
 
             $user->updateUser($input);
@@ -171,6 +172,16 @@ class UserController extends BaseController
         }
     }
 
-   
+    public function profileDoctor(Request $request,  $id)
+    {      
+        $input = $request->all();
+        try {
+            $user = User::findOrFail($id);
+            return $this->response->item($user, new UserTransformer());
+        } catch (Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }
+    }
 
 }
