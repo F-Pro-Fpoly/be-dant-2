@@ -58,11 +58,27 @@ class NewsController extends BaseController
         return $this->response->paginator($data, new NewsTransformer);
     }
 
+    public function listNews_all(Request $request){
+        $data = News::where('status', 1)->get();
+        return response()->json([
+                'status' => 200,
+                'data' => $data
+        ],200); 
+    }
+
     public function listNews_category(Request $request){
         $input = $request->all();
         $News_category = new News_category();
         $data = $News_category->searchNews_category($input);
         return $this->response->paginator($data, new News_categoryTransformer);
+    }
+
+    public function listNews_category_all(Request $request){
+        $data = News_category::where('status', 1)->get();
+        return response()->json([
+                'status' => 200,
+                'data' => $data
+            ],200);        
     }
 
     function getNewsID($id){
