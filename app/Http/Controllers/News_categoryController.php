@@ -24,11 +24,16 @@ class News_categoryController extends BaseController
 
            News_category::create([
                 //code thêm
+                'code' => $input['code'],
+                'slug' => $input['slug'],
+                'status' => $input['status'],
+                'name' => $input['name'],
+                'created_by' => auth()->user()->id
            ]);
 
            return response()->json([
                 'status' => 200,
-                'message' => "Thêm tin thành công"
+                'message' => "Thêm danh sách tin thành công"
            ], 200);
         } catch (\Throwable $th) {
            return response()->json(
@@ -54,6 +59,25 @@ class News_categoryController extends BaseController
         return $this->response->paginator($data, new News_categoryTransformer);
     }
 
+    function getNews_categoryID($id){
+        dd($id);
+        $data = News_category::find($id);
+        
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy một danh sách tin thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy dnah sách tin này"
+           ], 400);
+        }
+    }
+
     public function updateNews_category(Request $request, $id){
        $input = $request->all();
        (new UpdateNews_categoryValidate($input));
@@ -63,16 +87,21 @@ class News_categoryController extends BaseController
             if($data){
                 $data->update([
                     //code chỉnh sửa
+                    'code' => $input['code'],
+                    'slug' => $input['slug'],
+                    'status' => $input['status'],
+                    'name' => $input['name'],
+                    'updated_by' => auth()->user()->id
                 ]);
                 return response()->json([
                     'status' => 200,
-                    'message' => "Cập nhật đặt tin thành công"
+                    'message' => "Cập nhật danh sách tin thành công"
                ], 200);
             }
             else{
                 return response()->json([
                     'status'  => 400,
-                    'message' => 'Không tìm thấy tin',
+                    'message' => 'Không tìm thấy danh sách tin',
                 ],400);
             }
         } 
@@ -88,11 +117,46 @@ class News_categoryController extends BaseController
             $data->delete();
             return response()->json([
                 'status' => 200,
-                'message' => "Xóa tin thành công"
+                'message' => "Xóa danh sách tin thành công"
             ], 200);
         }
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+    // dùng cho client
+    public function getNews_category(Request $request){
+        $input = $request->all();
+        $News_category = new News_category();
+        $data = $News_category->searchNews_category($input);
+        return $this->response->paginator($data, new News_categoryTransformer);
+    }
+
+    public function getNews(Request $request){
+        $input = $request->all();
+        $News = new News();
+        $data = $News->searchNews($input);
+        return $this->response->paginator($data, new NewsTransformer);
+    }
+
+    public function getNewsInCategory($id){
+        if($id)
+            try {
+                $data = News::where('category_id', $id)->where('status', 1)->get();
+                return response()->json([
+                    'status' => 200,
+                    'data' => $data,
+                    'message' => "Danh sách tin theo loại tin"
+                ], 200);
+            }
+            catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+            }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tồn tại danh sách tin theo loại này"
+            ], 400);
         }
     }
 }

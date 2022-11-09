@@ -8,4 +8,5 @@ require_once __DIR__."/Specialist.php";
 require_once __DIR__."/Setting.php";
 require_once __DIR__."/User.php";
 require_once __DIR__."/schedule.php";
+require_once __DIR__."/news.php";
 ?>
