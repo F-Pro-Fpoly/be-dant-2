@@ -13,6 +13,7 @@ class setting extends BaseModel
         'id',
         'code',
         'description',
+        'link',
         'status',
         'created_at',
         'created_by',
