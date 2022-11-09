@@ -191,7 +191,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         $date_v2 = $datetime->format('Y-m-d');
         // dd(gettype($date_v2));
         $schedulesV0 = Schedule::select('date')->where('date', '>=' , $date_v2)->where('doctor_id', $doctor_id)
-            ->groupBy('date')
+            ->groupBy('date')->orderBy('date', 'asc')
             ->limit(5)->get();
         foreach($schedulesV0 as $scheduleV0) {
             $schedule_dates[] = [
