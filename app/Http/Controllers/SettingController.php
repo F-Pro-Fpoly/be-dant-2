@@ -101,10 +101,58 @@ class SettingController extends BaseController
     // list page all soft by sort
     public function listSettingNormal(){
         try {       
-            $page = setting::model()->where('status',1)->orderBy('updated_at','DESC')->get();
+
+            //logo
+            $logo = setting::select('description')->where('code', 'logo')->first();
+            view()->share('logo', $logo);
+
+            //favicon
+            $favicon = setting::select('description')->where('code', 'favicon')->first();
+            view()->share('favicon', $favicon);
+
+            //coppyright
+            $copyright = setting::select('description')->where('code', 'copyright')->first();
+            view()->share('copyright', $copyright);
+            
+
+            //email
+            $email = setting::select('description')->where('code', 'email')->first();
+            view()->share('email', $email); 
+
+            //phone
+            $phone = setting::select('description')->where('code', 'phone')->first();
+            view()->share('pohne', $phone);
+
+            //address
+            $address = setting::select('description')->where('code', 'address')->first();
+            view()->share('copyright', $address);
+            
+            //SocialFaceBook
+            $SocialFaceBook = setting::select('description', 'link')->where('code', 'SocialFaceBook')->first();
+            view()->share('copyright', $SocialFaceBook);
+
+            //address
+            $SocialYoutube = setting::select('description', 'link')->where('code', 'SocialYoutube')->first();
+            view()->share('copyright', $SocialYoutube);
+
+            //NameCompany
+            $NameCompany = setting::select('description')->where('code', 'NameCompany')->first();
+            view()->share('NameCompany', $NameCompany);
+
+
             return response()->json([
                 'status' => 200,
-                'data' => $page,
+                'data' =>[ 
+                    "logo" =>   $logo,
+                    "favicon" => $favicon,
+                    "copyright" => $copyright,
+                    "email" => $email,
+                    "phone" => $phone,
+                    "address" => $address,
+                    "SocialFaceBook" => $SocialFaceBook,
+                    "SocialYoutube" => $SocialYoutube,
+                    "NameCompany" => $NameCompany,
+                ]
             ], 200);
         } 
         catch (\Exception $th) {
