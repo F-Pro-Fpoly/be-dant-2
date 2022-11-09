@@ -23,11 +23,7 @@ class Page extends BaseModel
 
     public function searchPage($input = []){
         $dataInput = [];
-        if(!empty($input['code'])){
-            $dataInput[] = [
-                'code' , "like", "%".$input['code']."%"
-            ];
-        }
+
         if(!empty($input['name'])){
             $dataInput[] = [
                 'name' , "like", "%".$input['name']."%"
