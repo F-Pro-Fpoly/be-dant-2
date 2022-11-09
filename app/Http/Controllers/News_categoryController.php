@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Transformer\News\NewsTransformer;
-use App\Http\Validators\News\InsertNewsValidate;
-use App\Http\Validators\News\UpdateNewsValidate;
+use App\Http\Validators\News_category\InsertNews_categoryValidate;
+use App\Http\Validators\News_category\UpdateNews_categoryValidate;
 use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
 use App\Models\News_category;
@@ -39,7 +39,7 @@ class News_categoryController extends BaseController
            return response()->json(
                 [
                     'status' => 500,
-                    'message' => $th->getMessage() 
+                    'message' => $th->getMessage()
                 ],500
                 );
         }
@@ -62,7 +62,7 @@ class News_categoryController extends BaseController
     function getNews_categoryID($id){
         dd($id);
         $data = News_category::find($id);
-        
+
         if($data){
             return response()->json([
                 'status' => 200,
@@ -104,7 +104,7 @@ class News_categoryController extends BaseController
                     'message' => 'Không tìm thấy danh sách tin',
                 ],400);
             }
-        } 
+        }
         catch (Exception $th){
             throw new HttpException(500, $th->getMessage());
         }
