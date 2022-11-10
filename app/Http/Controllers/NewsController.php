@@ -82,8 +82,8 @@ class NewsController extends BaseController
             ],200);        
     }
 
-    function getNewsID($id){
-        $data = News::where('id',$id)->where('status', 1)->first();
+    function getNews_ID($id){
+        $data = News::find($id);
         if($data){
             return response()->json([
                 'status' => 200,
@@ -152,6 +152,24 @@ class NewsController extends BaseController
         }
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    // dùng cho client
+    function getNewsID($id){
+        $data = News::where('id',$id)->where('status', 1)->first();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy một tin thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin này"
+           ], 400);
         }
     }
 }
