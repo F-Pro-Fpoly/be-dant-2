@@ -27,12 +27,12 @@ class ContactController extends BaseController
         ]);
         
         if($validator->fails()){
-            $array = [
-                'errCode' => 1,
-                'message' => "Lỗi dữ liệu",
-                'data' => $validator->errors()
-            ];
-            return response()->json($array, 402);
+            return response()->json(
+                [
+                    'status' => 400,
+                    'message' => $validator->errors(),           
+                ],400
+            );
         }
 
         try{
@@ -49,13 +49,15 @@ class ContactController extends BaseController
             ], 200);
                 
         } catch(\Throwable $th){
-            $array = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => $th->getMessage() ,
+                    'line' => $th->getLine()
+                ],500
+            );
         }
-        return response()->json($array, 201);
+       
     }
 
     public function deleteContact($id){
