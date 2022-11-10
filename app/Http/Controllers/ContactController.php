@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\Contact\ContactTransformer;
 use App\Models\Contact;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -9,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
-class ContactController extends Controller
+class ContactController extends BaseController
 {
     //add
     public function addContact(Request $request){
@@ -17,45 +18,49 @@ class ContactController extends Controller
             'name' => 'required',
             'email' => 'required',
             'contents' => 'required',
+            'phone' => 'required',
         
         ],[
             'name.required' => 'Tên không được bỏ trống', 
             'email.required' => 'Email không được bỏ trống',
             'contents.required' => 'Nội dung không được bỏ trống', 
+            'contents.required' => 'Số điện th không được bỏ trống', 
           
         ]);
         
         if($validator->fails()){
-            $array = [
-                'errCode' => 1,
-                'message' => "Lỗi dữ liệu",
-                'data' => $validator->errors()
-            ];
-            return response()->json($array, 402);
+            return response()->json(
+                [
+                    'status' => 400,
+                    'message' => $validator->errors(),           
+                ],400
+            );
         }
 
         try{
             $contact = Contact::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'contents' => $request->contents,
-            
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'contents'  => $request->contents,
+                'phone'     => $request->phone,
+                'type'      => $request->type, 
             ]);
 
             return response()->json([
                 'status' => 200,
                 'message' => "Thêm contact thành công",
-                'data' => [$contact]
             ], 200);
                 
         } catch(\Throwable $th){
-            $array = [
-                'errCode' => 0,
-                'message' => "Lỗi phía server",
-                'data' => $th->getMessage()
-            ];
+            return response()->json(
+                [
+                    'status' => 500,
+                    'message' => $th->getMessage() ,
+                    'line' => $th->getLine()
+                ],500
+            );
         }
-        return response()->json($array, 201);
+       
     }
 
     public function deleteContact($id){
@@ -72,11 +77,16 @@ class ContactController extends Controller
         }
     }
     public function listContact(Request $request){
-        $contac = Contact::all();
-        return response()->json([
-            'list-contact' => $contac
 
-        ]);
+        $input = $request->all();
+        try {
+            $Contact = new Contact();
+            $data = $Contact->searchContact($input); 
+            return $this->response->paginator($data, new ContactTransformer);            
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage()) ;
+        }
+      
     }
 
     /**
