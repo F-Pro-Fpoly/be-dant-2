@@ -4,7 +4,7 @@ namespace App\Http\Validators\News_category;
 
 use App\Http\Validators\ValidatorBase;
 
-
+    
 class UpdateNews_categoryValidate extends ValidatorBase
 {
 
