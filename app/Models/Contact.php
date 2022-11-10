@@ -12,6 +12,7 @@ class Contact extends BaseModel
         'email',
         'contents',
         'type',
+        'phone',
         'created_at',
         'created_by',
         'updated_at',
