@@ -8,6 +8,7 @@ use App\Http\Validators\News\UpdateNewsValidate;
 use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
 use App\Models\News_category;
+use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -103,10 +104,14 @@ class NewsController extends BaseController
        (new UpdateNewsValidate($input));
 
         try {
-            if(!empty($input['file'])) {
-                $file = $request->file('file')->store('images','public');
-            }
+            // if(!empty($input['file'])) {
+            //     $file = $request->file('file')->store('images','public');
+            // }
+            
             $data = News::find($id);
+            if($input['file'] === $data->file){
+                $input['file'] = $data->file;
+            }
             if($data){
                 $data->update([
                     'slug' => $input['slug'],

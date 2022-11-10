@@ -21,8 +21,8 @@ class UpdateNews_categoryValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            "code" => "required|min:5|max:255|unique:news",
-            "slug" => "required|unique:news",
+            "code" => "required|min:5|max:255",
+            "slug" => "required",
             "status" => "required",
             "name" => "required|min:5|max:255",
         ];
