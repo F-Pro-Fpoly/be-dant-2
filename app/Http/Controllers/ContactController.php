@@ -18,11 +18,13 @@ class ContactController extends BaseController
             'name' => 'required',
             'email' => 'required',
             'contents' => 'required',
+            'phone' => 'required',
         
         ],[
             'name.required' => 'Tên không được bỏ trống', 
             'email.required' => 'Email không được bỏ trống',
             'contents.required' => 'Nội dung không được bỏ trống', 
+            'contents.required' => 'Số điện th không được bỏ trống', 
           
         ]);
         
@@ -40,6 +42,7 @@ class ContactController extends BaseController
                 'name'      => $request->name,
                 'email'     => $request->email,
                 'contents'  => $request->contents,
+                'phone'     => $request->phone,
                 'type'      => $request->type, 
             ]);
 
