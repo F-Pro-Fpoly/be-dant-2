@@ -53,6 +53,18 @@ class UserController extends BaseController
         }
     }
 
+    public function getUserClient(Request $request) {
+        $input = $request->all();
+        $id = auth()->user()->id ?? null;
+
+        try {
+            $user = User::findOrFail($id);
+            return $this->response->item($user, new UserTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
 
     public function listUser(Request $request) {
         $input = $request->all();
@@ -181,6 +193,28 @@ class UserController extends BaseController
         } catch (Exception $th) {
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
+        }
+    }
+
+    public function updateClient(Request $request) {
+        $input = $request->all();
+        // (new UpdateUserValidate($input));
+        // if(!empty($input['username'])) {
+        //     $id = User::where("username", "like", "%{$input['username']}%")->value('id');
+        // }
+        try {
+            // dd($id);
+            $id = auth()->user()->id ?? null;
+            $user = User::findOrFail($id);
+
+            $user->updateUser($input);
+
+            return response()->json([
+                'message' => "Cập nhập người dùng thành công",
+                'status' => 201
+            ], 201);
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
         }
     }
 

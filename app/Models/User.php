@@ -26,7 +26,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     protected $fillable = [
         'name', 'email', 'password', 'username', 'avatar', 'address', 'phone', 'active', 'role_id',
         "created_at", "created_by", "updated_at", "updated_by" ,"deleted", "deleted_at", "deleted_by",
-        "date", "gender", 'specailist_id', 'specailist_code', 'user_info'
+        "date", "gender", 'specailist_id', 'specailist_code', 'user_info', 'city_code', 'city_id',
+        'district_code', 'district_id', 'ward_code', 'ward_id', 'birthday'       
     ];
 
     /**
@@ -75,6 +76,18 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->belongsTo(Department::class, 'department_id' ,'id');
     }
 
+    public function city() {
+        return $this->belongsTo(City::class, 'city_code', 'code');
+    }
+
+    public function district() {
+        return $this->belongsTo(District::class, 'district_code', 'code');
+    }
+
+    public function ward() {
+        return $this->belongsTo(Ward::class, 'ward_code', 'code');
+    }
+
     public function searchUser($input = []){
         $dataInput = [];
         if(!empty($input['email'])){
@@ -117,6 +130,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'department_id', '=', null
             ];
         }
+        
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
@@ -130,6 +144,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         if(!empty($input['address'])){
             $this->address = $input['address'];
+        }
+
+        if(!empty($input['birthday'])) {
+            $this->birthday = $input['birthday'];
         }
 
         if(!empty($input['phone'])){
@@ -167,13 +185,28 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             }
         }
         
+        if(!empty($input['city_code'])) {
+            $this->city_code = $input['city_code'];
+        }
+
+        if(!empty($input['district_code'])) {
+            $this->district_code = $input['district_code'];
+        }
+
+        if(!empty($input['ward_code'])) {
+            $this->ward_code = $input['ward_code'];
+        }
 
         if(!empty($input['active'])) {
             $this->active = $input['active'];
         }else{
             $this->active = 0;
         }
-        $this->updated_by = auth()->user()->id;
+        
+        $id = auth()->user()->id ?? null;
+        if(!empty($id)) {
+            $this->updated_by = auth()->user()->id;
+        }
         $this->save();
     }
 

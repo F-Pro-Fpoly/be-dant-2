@@ -38,7 +38,14 @@ class UserTransformer extends TransformerAbstract
             'department_name' => $user->department->name ??null,
             "gender" => $user->gender ?? null,
             "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar),
-            "user_info" => $user->user_info ?? null
+            "user_info" => $user->user_info ?? null,
+            'city_code' => $user->city_code,
+            'city_name' => $user->city->name ?? null,
+            'district_code' => $user->district_code,
+            'district_name' => $user->district->name ?? null,
+            'ward_code' => $user->ward_code,
+            'ward_name' => $user->ward->name ?? null,
+            'birthday' => $user->birthday ?? null
         ];
         // dd($this->is_add_data_doctor);
         if($this->is_add_data_doctor) {
