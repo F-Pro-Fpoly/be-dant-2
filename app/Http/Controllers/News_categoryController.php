@@ -64,11 +64,10 @@ class News_categoryController extends BaseController
         return response()->json([
                 'status' => 200,
                 'data' => $data
-            ],200);        
+            ],200);
     }
 
     function getNews_categoryID($id){
-
         $data = News_category::find($id);
 
         if($data){

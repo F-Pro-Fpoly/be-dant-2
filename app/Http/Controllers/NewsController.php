@@ -46,7 +46,7 @@ class NewsController extends BaseController
            return response()->json(
                 [
                     'status' => 500,
-                    'message' => $th->getMessage() 
+                    'message' => $th->getMessage()
                 ],500
                 );
         }
@@ -64,7 +64,7 @@ class NewsController extends BaseController
         return response()->json([
                 'status' => 200,
                 'data' => $data
-        ],200); 
+        ],200);
     }
 
     public function listNews_category(Request $request){
@@ -79,7 +79,7 @@ class NewsController extends BaseController
         return response()->json([
                 'status' => 200,
                 'data' => $data
-            ],200);        
+            ],200);
     }
 
     function getNews_ID($id){
@@ -107,7 +107,7 @@ class NewsController extends BaseController
             // if(!empty($input['file'])) {
             //     $file = $request->file('file')->store('images','public');
             // }
-            
+
             $data = News::find($id);
             if($input['file'] === $data->file){
                 $input['file'] = $data->file;
@@ -134,7 +134,7 @@ class NewsController extends BaseController
                     'message' => 'Không tìm thấy tin',
                 ],400);
             }
-        } 
+        }
         catch (Exception $th){
             throw new HttpException(500, $th->getMessage());
         }
@@ -157,7 +157,7 @@ class NewsController extends BaseController
 
     // dùng cho client
     function getNewsID($id){
-        $data = News::where('id',$id)->where('status', 1)->first();
+        $data = News::where('slug',$id)->where('status', 1)->first();
         if($data){
             $data->update([
                 'view' => $data->view + 1,
