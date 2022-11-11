@@ -71,4 +71,16 @@ class Schedule extends BaseModel
         }
         return $data;
     }
+
+    public function update_schedule(array $input = []) {
+        if(!empty($input['status_id'])) {
+            $this->status_id = $input['status_id'];
+        }
+
+        if(!empty($input['status_code'])) {
+            $this->status_code = $input['status_code'];
+        }
+
+        $this->save();
+    }
 }
