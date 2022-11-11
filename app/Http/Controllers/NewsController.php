@@ -8,6 +8,7 @@ use App\Http\Validators\News\UpdateNewsValidate;
 use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
 use App\Models\News_category;
+use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -81,8 +82,8 @@ class NewsController extends BaseController
             ],200);        
     }
 
-    function getNewsID($id){
-        $data = News::where('id',$id)->where('status', 1)->first();
+    function getNews_ID($id){
+        $data = News::find($id);
         if($data){
             return response()->json([
                 'status' => 200,
@@ -103,10 +104,14 @@ class NewsController extends BaseController
        (new UpdateNewsValidate($input));
 
         try {
-            if(!empty($input['file'])) {
-                $file = $request->file('file')->store('images','public');
-            }
+            // if(!empty($input['file'])) {
+            //     $file = $request->file('file')->store('images','public');
+            // }
+            
             $data = News::find($id);
+            if($input['file'] === $data->file){
+                $input['file'] = $data->file;
+            }
             if($data){
                 $data->update([
                     'slug' => $input['slug'],
@@ -147,6 +152,24 @@ class NewsController extends BaseController
         }
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    // dùng cho client
+    function getNewsID($id){
+        $data = News::where('id',$id)->where('status', 1)->first();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy một tin thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin này"
+           ], 400);
         }
     }
 }

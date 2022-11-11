@@ -68,7 +68,7 @@ class News_categoryController extends BaseController
     }
 
     function getNews_categoryID($id){
-        dd($id);
+
         $data = News_category::find($id);
 
         if($data){

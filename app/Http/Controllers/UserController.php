@@ -98,9 +98,16 @@ class UserController extends BaseController
         $input = $request->all();
         (new UpdateUserValidate($input));    
         try {
-
+            
             $user = User::findOrFail($id);
 
+            if(!empty($input['avatar'])) {
+                $file = $request->file('avatar')->store('images','public');     
+               
+                $user->avatar =  $file;
+                $user->save();     
+            }
+    
             $user->updateUser($input);
 
             return response()->json([
