@@ -12,8 +12,20 @@ class Booking extends BaseModel
         'code',
         'department_id', 
         'schedule_id',
-        'timeslot_detail_id',
         'user_id',
+        'doctor_id',
+        'status_id',
+        'status_code',
+        'payment_method',
+        'address',
+        'city_code',
+        'customer_name',
+        'type',
+        'phone',
+        'birthday',
+        'district_code',
+        'price',
+        'ward_code',
         'status_id',
         'created_at',
         'created_by',
@@ -68,13 +80,67 @@ class Booking extends BaseModel
         return $this->belongsTo(Schedule::class);
     }
 
-    public function timeslotDetail(){
-        return $this->belongsTo(timeslotDetail::class, 'timeslot_detail_id', 'id');
-    }
     public function status(){
         return $this->belongsTo(status::class , 'status_id', 'id');
     }
 
+    public function create_booking($input) {
+        if(!empty($input['code'])) {
+            $this->code = $input['code'];
+        }
+        if(!empty($input['department_id'])){
+            $this->department_id = $input['department_id'];
+        }
+        if(!empty($input['schedule_id'])) {
+            $this->schedule_id = $input['schedule_id'];
+        }
+        if(!empty($input['user_id'])){
+            $this->user_id = $input['user_id'];
+        }
+        if(!empty($input['doctor_id'])) {
+            $this->doctor_id = $input['doctor_id'];
+        }
+        if(!empty($input['status_id'])) {
+            $this->status_id = $input['status_id'];
+        }
+        if(!empty($input['status_code'])) {
+            $this->status_code = $input['status_code'];
+        }
+        if(!empty($input['payment_method'])) {
+            $this->payment_method = $input['payment_method'];
+        }
+        if(!empty($input['address'])){
+            $this->address = $input['address'];
+        }
+        if(!empty($input['city_code'])) {
+            $this->city_code = $input['city_code'];
+        }
+        if(!empty($input['customer_name'])) {
+            $this->customer_name = $input['customer_name'];
+        }
+        if(!empty($input['type'])) {
+            $this->type = $input['type'];
+        }
+        if(!empty($input['phone'])) {
+            $this->phone = $input['phone'];
+        }
+        if(!empty($input['birthday'])){
+            $this->birthday = $input['birthday'];
+        }
+        if(!empty($input['district_code'])) {
+            $this->district_code = $input['district_code'];
+        }
+        if(!empty($input['price'])){
+            $this->price = $input['price'];
+        }
+        if(!empty($input['ward_code'])) {
+            $this->ward_code = $input['ward_code'];
+        }
+        if(!empty($input['created_by'])) {
+            $this->created_by = $input['created_by'];
+        }
 
+        $this->save();
+    }
 
 }

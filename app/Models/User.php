@@ -195,8 +195,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         if(!empty($input['active'])) {
             $this->active = $input['active'];
-        }else{
-            $this->active = 0;
+        }
+
+        if(isset($input['active'])) {
+            if($input['active'] == 0) {
+                $this->active = $input['active'];
+            }
         }
         
         $id = auth()->user()->id ?? null;
