@@ -38,6 +38,7 @@ class UserTransformer extends TransformerAbstract
             'department_name' => $user->department->name ??null,
             "gender" => $user->gender ?? null,
             "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar),
+            "thumbnail_name" => $user->avatar,
             "user_info" => $user->user_info ?? null,
             'city_code' => $user->city_code,
             'city_name' => $user->city->name ?? null,
