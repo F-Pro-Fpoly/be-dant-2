@@ -8,6 +8,7 @@ use App\Http\Validators\Booking\CreateBookingValidate;
 use App\Http\Validators\Booking\InsertBookingValidate;
 use App\Http\Validators\Booking\UpdateBookingValidate;
 use App\Models\Booking;
+use App\Models\Schedule;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -118,6 +119,14 @@ class BookingController extends BaseController
             }else{
                 $input = $this->handle_data_booking_noAuth($input);
             }
+
+            // Cập nhập status schedule
+            $inputSchule = [
+                'status_id' => 7,
+                'status_code' => 'BOOKED'
+            ];
+            $schedule = Schedule::findOrFail($input['schedule_id']);
+            $schedule->update_schedule($inputSchule);
             $booking = new Booking();
             $booking->create_booking($input);
 
