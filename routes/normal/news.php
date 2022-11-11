@@ -1,4 +1,4 @@
-<?php 
+<?php
     $api->group(['prefix' => 'news'], function ($api) {
         $api->get('/list-news-catagory', 'News_categoryController@listNews_category_all');
         $api->get('list-news-all', 'NewsController@listNews_all');

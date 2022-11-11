@@ -68,10 +68,6 @@ class News_categoryController extends BaseController
     }
 
     function getNews_categoryID($id){
-<<<<<<< HEAD
-=======
-
->>>>>>> a32a6fb1fba0b52d09c62b7f4f9dc5ba0e55de0e
         $data = News_category::find($id);
 
         if($data){
