@@ -137,7 +137,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function updateUser(array $input = [])
     {
-
+      
         if(count($input) <= 0){
             throw new HttpException(400, "Cần nhập thông tin update");
         }
@@ -174,10 +174,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $this->user_info = $input['user_info'];
         }
 
-        if(!empty($input['avatar'])) {
-            $this->avatar = $input['avatar'];
-        }
-
         if(!empty($input['department_id'])) {
             $this->department_id = $input['department_id'];
             if($input['department_id'] == "null") {
@@ -199,8 +195,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         if(!empty($input['active'])) {
             $this->active = $input['active'];
-        }else{
-            $this->active = 0;
+        }
+
+        if(isset($input['active'])) {
+            if($input['active'] == 0) {
+                $this->active = $input['active'];
+            }
         }
         
         $id = auth()->user()->id ?? null;

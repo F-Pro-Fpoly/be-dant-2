@@ -159,6 +159,9 @@ class NewsController extends BaseController
     function getNewsID($id){
         $data = News::where('id',$id)->where('status', 1)->first();
         if($data){
+            $data->update([
+                'view' => $data->view + 1,
+            ]);
             return response()->json([
                 'status' => 200,
                 'data' => $data,
@@ -169,6 +172,40 @@ class NewsController extends BaseController
             return response()->json([
                 'status' => 400,
                 'message' => "Không tìm thấy tin này"
+           ], 400);
+        }
+    }
+
+    function getNews_featured(){
+        $data = News::where('status', 1)->where('featured', 1)->limit(3)->get();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy 3 tin nổi bật thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin nỗi bật này"
+           ], 400);
+        }
+    }
+
+    function getNews_new(){
+        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->limit(9)->get();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy 3 tin nổi bật thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin nỗi bật này"
            ], 400);
         }
     }

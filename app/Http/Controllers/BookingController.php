@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Transformer\Booking\BookingTransformer;
+use App\Http\Validators\Booking\CreateBookingNoAuthValidate;
+use App\Http\Validators\Booking\CreateBookingValidate;
 use App\Http\Validators\Booking\InsertBookingValidate;
 use App\Http\Validators\Booking\UpdateBookingValidate;
 use App\Models\Booking;
+use App\Models\Schedule;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -95,5 +99,59 @@ class BookingController extends BaseController
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
+    }
+
+    // Client
+    public function create_booking_client(Request $request) {
+        $input = $request->all();
+        (new CreateBookingValidate($input));
+        $date = date('YMDHis', time());
+        try {
+            $user_id = auth()->user()->id ?? null;
+            $input['code'] = "BOOKING{$date}".random_int(10, 99);
+            $doctor_id = $input['doctor_id'];
+            $user = User::findOrFail($doctor_id);
+            $department_id = $user->department_id ?? null;
+            $input['department_id'] = $department_id;
+            if(!empty($user_id)){
+                $input['user_id'] = $user_id;
+                $input = $this->handle_data_booking_auth($input);
+            }else{
+                $input = $this->handle_data_booking_noAuth($input);
+            }
+
+            // Cập nhập status schedule
+            $inputSchule = [
+                'status_id' => 7,
+                'status_code' => 'BOOKED'
+            ];
+            $schedule = Schedule::findOrFail($input['schedule_id']);
+            $schedule->update_schedule($inputSchule);
+            $booking = new Booking();
+            $booking->create_booking($input);
+
+
+            return response()->json([
+                'message' => "Thêm booking thành công"
+            ],200);
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    private function handle_data_booking_auth ($input) {
+        $input['status_id'] = 1;
+        $input['status_code'] = 'NEW';
+        $input['type'] = 'LOGIN';
+        $input['created_by'] = $input['user_id'];
+        return $input;
+    }
+
+    private function handle_data_booking_noAuth($input) {
+        (new CreateBookingNoAuthValidate($input));
+        $input['status_id'] = 1;
+        $input['status_code'] = 'NEW';
+        $input['type'] = 'NOLOGIN';
+        return $input;
     }
 }
