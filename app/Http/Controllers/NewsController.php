@@ -32,7 +32,7 @@ class NewsController extends BaseController
                 'status' => $input['status'],
                 'category_id' => $input['category_id'],
                 'name' => $input['name'],
-                'file' => 'images'.$input['file'],
+                'file' => 'images/'.$input['file'],
                 'content' => $input['content'],
                 'views' => 0,
                 'created_by' => auth()->user()->id
@@ -113,7 +113,7 @@ class NewsController extends BaseController
                 $input['file'] = $data->file;
             }
             else{
-                $input['file'] = 'images'.$input['file'];
+                $input['file'] = 'images/'.$input['file'];
             }
             if($data){
                 $data->update([
