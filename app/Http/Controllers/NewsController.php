@@ -104,13 +104,16 @@ class NewsController extends BaseController
        (new UpdateNewsValidate($input));
 
         try {
-            // if(!empty($input['file'])) {
-            //     $file = $request->file('file')->store('images','public');
-            // }
+            if(!empty($input['file'])) {
+                $file = $request->file('file')->store('images','public');
+            }
 
             $data = News::find($id);
             if($input['file'] === $data->file){
                 $input['file'] = $data->file;
+            }
+            else{
+                $input['file'] = 'images'.$input['file'];
             }
             if($data){
                 $data->update([
@@ -119,7 +122,7 @@ class NewsController extends BaseController
                     'status' => $input['status'],
                     'category_id' => $input['category_id'],
                     'name' => $input['name'],
-                    'file' => 'images'.$input['file'],
+                    'file' => $input['file'],
                     'content' => $input['content'],
                     'updated_by' => auth()->user()->id
                 ]);
