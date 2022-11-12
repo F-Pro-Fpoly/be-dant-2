@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\User\UserTransformer;
 use App\Models\User;
+use App\Supports\TM_Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
 use Tymon\JWTAuth\JWTAuth;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
     public function register(Request $request) {
         $validator = Validator::make($request->all(),[
@@ -136,22 +138,23 @@ class AuthController extends Controller
             }
 
             // auth()->login($token);
+            $user_id = auth()->setToken($token)->user()->id;
+            $user = User::findOrFail($user_id);
+            $user->avatar = strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar);
+            
             $arrRes = [
                 'errCode'=> 0,
                 'message' => 'Đăng nhập thành công',
                 'data' => [
-                    "user" => auth()->setToken($token)->user(),
+                    "user" => $user,
                     'token' => $token
                 ]
             ];
             return response()->json($arrRes, 201);
-        } catch (\Throwable $th) {
-            $arrRes = [
-                'errCode'=> 2,
-                'message' => 'Lỗi phía server',
-                'data' => $th->getMessage()
-            ];
-            return response()->json($arrRes, 501);
+            
+        } catch (\Exception $th) {
+            $res = new TM_Error($th);
+            return $this->response->error($res->getMessage(), $res->getStatusCode());
         }
 
     }
