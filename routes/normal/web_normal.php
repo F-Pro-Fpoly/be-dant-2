@@ -14,4 +14,5 @@ require_once __DIR__."/ward.php";
 require_once __DIR__."/news.php";
 require_once __DIR__."/contact.php";
 require_once __DIR__."/booking.php";
+require_once __DIR__."/file.php";
 ?>
