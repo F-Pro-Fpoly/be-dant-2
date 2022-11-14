@@ -21,14 +21,14 @@ class UpdateNewsValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            "code" => "required|min:5|max:255",
-            "slug" => "required",
-            "status" => "required",
-            "featured" => "required",
-            "category_id" => "required",
-            "file" => "required",
-            "content" => "required",
-            "name" => "required|min:5|max:255",
+            // "code" => "required|min:5|max:255",
+            // "slug" => "required",
+            // "status" => "required",
+            // "featured" => "required",
+            // "category_id" => "required",
+            // "file" => "required",
+            // "content" => "required",
+            // "name" => "required|min:5|max:255",
         ];
     }
 

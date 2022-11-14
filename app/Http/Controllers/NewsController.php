@@ -22,9 +22,8 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
-            if(!empty($input['file'])) {
-                $file = $request->file('file')->store('images','public');
-            }
+            
+            $file_name = $input['file_name'] ?? null;
            News::create([
                 'code' => $input['code'],
                 'slug' => $input['slug'],
@@ -32,11 +31,13 @@ class NewsController extends BaseController
                 'status' => $input['status'],
                 'category_id' => $input['category_id'],
                 'name' => $input['name'],
-                'file' => 'images/'.$input['file'],
+                'file' => $file_name,
                 'content' => $input['content'],
                 'views' => 0,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id ?? null,
            ]);
+        //    dd($path);
+
 
            return response()->json([
                 'status' => 200,
@@ -103,32 +104,26 @@ class NewsController extends BaseController
        $input = $request->all();
        (new UpdateNewsValidate($input));
 
-        try {
-            if(!empty($input['file'])) {
-                $file = $request->file('file')->store('images','public');
-            }
+       try{
 
+            $file_name = $input['file_name'] ?? null;
+            // return $file_name;
             $data = News::find($id);
-            if($input['file'] === $data->file){
-                $input['file'] = $data->file;
-            }
-            else{
-                $input['file'] = 'images/'.$input['file'];
-            }
             if($data){
                 $data->update([
-                    'slug' => $input['slug'],
-                    'featured' => $input['featured'],
-                    'status' => $input['status'],
-                    'category_id' => $input['category_id'],
-                    'name' => $input['name'],
-                    'file' => $input['file'],
-                    'content' => $input['content'],
-                    'updated_by' => auth()->user()->id
+                    'slug' => $input['slug'] ?? $data->slug,
+                    'featured' => $input['featured'] ?? $data->featured,
+                    'status' => $input['status'] ?? $data->status,
+                    'category_id' => $input['category_id'] ?? $data->category_id,
+                    'name' => $input['name'] ?? $data->name,
+                    'file' => $file_name ?? $data->file,
+                    'content' => $input['content'] ?? $data->content,
+                    'updated_by' => auth()->user()->id ?? null
                 ]);
+                
                 return response()->json([
                     'status' => 200,
-                    'message' => "Cập nhật đặt tin thành công"
+                    'message' => "Cập nhật tin thành công"
                ], 200);
             }
             else{
