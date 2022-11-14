@@ -67,8 +67,11 @@ class Booking extends BaseModel
         return $data;
     }
 
-    public function searchMyBooking($input = [], $id ,$limit = null){
+    public function searchMyBooking($input = [], $id, $with=[] ,$limit = null){  
         $dataInput =[];
+
+ 
+        
         if(!empty($input['department_id'])){
             $dataInput[] = [
                 'department_id' , "=" ,$input['department_id']

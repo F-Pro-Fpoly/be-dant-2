@@ -102,8 +102,7 @@ class UserController extends BaseController
             $user = User::findOrFail($id);
 
             if(!empty($input['avatar'])) {
-                $file = $request->file('avatar')->store('images','public');     
-               
+                $file = $request->file('avatar')->store('images','public');              
                 $user->avatar =  $file;
                 $user->save();     
             }
