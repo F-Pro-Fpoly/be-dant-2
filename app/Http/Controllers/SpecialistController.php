@@ -38,7 +38,8 @@ class SpecialistController extends BaseController
                 'slug' => !empty($input['slug'])?$input['slug']:Str::slug($input['name']),
                 'description' => $input['description']??null,
                 "created_by" => auth()->user()->id,
-                'thumbnail_id' => $file->id??null
+                'thumbnail_id' => $file->id??null,
+                'short_description' => $input['short_description'] ?? null
             ]);
 
                 return response()->json([
@@ -87,16 +88,25 @@ class SpecialistController extends BaseController
        try {
             $data = Specialist::findOrFail($id);
             if($data){
-                // $data->update([
-                //     'code' => $input['code'] ? $input['code'] : $data->code,
-                //     'name' => $input['name'] ? $input['name'] : $data->name,
-                //     'is_feature' =>$input['is_feature'] ? $input['is_feature'] : $data->is_feature,
-                //     'slug' => Str::slug($input['name']),
-                //     'description' => $input['description'] ?? $data->description,
-                //     'status' => $input['status'] ?? $data->status,
-                //     'updated_by' => auth()->user()->id,
-                //     ''
-                // ]);
+                if(!empty($input['file_name'])){
+                    $file = File::create([
+                        'alt' => null,
+                        'url' => $input['file_name'] ?? null
+                    ]);
+
+                    $file_id = $file->id;
+                }
+
+                $data->update([
+                    'name' => $input['name'] ? $input['name'] : $data->name,
+                    'is_feature' => !empty($input['is_feature']) ? $input['is_feature'] : $data->is_feature,
+                    'slug' => $input['slug'] ?? $data->slug,
+                    'description' => $input['description'] ?? $data->description,
+                    'status' => $input['status'] ?? $data->status,
+                    'updated_by' => auth()->user()->id,
+                    'short_description' => $input['short_description'] ?? $data->short_description,
+                    'thumbnail_id' => $file_id ?? $data->thumbnail_id
+                ]);
                 return response()->json([
                     'status' => 200,
                     'message' => "Cập nhật chuyên khoa thành công"

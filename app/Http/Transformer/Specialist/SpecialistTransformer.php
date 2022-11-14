@@ -22,6 +22,7 @@ class SpecialistTransformer extends TransformerAbstract
             'thumbnail_id' => $spct->thumbnail_id ?? null,
             'thumbnail_name' => $spct->file->url ?? null,
             'description' => $spct->description,
+            'short_description' => $spct->short_description
         ];
     }
 }
