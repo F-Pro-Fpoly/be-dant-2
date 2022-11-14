@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class BaseModel extends Model
@@ -60,4 +61,30 @@ class BaseModel extends Model
         $this->save();
         parent::delete();
     }
+
+    
+    public function sortBuilder(&$query, $attributes = [])
+    {
+    $validConditions = ['asc', 'desc'];
+    $validColumn     = DB::getSchemaBuilder()->getColumnListing($this->getTable());
+
+    if (empty($attributes['sort'])) {
+        $attributes['sort'] = ['updated_at' => 'asc'];
+    }
+    foreach ($attributes['sort'] as $key => $value) {
+
+        if (!$value) {
+            $value = 'asc';
+        }
+
+        if (!in_array($value, $validConditions)) {
+            continue;
+        }
+
+        if (!in_array($key, $validColumn)) {
+            continue;
+        }
+        $query->orderBy($key, $value);
+    }
+}
 }

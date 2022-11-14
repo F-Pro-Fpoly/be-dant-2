@@ -11,17 +11,29 @@ class BookingTransformer extends TransformerAbstract
 {
     public function transform(Booking $booking)
     {
-        // dd($booking->timeslot);
+      
+      
         return [
             'id'   => $booking->id,
             'code' => $booking->code,
-            'department_name' => $booking->department->name,
-            'schedule_name' => $booking->schedule->description,
+            'department_id' => $booking->department_id,
+            'department_name' => $booking->department->name ?? null,
+            'schedule_id' => $booking->schedule_id,
+            'schedule_name' => $booking->schedule->description ?? null,
             'date' => $booking->schedule->date,
-            'timeSlot_start' => $booking->timeslotDetail->timeslot->time_start,
-            'timeSlot_end' => $booking->timeslotDetail->timeslot->time_end,
-            'user_name' => $booking->user->name,
-            'status' => $booking->status->name,
+            'user_id' => $booking->user_id,
+            'customer_name' => $booking->customer_name,
+            'payment_method' => $booking->payment_method,    
+            'status_id' => $booking->status_id,
+            'status_code' => $booking->status_code,
+            'address' => $booking->address,
+            'city_code' => $booking->city_code,
+            'type' => $booking->type,
+            'phone' => $booking->phone,
+            'birthday' => $booking->birthday,
+            'district_code' => $booking->district_code,
+            'price' => $booking->price,
+            'ward_code' => $booking->ward_code,
         ];
     }
 }

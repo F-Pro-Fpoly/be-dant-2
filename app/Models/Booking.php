@@ -67,13 +67,51 @@ class Booking extends BaseModel
         return $data;
     }
 
+    public function searchMyBooking($input = [], $id, $with=[] ,$limit = null){  
+        $dataInput =[];
+
+ 
+        
+        if(!empty($input['department_id'])){
+            $dataInput[] = [
+                'department_id' , "=" ,$input['department_id']
+            ];
+        }
+        if(!empty($input['schedule_id'])){
+            $dataInput[] = [
+                'schedule_id' , "=" ,$input['schedule_id']
+            ];
+        }
+        $dataInput[] = [
+            'user_id' , "=" , $id
+        ];
+        // if(!empty($input['timeSlot_id'])){
+        //     $dataInput[] = [
+        //         'timeSlot_id' , "=" ,$input['timeSlot_id']
+        //     ];
+        // }
+        if(!empty($input['user_id'])){
+            $dataInput[] = [
+                'user_id' , "=" ,$input['user_id']
+            ];
+        }
+        if(!empty($input['code'])){
+            $dataInput[] = [
+                'code' , "=",$input['code']
+            ];
+        }
+        $data = $this->search($dataInput, [], $limit);
+        return $data;
+    }
+
+
  
     public function user(){
         return $this->belongsTo(User::class);
     }
 
     public function department(){
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id','id');
     }
 
     public function schedule(){

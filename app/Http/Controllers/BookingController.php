@@ -51,8 +51,16 @@ class BookingController extends BaseController
         $input = $request->all();
         $booking = new Booking();
         $data = $booking->searchBooking($input);
-        return $this->response->paginator($data, new BookingTransformer);
+            return $this->response->paginator($data, new BookingTransformer);
     }
+
+    public function listMyBooking(Request $request, $id){
+        $input = $request->all();
+        $booking = new Booking();
+        $data = $booking->searchMyBooking($input,$id);
+            return $this->response->collection($data, new BookingTransformer);
+    }
+    
 
     public function updateBooking(Request $request, $id){
        $input = $request->all();

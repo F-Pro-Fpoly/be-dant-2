@@ -5,5 +5,8 @@
         $api->put('/edit/{id:[0-9]+}', 'BookingController@updateBooking');
         $api->delete('/delete/{id:[0-9]+}', 'BookingController@deleteBooking');
     });
+    $api -> group(['prefix' => 'booking', 'middleware' => 'auth'], function ($api) {
+        $api->get('/mylist/user_id={id:[0-9]+}', 'BookingController@listMyBooking');
+    });
 
 ?>
