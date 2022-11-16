@@ -14,6 +14,7 @@ class Vaccine extends BaseModel
         'slug',
         'description',
         'price',
+        'sick_ids',
         'sick_id',
         'national_id',
         'created_at',
