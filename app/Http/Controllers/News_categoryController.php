@@ -61,9 +61,11 @@ class News_categoryController extends BaseController
 
     public function listNews_category_all(Request $request){
         $data = News_category::where('status', 1)->get();
+        $data_count = News_category::where('status', 1)->count();
         return response()->json([
                 'status' => 200,
-                'data' => $data
+                'data' => $data,
+                'data_count' => $data_count
             ],200);
     }
 
@@ -165,5 +167,30 @@ class News_categoryController extends BaseController
                 'message' => "Không tồn tại danh sách tin theo loại này"
             ], 400);
         }
+    }
+
+    public function count_new_categoryID($id){
+        if($id)
+            try {
+                $data_count = News::where('category_id', $id)->where('status', 1)->get();
+                $data = News::where('category_id', $id)->where('status', 1)->count();
+            // dd($data);
+            return response()->json([
+                'status' => 200,
+                'message' => "Số lượng bài là ".$data,
+                'data_count' => $data_count,
+                'data' => $data
+            ], 200);
+            }
+            catch (Exception $th){
+                throw new HttpException(500, $th->getMessage());
+            }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tồn tại danh sách tin theo loại này"
+            ], 400);
+        }
+        // dd($data);
     }
 }

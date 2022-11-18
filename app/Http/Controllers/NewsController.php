@@ -62,9 +62,11 @@ class NewsController extends BaseController
 
     public function listNews_all(Request $request){
         $data = News::where('status', 1)->get();
+        $data_count = News::where('status', 1)->count();
         return response()->json([
                 'status' => 200,
-                'data' => $data
+                'data' => $data,
+                'data_count' => $data_count
         ],200);
     }
 
@@ -76,6 +78,7 @@ class NewsController extends BaseController
     }
 
     public function listNews_category_all(Request $request){
+        $data = News_category::where('status', 1)->get();
         $data = News_category::where('status', 1)->get();
         return response()->json([
                 'status' => 200,
