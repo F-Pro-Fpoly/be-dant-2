@@ -65,7 +65,7 @@ class News_categoryController extends BaseController
         return response()->json([
                 'status' => 200,
                 'data' => $data,
-                'data_count' => $data_count
+                'data_count' => $data_count,
             ],200);
     }
 
