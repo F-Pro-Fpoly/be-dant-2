@@ -17,6 +17,7 @@ require_once __DIR__."/schedule.php";
 require_once __DIR__."/timeslot.php";
 require_once __DIR__."/news.php";
 require_once __DIR__."/news_category.php";
+require_once __DIR__."/banner.php";
 
 require_once __DIR__."/setting.php";
 
