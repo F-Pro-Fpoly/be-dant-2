@@ -6,6 +6,9 @@
         $api->put('/edit/{id:[0-9]+}', 'NewsController@updateNews');
         $api->delete('/delete/{id:[0-9]+}', 'NewsController@deleteNews');
         $api->get('/news-detail/{id:[0-9]+}', 'NewsController@getNews_ID');
+        $api->get('/news-new', 'NewsController@getNews_new');
+        $api->post('/add_news', 'NewsController@addNews');
+        $api->put('/update_news/{id:[0-9]+}', 'NewsController@updateNews');
     });
 
 ?>
