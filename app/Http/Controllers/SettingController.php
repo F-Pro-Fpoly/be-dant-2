@@ -108,7 +108,7 @@ class SettingController extends BaseController
         throw new HttpException(500, $th->getMessage());
     }
     }
-    // // delete
+    // delete
     public function deleteSetting($id){
         try {
             $data = setting::findOrFail($id);
