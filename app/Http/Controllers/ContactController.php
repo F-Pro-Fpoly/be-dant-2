@@ -86,7 +86,6 @@ class ContactController extends BaseController
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage()) ;
         }
-      
     }
 
     /**

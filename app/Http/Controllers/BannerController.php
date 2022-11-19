@@ -19,17 +19,17 @@ class BannerController extends BaseController
         try {
 
 
-            $get_img = $request->file('image');   
-            
+            $get_img[] = $request->file('image');   
+            return $get_img;
             if($get_img) {
                 foreach($get_img as $key => $image) {
-                  return $image;
-                  die;
-                    $file  = $image->store('images','public');   
+                    $file = $image->store('images','public');   
              
+                    dd($image);
                 }            
             }
-            
+
+            die;
             Banner::create([
                 'code' => $input['code'],
                 'name' => $input['name'],
