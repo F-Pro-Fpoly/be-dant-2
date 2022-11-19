@@ -17,6 +17,8 @@ class ContactTransformer extends TransformerAbstract
             'email' => $Contact->email,
             'content' => $Contact->contents,
             'type' => $Contact->type,
+            'phone' => $Contact->phone,
+
 
         ];
     }

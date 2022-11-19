@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Transformer\Contact\ContactTransformer;
+use App\Http\Validators\Contact\UpdateContactValidate;
 use App\Models\Contact;
 use Exception;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ContactController extends BaseController
 {
@@ -89,28 +89,31 @@ class ContactController extends BaseController
       
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function listcontact_ID($id){
+        try {
+            $contact = Contact::findOrFail($id);
+            
+            return $this->response->item($contact, new contactTransformer());
+        } catch (\Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }    
     }
+  
+    public function updateContact(Request $request, $id){
+        $input = $request->all();
+        (new UpdateContactValidate($input));
+        try {
+            $contact = Contact::findOrFail($id);
+            $contact->updateContact($input);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+            return response()->json([
+                "message" => "cập nhập thành công"
+            ], 200);
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -120,7 +123,7 @@ class ContactController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
