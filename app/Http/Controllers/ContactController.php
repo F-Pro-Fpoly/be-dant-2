@@ -108,7 +108,7 @@ class ContactController extends BaseController
             $contact->updateContact($input);
 
             return response()->json([
-                "message" => "cập nhập thành công"
+                "message" => "cập nhập thành công",
             ], 200);
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());

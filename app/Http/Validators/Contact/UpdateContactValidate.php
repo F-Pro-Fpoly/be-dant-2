@@ -25,7 +25,7 @@ class UpdateContactValidate extends ValidatorBase
             'email' => 'required',
             'contents' => 'required',
             'type' => 'required',
-            // 'phone' => 'required|min:10|max:11',
+            'phone' => 'required',
 
         ];
     }
@@ -39,9 +39,8 @@ class UpdateContactValidate extends ValidatorBase
             'email.required' => 'Không được bỏ trống email',
             'contents.required' => 'Không được bỏ trống contents',
             'type.required' => 'Không được bỏ trống type',
-            // 'phone.required' => 'Không được bỏ trống phone',
-            // 'phone.min' => 'Số điện thoại quá ngắn!(Tối thiểu 10 ký tự)',
-            // 'phone.max' => 'Số điện thoại quá dài!(Tối đa 11 ký tự)',
+            'phone.required' => 'Không được bỏ trống phone',
+    
         
         ];
     }
