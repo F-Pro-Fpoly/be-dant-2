@@ -18,4 +18,8 @@ class status extends BaseModel
     public function booking(){
         return $this->hasOne(Booking::class, 'status_id');
     }
+
+    public function contact(){
+        return $this->hasOne(contact::class, 'status_id');
+    }
 }

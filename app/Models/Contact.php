@@ -49,4 +49,9 @@ class Contact extends BaseModel
         return $data;
     }
 
+
+    public function status(){
+        return $this->belongsTo(status::class , 'status_id', 'id');
+    }
+
 }

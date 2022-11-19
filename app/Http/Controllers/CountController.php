@@ -15,6 +15,7 @@ use App\Models\status;
 use App\Models\Timeslot;
 use App\Models\User;
 use App\Models\Vaccine;
+use App\Models\Contact;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,7 @@ class CountController extends Controller
             $status = status::count();
             $timeslot = Timeslot::count();
             $vaccine = Vaccine::count();
-
+            $contact = Contact::where('status_id', 1)->count();
             try{
                     return response()->json([
                         'data' => [
@@ -49,8 +50,7 @@ class CountController extends Controller
                             'booking-count' => $booking, 
                             'Department-count' => $department,
                             'file-count' => $file,
-                            'historie-count' => $historie,
-                            
+                            'historie-count' => $historie,                     
                             'national-count' => $national,
                             'roles-count' => $role,
                             'schedule-count' => $schedule,
@@ -58,9 +58,8 @@ class CountController extends Controller
                             'specialist-count' => $specialist,
                             'status-count' => $status,
                             'timeslot-count' => $timeslot,
-                            'vaccine-count' => $vaccine
-
-
+                            'vaccine-count' => $vaccine,
+                            'contact-count' => $contact
                         ]
                     ]);
             } catch(\Throwable $th){
