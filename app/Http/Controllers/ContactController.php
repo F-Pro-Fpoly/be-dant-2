@@ -24,7 +24,7 @@ class ContactController extends BaseController
             'name.required' => 'Tên không được bỏ trống', 
             'email.required' => 'Email không được bỏ trống',
             'contents.required' => 'Nội dung không được bỏ trống', 
-            'contents.required' => 'Số điện th không được bỏ trống', 
+            'phone.required' => 'Số điện th không được bỏ trống', 
           
         ]);
         
@@ -107,32 +107,11 @@ class ContactController extends BaseController
             $contact->updateContact($input);
 
             return response()->json([
-                "message" => "cập nhập thành công",
+                "message" => "cập nhập thành công"
             ], 200);
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
     }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }

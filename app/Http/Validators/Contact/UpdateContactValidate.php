@@ -21,11 +21,14 @@ class UpdateContactValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            'name' => 'required|min:5|max:255',
-            'email' => 'required',
-            'contents' => 'required',
-            'type' => 'required',
-            'phone' => 'required',
+            "name" => "required",
+            "email" => "required",
+            "contents" => "required",
+            "type" => "required",
+            "phone" => "required",
+            
+
+
 
         ];
     }
@@ -34,12 +37,11 @@ class UpdateContactValidate extends ValidatorBase
     {
         return [
             'name.required' => 'Không được bỏ trống name',
-            'name.min' => 'Tên quá ngắn!(Tối thiểu 5 ký tự)',
-            'name.max' => 'Tên quá dài!(Tối đa 255 ký tự)',
             'email.required' => 'Không được bỏ trống email',
             'contents.required' => 'Không được bỏ trống contents',
             'type.required' => 'Không được bỏ trống type',
             'phone.required' => 'Không được bỏ trống phone',
+
     
         
         ];
