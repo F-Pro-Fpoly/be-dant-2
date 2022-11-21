@@ -18,6 +18,7 @@ class Booking extends BaseModel
         'status_code',
         'payment_method',
         'address',
+        'specialist_id',
         'city_code',
         'customer_name',
         'type',
@@ -149,6 +150,9 @@ class Booking extends BaseModel
         }
         if(!empty($input['city_code'])) {
             $this->city_code = $input['city_code'];
+        }
+        if(!empty($input['specialist_id'])){
+            $this->specialist_id = $input['specialist_id'];
         }
         if(!empty($input['customer_name'])) {
             $this->customer_name = $input['customer_name'];
