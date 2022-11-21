@@ -22,10 +22,9 @@ class VaccineController extends BaseController
            Vaccine::create([
                 "code" => $input['code'], 
                 "name" => $input['name'], 
-                "slug" => Str::slug($input['name']),
+                "slug" => $input['slug']??Str::slug($input['name']),
                 "price" => $input['price'],
                 "description" => $input['description'],
-                "sick_id" => $input['sick_id'],
                 "national_id" => $input['national_id'],
                 "created_by" => auth()->user()->id
            ]);
