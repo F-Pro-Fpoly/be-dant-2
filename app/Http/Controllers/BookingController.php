@@ -113,7 +113,7 @@ class BookingController extends BaseController
     public function create_booking_client(Request $request) {
         $input = $request->all();
         (new CreateBookingValidate($input));
-        $date = date('YMDHis', time());
+        $date = date('YmdHis', time());
         try {
             $user_id = auth()->user()->id ?? null;
             $input['code'] = "BOOKING{$date}".random_int(10, 99);
@@ -121,6 +121,8 @@ class BookingController extends BaseController
             $user = User::findOrFail($doctor_id);
             $department_id = $user->department_id ?? null;
             $input['department_id'] = $department_id;
+            // get specialist_id
+            $input['specialist_id'] = $user->specailist_id ?? null;
             if(!empty($user_id)){
                 $input['user_id'] = $user_id;
                 $input = $this->handle_data_booking_auth($input);
