@@ -10,10 +10,13 @@
         "flipbox/lumen-generator": "^9.1",
         "google/apiclient": "^2.12",
         "google/photos-library": "^1.5",
+        "guzzlehttp/guzzle": "^7.5",
         "illuminate/mail": "v8.30.1",
         "laravel/lumen-framework": "^8.3.1",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "~1.0",
+        "symfony/http-client": "^6.1",
+        "symfony/mailgun-mailer": "^6.1",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
