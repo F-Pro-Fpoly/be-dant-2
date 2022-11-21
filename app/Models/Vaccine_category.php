@@ -12,6 +12,7 @@ class Vaccine_category extends BaseModel
     protected $fillable = [
         'code',
         'name',
+        'slug',
         'parent_id',
         'active',
         'description',
@@ -57,7 +58,7 @@ class Vaccine_category extends BaseModel
         }
 
         if(!empty($input['limit'])) {
-            $data = $query->panigate($input['limit']);
+            $data = $query->paginate($input['limit']);
         }else{
             $data = $query->get();
         }
