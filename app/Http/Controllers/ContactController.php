@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Transformer\Contact\ContactTransformer;
 use App\Http\Validators\Contact\UpdateContactValidate;
+use App\Mail\OrderShipped;
 use App\Models\Contact;
+use App\Supports\TM_Error;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Mail\ContactMail;
 
 class ContactController extends BaseController
 {
@@ -99,18 +103,31 @@ class ContactController extends BaseController
         }    
     }
   
-    public function updateContact(Request $request, $id){
+    public function replyContact(Request $request, $id){
         $input = $request->all();
-        (new UpdateContactValidate($input));
+
         try {
+
             $contact = Contact::findOrFail($id);
-            $contact->updateContact($input);
+            $contact->reply_contact = $input['reply_contact'];
+            $contact->status_id = 8;
+            $contact->save();
+            
+            $e = $contact->email;
+            Mail::send('email.contactEmail',compact('contact'), function ($email) use ($e) {
+                $email->from('phuly4795@gmail.com','Fpro Hopital');
+                $email->subject('Fpro Hopital - Trả lời liên hệ');
+                $email->to($e, 'Quý khách');
+            });
+
 
             return response()->json([
-                "message" => "cập nhập thành công"
+                "message" => "Trả lời thành công"
             ], 200);
+            
         } catch (\Exception $th) {
-            throw new HttpException(500, $th->getMessage());
+            $res = new TM_Error($th);
+            return $this->response->error($res->getMessage(), $res->getStatusCode());
         }
     }
     

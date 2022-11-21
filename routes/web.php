@@ -21,7 +21,6 @@ $router->get('/', function () use ($router) {
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
 
-
 // national
 $router->group(['prefix' => 'admin/national'], function ($router){
     $router->get('/test', 'NationalController@test');

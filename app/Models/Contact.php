@@ -8,9 +8,11 @@ class Contact extends BaseModel
 {
     protected $table = 'contacts';
     protected $fillable = [
+        'id',
         'name',
         'email',
         'contents',
+        'reply_contact',
         'type',
         'phone',
         'created_at',

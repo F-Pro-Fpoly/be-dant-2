@@ -161,6 +161,9 @@ $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
+// send mail
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -172,7 +175,8 @@ $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 |
 */
 
-
+$app->configure('services');
+$app->configure('mail');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
