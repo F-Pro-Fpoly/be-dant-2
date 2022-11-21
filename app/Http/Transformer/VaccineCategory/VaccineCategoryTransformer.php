@@ -11,6 +11,9 @@ class VaccineCategoryTransformer extends TransformerAbstract
         return [
             'id' => $vaccine_category->id,
             'name' => $vaccine_category->name,
+            'code' => $vaccine_category->code,
+            'slug' => $vaccine_category->slug,
+            // 'page_id' => $vaccine_category->total(),
             'parent_id' => $vaccine_category->parent_id ?? null,
             'parent_name' => $vaccine_category->parent->name ?? null,
             'description' => $vaccine_category->description,
