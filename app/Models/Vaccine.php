@@ -16,11 +16,15 @@ class Vaccine extends BaseModel
         'price',
         'sick_ids',
         'sick_id',
+        'category_ids',
         'national_id',
         'created_at',
         'created_by',
         'updated_at',
-        'updated_by'
+        'updated_by',
+        'deleted',
+        'deleted_at',
+        'deleted_by'
     ];
 
     public function searchVaccine($input = []){
