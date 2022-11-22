@@ -19,8 +19,7 @@ class BookingTransformer extends TransformerAbstract
             'department_id' => $booking->department_id,
             'department_name' => $booking->department->name ?? null,
             'schedule_id' => $booking->schedule_id,
-            'schedule_name' => $booking->schedule->description ?? null,
-            'date' => $booking->schedule->date,
+            'schedule_name' => $booking->schedule->description ?? null,       
             'user_id' => $booking->user_id,
             'customer_name' => $booking->customer_name,
             'payment_method' => $booking->payment_method,    
@@ -34,6 +33,9 @@ class BookingTransformer extends TransformerAbstract
             'district_code' => $booking->district_code,
             'price' => $booking->price,
             'ward_code' => $booking->ward_code,
+            'date' => $booking->schedule->date,
+            'time_start' =>$booking->schedule->timeslot->time_start,
+            'time_end' =>$booking->schedule->timeslot->time_end,
         ];
     }
 }
