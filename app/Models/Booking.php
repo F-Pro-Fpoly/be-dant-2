@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder;
 class Booking extends BaseModel
 {
     use HasFactory;
@@ -59,6 +59,11 @@ class Booking extends BaseModel
                 'user_id' , "=" ,$input['user_id']
             ];
         }
+        if(!empty($input['date'])){
+            $dataInput[] = [
+                'date' , "=" ,$input['date']
+            ];
+        }
         if(!empty($input['code'])){
             $dataInput[] = [
                 'code' , "=",$input['code']
@@ -66,6 +71,29 @@ class Booking extends BaseModel
         }
         $data = $this->search($dataInput, [], 5);
         return $data;
+    }
+
+
+    public function searchBookingDoctor(array $input) {
+      
+        $query = $this->model();
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+          
+            $query->where(function($query) use($date) {    
+                $query->whereHas('schedule', function ( $query) use ($date) {
+                    $query->where('date', '=', $date);
+                });     
+            });
+           
+        }
+
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
     }
 
     public function searchMyBooking($input = [], $id, $with=[] ,$limit = null){  
