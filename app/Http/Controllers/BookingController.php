@@ -54,6 +54,13 @@ class BookingController extends BaseController
             return $this->response->paginator($data, new BookingTransformer);
     }
 
+    public function listBookingDoctor(Request $request){
+        $input = $request->all();
+        $booking = new Booking();
+        $data = $booking->searchBookingDoctor($input);
+        return $this->response->collection($data, new BookingTransformer);
+    }
+
     public function detailBooking($id){
         try {
             $booking = Booking::findOrFail($id);
