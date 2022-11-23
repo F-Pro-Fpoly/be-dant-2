@@ -15,6 +15,8 @@ class Booking extends BaseModel
         'user_id',
         'doctor_id',
         'status_id',
+        'description',
+        'email',
         'status_code',
         'payment_method',
         'address',
@@ -204,6 +206,12 @@ class Booking extends BaseModel
         }
         if(!empty($input['created_by'])) {
             $this->created_by = $input['created_by'];
+        }
+        if(!empty($input['description'])) {
+            $this->description = $input['description'];
+        }
+        if(!empty($input['email'])){
+            $this->email = $input['email'];
         }
 
         $this->save();
