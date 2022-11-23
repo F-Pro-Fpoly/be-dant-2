@@ -85,10 +85,9 @@ class Booking extends BaseModel
                 $query->whereHas('schedule', function ( $query) use ($date) {
                     $query->where('date', '=', $date);
                 });     
-            });
-           
+            }); 
         }
-
+        $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
             return $query->limit($input['limit'])->paginate();
         }else{
