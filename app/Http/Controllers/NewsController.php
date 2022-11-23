@@ -34,7 +34,7 @@ class NewsController extends BaseController
                 'file' => $file_name,
                 'content' => $input['content'],
                 'views' => 0,
-                'created_by' => auth()->user()->id ?? null,
+                'created_by' => auth()->user()->id ?? null
            ]);
         //    dd($path);
 
