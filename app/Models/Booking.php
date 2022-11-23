@@ -80,6 +80,11 @@ class Booking extends BaseModel
       
         $query = $this->model();
 
+        if(!empty($input['user_id'])) {
+            $query->where('doctor_id', '=', $input['user_id']);
+        }
+        
+
         if(!empty($input['date'])) {
             $date = $input['date'];
           
@@ -89,6 +94,10 @@ class Booking extends BaseModel
                 });     
             }); 
         }
+        
+        if(!empty($input['status'])) {
+            $query->where('status_id', '=', $input['status']);
+        }
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
             return $query->limit($input['limit'])->paginate();
@@ -96,6 +105,8 @@ class Booking extends BaseModel
             return $query->get();
         }
     }
+
+   
 
     public function searchMyBooking($input = [], $id, $with=[] ,$limit = null){  
         $dataInput =[];
