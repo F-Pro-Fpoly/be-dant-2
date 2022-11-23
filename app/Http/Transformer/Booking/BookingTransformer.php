@@ -11,8 +11,38 @@ class BookingTransformer extends TransformerAbstract
 {
     public function transform(Booking $booking)
     {
-      
-      
+        
+        if($booking->type == "NOLOGIN"){
+              return [
+                'id'   => $booking->id,
+                'code' => $booking->code,
+                'department_id' => $booking->department_id,
+                'department_name' => $booking->department->name ?? null,
+                'schedule_id' => $booking->schedule_id,
+                'schedule_name' => $booking->schedule->description ?? null,       
+                'user_id' => $booking->user_id,
+                'customer_name' => $booking->customer_name,
+                'payment_method' => $booking->payment_method,    
+                'description' => $booking->description ?? null,    
+                'status_id' => $booking->status_id,
+                'status_code' => $booking->status_code,
+                'status_name' => $booking->status->name,
+                'address' => $booking->address,
+                'city_code' => $booking->city_code,
+                'type' => $booking->type,
+                'phone' => $booking->phone,
+                'email' => $booking->email ?? null,
+                'birthday' => $booking->birthday,
+                'district_code' => $booking->district_code,
+                'price' => $booking->price,
+                'ward_code' => $booking->ward_code,
+                'date' => $booking->schedule->date,
+                'time_start' =>$booking->schedule->timeslot->time_start,
+                'time_end' =>$booking->schedule->timeslot->time_end,
+            ];
+        }
+        else{
+              
         return [
             'id'   => $booking->id,
             'code' => $booking->code,
@@ -21,21 +51,26 @@ class BookingTransformer extends TransformerAbstract
             'schedule_id' => $booking->schedule_id,
             'schedule_name' => $booking->schedule->description ?? null,       
             'user_id' => $booking->user_id,
-            'customer_name' => $booking->customer_name,
+            'customer_name' => $booking->user->name,
             'payment_method' => $booking->payment_method,    
+            'description' => $booking->description ?? null,    
             'status_id' => $booking->status_id,
             'status_code' => $booking->status_code,
-            'address' => $booking->address,
-            'city_code' => $booking->city_code,
+            'status_name' => $booking->status->name,
+            'address' => $booking->user->address,
+            'city_code' => $booking->user->city_code,
             'type' => $booking->type,
-            'phone' => $booking->phone,
-            'birthday' => $booking->birthday,
-            'district_code' => $booking->district_code,
+            'phone' => $booking->user->phone,
+            'email' => $booking->user->email,
+            'birthday' => $booking->user->birthday,
+            'district_code' => $booking->user->district_code,
             'price' => $booking->price,
-            'ward_code' => $booking->ward_code,
+            'ward_code' => $booking->user->ward_code,
             'date' => $booking->schedule->date,
             'time_start' =>$booking->schedule->timeslot->time_start,
             'time_end' =>$booking->schedule->timeslot->time_end,
         ];
+        }
+    
     }
 }

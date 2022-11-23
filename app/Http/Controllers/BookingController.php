@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Transformer\Booking\BookingTransformer;
+use App\Http\Transformer\Booking\StatusTransformer;
 use App\Http\Validators\Booking\CreateBookingNoAuthValidate;
 use App\Http\Validators\Booking\CreateBookingValidate;
 use App\Http\Validators\Booking\InsertBookingValidate;
 use App\Http\Validators\Booking\UpdateBookingValidate;
 use App\Models\Booking;
 use App\Models\Schedule;
+use App\Models\status;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -59,6 +61,13 @@ class BookingController extends BaseController
         $booking = new Booking();
         $data = $booking->searchBookingDoctor($input);
         return $this->response->collection($data, new BookingTransformer);
+    }
+
+    public function statusBooking(Request $request){
+        $input = $request->all();
+        $listStatus = new status();
+        $data = $listStatus->searchListStatus($input);
+        return $this->response->collection($data, new StatusTransformer);
     }
 
     public function detailBooking($id){
