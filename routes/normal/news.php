@@ -8,8 +8,8 @@
         $api->get('/news-categoryID/{id:[0-9]+}', 'News_categoryController@getNews_categoryID');
         $api->get('/featured', 'NewsController@getNews_featured');
         $api->get('/count_new_categoryID/{id:[0-9]+}', 'News_categoryController@count_new_categoryID');
-        // $api->get('/news-new', 'NewsController@getNews_new');
-        // $api->post('/add_news', 'NewsController@addNews');
-        // $api->put('/update_news/{id:[0-9]+}', 'NewsController@updateNews');
+        $api->get('/news-new', 'NewsController@getNews_new');
+        $api->post('/add_news', 'NewsController@addNews');
+        $api->put('/update_news/{id:[0-9]+}', 'NewsController@updateNews');
     });
 ?>
