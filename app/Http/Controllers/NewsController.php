@@ -210,4 +210,16 @@ class NewsController extends BaseController
            ], 400);
         }
     }
+    // public function listall(Request $request){
+    //     $input = $request->all();
+    //     $News = News::where('status', 1)->orderBy('created_at', 'DESC')->get();
+    //     $data = $News->searchNews($input);
+    //     return $this->response->paginator($data, new NewsTransformer);
+    // }
+       public function listall(Request $request){
+        $input = $request->all();
+        $News = new News();
+        $data = $News->searchNews($input);
+        return $this->response->paginator($data, new NewsTransformer);
+    }
 }
