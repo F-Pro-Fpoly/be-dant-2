@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\Newsletter\NewsletterTransformer;
 use App\Http\Validators\Newsletter\InsertNewsletterValidate;
 use App\Models\Newsletter;
 use Illuminate\Http\Request;
@@ -30,5 +31,12 @@ class NewsLetterController extends BaseController
                 ],500
                 );
         }
+    }
+    
+    public function listNewsletter(Request $request){
+        $input = $request->all();
+        $News = new Newsletter();
+        $data = $News->searchNewsletter($input);
+        return $this->response->paginator($data, new NewsletterTransformer);
     }
 }

@@ -21,7 +21,7 @@ class InsertNewsletterValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            'email' => "required",
+            'email' => "required|unique:newsletters",
         ];
     }
 
@@ -29,6 +29,7 @@ class InsertNewsletterValidate extends ValidatorBase
     {
         return [
             'email.required' => 'Không được bỏ trống email', 
+            'email.unique' => 'Email đã được sử dụng!!!', 
         ];
     }
 }
