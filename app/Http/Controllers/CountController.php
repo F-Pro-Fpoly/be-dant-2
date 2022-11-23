@@ -15,7 +15,9 @@ use App\Models\status;
 use App\Models\Timeslot;
 use App\Models\User;
 use App\Models\Vaccine;
+use App\Models\News;
 use App\Models\Contact;
+use App\Models\News_category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Http\Request;
 
@@ -29,8 +31,8 @@ class CountController extends Controller
         public function count(){
             $count = User::count();
             $booking = Booking::count();
-            $department = Department::count();  
-            $file = File::count(); 
+            $department = Department::count();
+            $file = File::count();
             $historie = Histories::count();
             // $migration= Migrations
             $national = National::count();
@@ -43,14 +45,16 @@ class CountController extends Controller
             $timeslot = Timeslot::count();
             $vaccine = Vaccine::count();
             $contact = Contact::where('status_id', 1)->count();
+            $news = News::count();
+            $newsCategory = News_category::count();
             try{
                     return response()->json([
                         'data' => [
                             'user-count' => $count,
-                            'booking-count' => $booking, 
+                            'booking-count' => $booking,
                             'Department-count' => $department,
                             'file-count' => $file,
-                            'historie-count' => $historie,                     
+                            'historie-count' => $historie,
                             'national-count' => $national,
                             'roles-count' => $role,
                             'schedule-count' => $schedule,
@@ -59,7 +63,9 @@ class CountController extends Controller
                             'status-count' => $status,
                             'timeslot-count' => $timeslot,
                             'vaccine-count' => $vaccine,
-                            'contact-count' => $contact
+                            'contact-count' => $contact,
+                            'News-count' => $news,
+                            'NewsCategory-count' => $newsCategory
                         ]
                     ]);
             } catch(\Throwable $th){
@@ -68,7 +74,7 @@ class CountController extends Controller
                     'data' => $th->getMessage()
                 ],400);
             }
-      
+
         }
 
 }

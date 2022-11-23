@@ -22,7 +22,7 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
-            
+
             $file_name = $input['file_name'] ?? null;
            News::create([
                 'code' => $input['code'],
@@ -123,7 +123,7 @@ class NewsController extends BaseController
                     'content' => $input['content'] ?? $data->content,
                     'updated_by' => auth()->user()->id ?? null
                 ]);
-                
+
                 return response()->json([
                     'status' => 200,
                     'message' => "Cập nhật tin thành công"
@@ -178,12 +178,12 @@ class NewsController extends BaseController
     }
 
     function getNews_featured(){
-        $data = News::where('status', 1)->where('featured', 1)->limit(3)->get();
+        $data = News::where('status', 1)->where('featured', 1)->limit(9)->get();
         if($data){
             return response()->json([
                 'status' => 200,
                 'data' => $data,
-                'message' => "Lấy 3 tin nổi bật thành công"
+                'message' => "Lấy 9 tin nổi bật thành công"
            ], 200);
         }
         else{
@@ -195,12 +195,12 @@ class NewsController extends BaseController
     }
 
     function getNews_new(){
-        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->limit(9)->get();
+        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->limit(3)->get();
         if($data){
             return response()->json([
                 'status' => 200,
                 'data' => $data,
-                'message' => "Lấy 3 tin nổi bật thành công"
+                'message' => "Lấy 3 tin mới thành công"
            ], 200);
         }
         else{
@@ -209,5 +209,17 @@ class NewsController extends BaseController
                 'message' => "Không tìm thấy tin nỗi bật này"
            ], 400);
         }
+    }
+    // public function listall(Request $request){
+    //     $input = $request->all();
+    //     $News = News::where('status', 1)->orderBy('created_at', 'DESC')->get();
+    //     $data = $News->searchNews($input);
+    //     return $this->response->paginator($data, new NewsTransformer);
+    // }
+       public function listall(Request $request){
+        $input = $request->all();
+        $News = new News();
+        $data = $News->searchNews($input);
+        return $this->response->paginator($data, new NewsTransformer);
     }
 }
