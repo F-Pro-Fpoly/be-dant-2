@@ -125,16 +125,13 @@ class Booking extends BaseModel
         $dataInput[] = [
             'user_id' , "=" , $id
         ];
-        // if(!empty($input['timeSlot_id'])){
-        //     $dataInput[] = [
-        //         'timeSlot_id' , "=" ,$input['timeSlot_id']
-        //     ];
-        // }
-        if(!empty($input['user_id'])){
+
+        if(!empty($input['status_id'])){
             $dataInput[] = [
-                'user_id' , "=" ,$input['user_id']
+                'status_id' , "=" ,$input['status_id']
             ];
         }
+
         if(!empty($input['code'])){
             $dataInput[] = [
                 'code' , "=",$input['code']
@@ -161,6 +158,11 @@ class Booking extends BaseModel
     public function status(){
         return $this->belongsTo(status::class , 'status_id', 'id');
     }
+
+    public function specialist(){
+        return $this->belongsTo(Specialist::class , 'specialist_id', 'id');
+    }
+
 
     public function file(){
         return $this->belongsTo(File::class, 'id_file');

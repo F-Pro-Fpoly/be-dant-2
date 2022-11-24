@@ -29,6 +29,10 @@ class Specialist extends BaseModel
         return $this->hasOne(Department::class);
     }
 
+    public function booking(){
+        return $this->hasOne(Booking::class, 'specailist_id');
+    }
+
     public function user(){
         return $this->hasMany(User::class, 'specailist_id' , 'id');
     }
