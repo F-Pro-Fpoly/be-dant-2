@@ -3,6 +3,7 @@ $api -> group(['prefix' => 'user'], function ($api) {
     $api -> group(['middleware' => 'role:admin' ], function ($api){
         $api->post('/add', 'UserController@addUser');
         $api->get('/list', 'UserController@listUser');
+        $api->get('/list-v2', 'UserController@listUserV2');
         $api->delete('/delete/{id}', 'UserController@deleteUser');
         $api->put('/updateByName', 'UserController@updateByName');
     });
