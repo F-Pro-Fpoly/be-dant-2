@@ -15,10 +15,11 @@ use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SendNewsletter;
 use App\Mail\OrderShipped;
 use App\Supports\TM_Error;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use App\Jobs\SendNewsletter;
 
 class NewsController extends BaseController
 {
@@ -46,7 +47,7 @@ class NewsController extends BaseController
             if($input['featured'] == 1){
                 try{
                     $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
-                    dispatch(new SendNewsletter($dataNews));
+                    Queue::push(new SendNewsletter($dataNews));
                     $messager = "Gửi mail thành công";
                 }
                 catch(\Throwable $th){

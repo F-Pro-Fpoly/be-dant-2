@@ -5,18 +5,15 @@ namespace App\Jobs;
 
 use App\Models\Newsletter;
 use App\Models\News;
-use App\Jobs\Job;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SendNewsletter extends Job implements ShouldQueue
 {
-    use SerializesModels;
-
-    protected $dataNews;
+    use InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
