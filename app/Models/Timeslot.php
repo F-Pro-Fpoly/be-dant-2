@@ -12,6 +12,7 @@ class Timeslot extends BaseModel
     protected $fillable = [
         'time_start',
         'time_end',
+        'interval',
         'created_at',
         'created_by',
         'updated_at',
@@ -45,7 +46,13 @@ class Timeslot extends BaseModel
             });
         }
 
-        
+        if(!empty($input['interval'])) {
+            if($input['interval'] != 'M' && $input['interval'] != 'A') {
+                throw new \Exception('Bạn phải nhập khoản thời gian giá trị là M va A', 400);
+            }
+
+            $query->where('interval', $input['interval']);
+        }
 
         if(!empty($input['limit'])){
             return $query->limit($input['limit'])->paginate();
