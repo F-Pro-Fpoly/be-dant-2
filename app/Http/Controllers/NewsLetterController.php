@@ -48,13 +48,13 @@ class NewsLetterController extends BaseController
         return $this->response->paginator($data, new NewsletterTransformer);
     }
     
-    public function sendNewsletter(){
-        try {
-            $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
-            dispatch(new SendNewsletter($dataNews));
-        } catch (\Exception $th) {
-            $res = new TM_Error($th);
-            return $this->response->error($res->getMessage(), $res->getStatusCode());
-        }
-    }
+    // public function sendNewsletter(){
+    //     try {
+    //         $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
+    //         dispatch(new SendNewsletter($dataNews));
+    //     } catch (\Exception $th) {
+    //         $res = new TM_Error($th);
+    //         return $this->response->error($res->getMessage(), $res->getStatusCode());
+    //     }
+    // }
 }
