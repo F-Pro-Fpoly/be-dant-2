@@ -135,6 +135,37 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $data;
     }
 
+    public function searchUserV2(array $input = []) {
+        $query = $this->model();
+
+        if(!empty($input['name'])) {
+            $query->where('name', 'like', "%{$input['name']}%");
+        }
+        if(!empty($input['code'])) {
+            $query->where('code', $input['code']);
+        }
+        if(!empty($input['username'])){
+            $query->where('username', $input['username']);
+        }
+        if(!empty($input['email'])) {
+            $query->where('email', 'like', "%{$input['email']}%");
+        }
+        if(!empty($input['role_id'])) {
+            $query->where('role_id', $input['role_id']);
+        }
+        if(!empty($input['role_code'])) {
+            $role_id = Role::where('code', $input['role_code'])->value('id');
+            $query->where('role_id', $role_id);
+        }
+
+        if(!empty($input['limit'])) {
+            return $query->paginate($input['limit']);
+        }
+        else{
+            return $query->get();
+        }
+    }
+
     public function updateUser(array $input = [])
     {
       

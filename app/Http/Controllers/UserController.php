@@ -80,6 +80,20 @@ class UserController extends BaseController
         }
     }
 
+    public function listUserV2(Request $request) {
+        $input = $request->all();
+        try {
+            $user = new User();
+            $data = $user->searchUserV2($input);
+            if(empty($input['limit'])){
+                return $this->response->collection($data, new UserTransformer());
+            }
+            return $this->response->paginator($data, new UserTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
     function deleteUser($id){
         try {
             $data = User::find($id);
