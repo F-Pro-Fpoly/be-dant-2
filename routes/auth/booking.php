@@ -5,6 +5,7 @@
         $api->get('/statusBooking', 'BookingController@statusBooking');
         $api->post('/add', 'BookingController@addBooking');
         $api->put('/edit/{id:[0-9]+}', 'BookingController@updateBooking');
+        $api->put('/updateBooking/{id:[0-9]+}', 'BookingController@updateBookingDoctor');
         $api->get('/detail/{id:[0-9]+}', 'BookingController@detailBooking');
         $api->delete('/delete/{id:[0-9]+}', 'BookingController@deleteBooking');
     });

@@ -16,6 +16,8 @@ class Booking extends BaseModel
         'doctor_id',
         'status_id',
         'description',
+        'infoAfterExamination',
+        'id_file',
         'email',
         'status_code',
         'payment_method',
@@ -158,6 +160,10 @@ class Booking extends BaseModel
 
     public function status(){
         return $this->belongsTo(status::class , 'status_id', 'id');
+    }
+
+    public function file(){
+        return $this->belongsTo(File::class, 'id_file');
     }
 
     public function create_booking($input) {

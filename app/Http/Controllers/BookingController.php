@@ -9,11 +9,13 @@ use App\Http\Validators\Booking\CreateBookingValidate;
 use App\Http\Validators\Booking\InsertBookingValidate;
 use App\Http\Validators\Booking\UpdateBookingValidate;
 use App\Models\Booking;
+use App\Models\File;
 use App\Models\Schedule;
 use App\Models\status;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -87,6 +89,40 @@ class BookingController extends BaseController
             return $this->response->collection($data, new BookingTransformer);
     }
     
+
+    public function updateBookingDoctor(Request $request, $id)
+    {
+        $input = $request->all();
+     
+        try {    
+            $data = Booking::find($id);
+        
+            if(!empty($input['file'])){
+                $file = $request->file('file')->store('files','public');          
+                $file = File::create([            
+                    'alt' => null,
+                    'url' => $file ?? null
+                ]);
+
+                $file_id = $file->id;
+            }
+
+            $data->update([
+                "status_id"            => Arr::get($input, 'statusBooking',$data->status_id),
+                "infoAfterExamination" => Arr::get($input, 'info',  $data->infoAfterExamination),
+                "id_file"              => $file_id ?? $data->id_file,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => "Cập nhật lịch khám thành công"
+           ], 200);
+            // dd($request->file('file'));
+
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
 
     public function updateBooking(Request $request, $id){
        $input = $request->all();
