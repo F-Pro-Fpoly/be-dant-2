@@ -2,56 +2,55 @@
 
 namespace App\Jobs;
 
-use App\AudioProcessor;
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-
-use App\Mail\OrderShipped;
-use App\Supports\TM_Error;
 use App\Models\Newsletter;
 use App\Models\News;
+use App\Jobs\Job;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Bus\SelfHandling;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendNewsletter extends Job
+class SendNewsletter extends Job implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use SerializesModels;
+
+    protected $dataNews;
+
     /**
      * Create a new job instance.
      *
+     * @param  User  $user
      * @return void
      */
-    public $Newsletter;
-
-    public function __construct(Newsletter $Newsletter)
+    public function __construct(News $News)
     {
-        $this->Newsletter = $Newsletter;
+        $this->News = $News;
     }
 
     /**
      * Execute the job.
      *
+     * @param  Mailer  $mailer
      * @return void
      */
     public function handle()
     {
-        //
-            // $dataNewsletter = Newsletter::all();
-            // $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
-            // $title_mail = "Tin sốt dẻo";
+        $title_mail = "Tin sốt dẻo";
+        $data = [];
+        $dataNewsletter = Newsletter::all();
+        $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
+        foreach($dataNewsletter as $send){
+            $data['email'][] = $send->email;
+        }
 
-            // foreach($this->podcast as $send){
-            //     $data['email'][] = $send->email;
-            // }
-            // Mail::send('email.Newsletter', compact('dataNews'), function ($messager) use ($title_mail, $data){
-            //     $messager->to($data['email'])->subject($title_mail);
-            //     $messager->from($data['email'], $title_mail);
-            // });
-
-            // return response()->json([
-            //     "message" => "Gửi mail thành công"
-            // ], 200);
+        Mail::send('email.Newsletter', compact('dataNews'), function ($messager) use ($title_mail, $data){
+            $messager->to($data['email'])->subject($title_mail);
+            $messager->from($data['email'], $title_mail);
+        });
+        return response()->json([
+            "message" => "Gửi mail thành công"
+        ], 200);
     }
 }
