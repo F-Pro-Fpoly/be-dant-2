@@ -42,14 +42,23 @@ class NewsController extends BaseController
                 'views' => 0,
                 'created_by' => auth()->user()->id ?? null
            ]);
-           if($input['featured'] == 1){
-                $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
-                dispatch(new SendNewsletter($dataNews));
+            $messager = "";
+            if($input['featured'] == 1){
+                try{
+                    $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
+                    dispatch(new SendNewsletter($dataNews));
+                    $messager = "Gửi mail thành công";
+                }
+                catch(\Throwable $th){
+                    $messager = $th->getMessage();
+                }
+                
            }
         //    dd($path);
            return response()->json([
                 'status' => 200,
-                'message' => "Thêm tin thành công"
+                'message' => "Thêm tin thành công",
+                'mail' => $messager,
            ], 200);
         } catch (\Throwable $th) {
            return response()->json(
