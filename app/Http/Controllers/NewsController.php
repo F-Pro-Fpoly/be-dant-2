@@ -14,6 +14,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SendNewsletter;
+use App\Mail\OrderShipped;
+use App\Supports\TM_Error;
+
 class NewsController extends BaseController
 {
    public function addNews(Request $request)
@@ -36,12 +43,23 @@ class NewsController extends BaseController
                 'views' => 0,
                 'created_by' => auth()->user()->id ?? null
            ]);
+            $messager = "";
+            if($input['featured'] == 1){
+                try{
+                    $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
+                    Queue::push(new SendNewsletter($dataNews));
+                    $messager = "Gửi mail thành công";
+                }
+                catch(\Throwable $th){
+                    $messager = $th->getMessage();
+                }
+                
+           }
         //    dd($path);
-
-
            return response()->json([
                 'status' => 200,
-                'message' => "Thêm tin thành công"
+                'message' => "Thêm tin thành công",
+                'mail' => $messager,
            ], 200);
         } catch (\Throwable $th) {
            return response()->json(

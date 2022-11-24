@@ -27,10 +27,8 @@ class status extends BaseModel
       
         $query = $this->model();
 
-        $query->where('id',1);
-        $query->orWhere('id',2);
-        $query->orWhere('id',3);
-        $query->orWhere('id',4);
+        $query->where('status_group',$input['status_group']);
+       
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
             return $query->limit($input['limit'])->paginate();

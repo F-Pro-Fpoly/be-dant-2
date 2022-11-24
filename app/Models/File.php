@@ -47,4 +47,8 @@ class File extends BaseModel
         return $this->hasOne(Specialist::class, 'thumbnail_id');
     }
 
+    public function booking(){
+        return $this->hasOne(Booking::class, 'id_file');
+    }
+
 }
