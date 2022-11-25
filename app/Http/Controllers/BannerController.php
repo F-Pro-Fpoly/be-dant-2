@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Transformer\banner\BannerTransformer;
 use App\Http\Validators\Banner\CreateBannerValidate;
 use App\Models\Banner;
+use App\Models\banner_detail;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Arr;
@@ -14,30 +16,31 @@ class BannerController extends BaseController
     public function addBanner(Request $request)
     {
         $input = $request->all();
-        (new CreateBannerValidate($input));
-
+        // (new CreateBannerValidate($input));
         try {
-
-
-            $get_img[] = $request->file('image');   
-            return $get_img;
-            if($get_img) {
-                foreach($get_img as $key => $image) {
-                    $file = $image->store('images','public');   
-             
-                    dd($image);
-                }            
+                
+            if(!empty($input['image'])){
+                $file = $request->file('image')->store('images','public');          
+                $file = File::create([
+                    'alt' => null,
+                    'url' => $file?? null
+                ]);
+    
+                $file_id = $file->id;
             }
 
-            die;
-            Banner::create([
+             Banner::create([
                 'code' => $input['code'],
                 'name' => $input['name'],
                 'status' =>$input['status'],
-                'description' => $input['description'],
-                'image' => $file,
+                'description' =>$input['description'],
+                'thumnail_id' =>$file_id,
                 "created_by" => auth()->user()->id
             ]);
+
+
+         
+
             return response()->json([
                 "message" => "Thêm banner thành công",
                 "status" => 201

@@ -12,8 +12,8 @@ class Banner extends BaseModel
         'name',
         'code',
         'status',
-        'image',
         'description',
+        'thumnail_id',
         'created_at',
         'created_by',
         'updated_at',
@@ -49,4 +49,10 @@ class Banner extends BaseModel
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
+
+
+    public function file(){
+        return $this->belongsTo(File::class, 'thumnail_id');
+    }
 }
+
