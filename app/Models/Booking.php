@@ -17,6 +17,7 @@ class Booking extends BaseModel
         'status_id',
         'description',
         'infoAfterExamination',
+        'reasonCancel',
         'id_file',
         'email',
         'status_code',
@@ -110,35 +111,46 @@ class Booking extends BaseModel
 
    
 
-    public function searchMyBooking($input = [], $id, $with=[] ,$limit = null){  
-        $dataInput =[];
+    public function searchMyBooking(array $input, $id){  
+
+        $query = $this->model();
+
+        if(!empty($input['user_id'])) {
+            $query->where('doctor_id', '=', $input['user_id']);
+        }
+        
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+          
+            $query->where(function($query) use($date) {    
+                $query->whereHas('schedule', function ( $query) use ($date) {
+                    $query->where('date', '=', $date);
+                });     
+            }); 
+        }
+        
+        if(!empty($input['status'])) {
+            $query->where('status_id', '=', $input['status']);
+        }
+        $query->where('user_id', '=', $id);
         if(!empty($input['department_id'])){
-            $dataInput[] = [
-                'department_id' , "=" ,$input['department_id']
-            ];
+            $query->where('department_id', '=', $input['department_id']);
         }
         if(!empty($input['schedule_id'])){
-            $dataInput[] = [
-                'schedule_id' , "=" ,$input['schedule_id']
-            ];
+            $query->where('schedule_id', '=', $input['schedule_id']);
         }
-        $dataInput[] = [
-            'user_id' , "=" , $id
-        ];
-
-        if(!empty($input['status_id'])){
-            $dataInput[] = [
-                'status_id' , "=" ,$input['status_id']
-            ];
-        }
-
         if(!empty($input['code'])){
-            $dataInput[] = [
-                'code' , "=",$input['code']
-            ];
+            $query->where('code', '=', $input['code']);
         }
-        $data = $this->search($dataInput, [], $limit);
-        return $data;
+
+        $query->orderBy('created_at','DESC');
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
+
     }
 
 
