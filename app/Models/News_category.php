@@ -49,4 +49,8 @@ class News_category extends BaseModel
         return $this->belongsTo(User::class);
     }
 
+    public function news(){
+        return $this->hasMany(News::class, 'id' , 'category_id');
+    }
+
 }
