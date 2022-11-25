@@ -14,7 +14,7 @@ class BannerTransformer extends TransformerAbstract
             'code' => $banner->code,          
             'name' => $banner->name,          
             'status' => $banner->status,
-            'image' => $banner->image,
+            'image' => $banner->file->url,
             'description' => $banner->description,
             'updated_at' => date_format($banner->updated_at, "d/m/Y"),
         ];

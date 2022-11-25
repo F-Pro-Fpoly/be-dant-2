@@ -13,6 +13,7 @@ class NewsletterTransformer extends TransformerAbstract
     {
         return [
             'email' => $newsletter->email,
+            'created_at' => date_format($newsletter->created_at, "d/m/Y"),
         ];
     }
 }

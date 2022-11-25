@@ -20,15 +20,19 @@ class Newsletter extends BaseModel
         'deleted_by'
     ];
 
-    public function searchNewsletter($input = []){
-        $dataInput =[];
-        if(!empty($input['email'])){
-            $dataInput[] = [
-                'email' , "=" ,$input['email']
-            ];
+    public function searchNewsletter(array $input){
+        $query = $this->model();
+
+        if(!empty($input['email'])) {
+            $query->where('email', 'like', "%".$input['email']."%");
         }
-        
-        $data = $this->search($dataInput, [], 5);
-        return $data;
+
+        // $query->orderBy('created_at ','DESC');
+
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
     }
 }
