@@ -104,7 +104,7 @@ class Doctor_profileController extends BaseController
     }
     // client ??? dùng get bình thường
     public function Doctor_profile_ID(Request $request, $id){
-        $Doctor_profile = Doctor_profile::select('doctor_profiles.*', 'users.name as doctor_name', 'specialists.name as specialists_name')
+        $Doctor_profile = Doctor_profile::select('doctor_profiles.*', 'users.name as doctor_name', 'users.avatar as doctor_avatar','specialists.name as specialists_name')
                         ->join('users', 'users.id', 'doctor_profiles.id_user')
                         ->join('specialists', 'specialists.id', 'users.specailist_id')
                         ->where('doctor_profiles.id_user',$id)->first();
