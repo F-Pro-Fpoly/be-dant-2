@@ -22,6 +22,7 @@ class Doctor_profileTransformer extends TransformerAbstract
             'experience' => $doctor_profile->experience,
             'created_at' => $doctor_profile->created_at->format('d-m-Y'),
             'doctor_name' => $doctor_profile->user->name,
+            'doctor_avatar' => $doctor_profile->user->avatar,
             'specialists_name' => $doctor_profile->user->specailist_id // Chưa lấy được specialist name
         ];
     }
