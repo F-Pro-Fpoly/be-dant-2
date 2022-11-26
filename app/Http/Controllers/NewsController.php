@@ -175,17 +175,16 @@ class NewsController extends BaseController
     }
 
     // dùng cho client
-    function getNewsID($id){
+    function getNewsID(Request $request, $id){
         $data = News::where('slug',$id)->where('status', 1)->first();
         if($data){
             $data->update([
                 'view' => $data->view + 1,
             ]);
-            return response()->json([
-                'status' => 200,
-                'data' => $data,
-                'message' => "Lấy một tin thành công"
-           ], 200);
+            $input = $request->all();
+            $News = News::where('slug',$id)->where('status', 1)->first();
+            $dataNews = $News->searchNews($input);
+            return $this->response->item($News, new NewsTransformer);
         }
         else{
             return response()->json([

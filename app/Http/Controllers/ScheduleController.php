@@ -93,7 +93,8 @@ class ScheduleController extends BaseController
         try {
             $user = User::findOrFail($id??null);
             $data_schedule = $user->get_data_schudule([
-                'date' => $input['date']??null
+                'date' => $input['date']??null,
+                'interval' => $input['interval']??null
             ]);
             // dd($data_schedule);
             return response()->json([

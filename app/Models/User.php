@@ -88,6 +88,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->belongsTo(Ward::class, 'ward_code', 'code');
     }
 
+    public function doctor_profile() {
+        return $this->hasOne(Doctor_profile::class, 'id_user');
+    }
+
     public function searchUser($input = []){
         $dataInput = [];
         if(!empty($input['email'])){
@@ -275,6 +279,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'time_end' => \Carbon\Carbon::createFromFormat('H:i:s',$schedule->timeslot->time_end)->format('h:i'),
                 'status_code'=>$schedule->status_code,
                 'status_id' => $schedule->status_id,
+                'interval' => $schedule->timeslot->interval,
                 'id' => $schedule->id
             ];
         }
