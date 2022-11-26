@@ -14,6 +14,8 @@ class Banner extends BaseModel
         'status',
         'description',
         'thumnail_id',
+        'button',
+        'link',
         'created_at',
         'created_by',
         'updated_at',
@@ -26,11 +28,7 @@ class Banner extends BaseModel
     public function searchBanner($input=[])
     {
         $dataInput = [];
-        if(!empty($input['code'])){
-            $dataInput[] = [
-                'code'  , "=", $input['code']
-            ];
-        }
+
         if(!empty($input['status'])){
             $dataInput[] = [
                 'status' , "=", $input['status']
@@ -47,6 +45,29 @@ class Banner extends BaseModel
             ];
         }
         $data = $this->search($dataInput, [], 5);
+        return $data;
+    }
+
+    public function searchBannerNormal($input=[])
+    {
+        $dataInput = [];
+
+        if(!empty($input['status'])){
+            $dataInput[] = [
+                'status' , "=", $input['status']
+            ];
+        }
+        if(!empty($input['name'])){
+            $dataInput[] = [
+                'name' , "like", "%".$input['name']."%"
+            ];
+        }
+        if(!empty($input['description'])){
+            $dataInput[] = [
+                'description' , "like", "%".$input['description']."%"
+            ];
+        }
+        $data = $this->search($dataInput, []);
         return $data;
     }
 

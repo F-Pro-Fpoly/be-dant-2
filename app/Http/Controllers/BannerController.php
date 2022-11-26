@@ -29,20 +29,18 @@ class BannerController extends BaseController
                 $file_id = $file->id;
             }
 
-             Banner::create([
-                'code' => $input['code'],
-                'name' => $input['name'],
-                'status' =>$input['status'],
+             Banner::create([          
+                'name'        => $input['name'],
+                'status'      =>$input['status'],
                 'description' =>$input['description'],
+                'button'      =>$input['button'],
+                'link'        =>$input['link'],
                 'thumnail_id' =>$file_id,
-                "created_by" => auth()->user()->id
+                "created_by"  => auth()->user()->id
             ]);
 
-
-         
-
             return response()->json([
-                "message" => "Thêm banner thành công",
+                "message" => "Thêm slide thành công",
                 "status" => 201
             ],201);
         } catch (\Exception $th) {
@@ -63,23 +61,23 @@ class BannerController extends BaseController
                 $data->image  = $file;
                 $data->save();
             }
-            $data->update([
-                'code' =>  Arr::get($input, 'code',  $data->code),
+            $data->update([      
                 'name' =>  Arr::get($input, 'name',  $data->name),
                 'status' =>Arr::get($input, 'status',  $data->status),
                 'description' => Arr::get($input, 'description',  $data->description),    
+                'link' => Arr::get($input, 'link',  $data->link),    
+                'button' => Arr::get($input, 'button',  $data->button),    
                 'updated_by' => auth()->user()->id,            
             ]);
             return response()->json([
                 'status' => 200,
-                'message' => "Cập nhật banner thành công"
+                'message' => "Cập nhật silde thành công"
             ], 200);        
        } 
        catch (\Exception $th) {
         throw new HttpException(500, $th->getMessage());
         }
     }
-
 
     //  // select one
     public function  bannerDetail($id){
@@ -92,6 +90,8 @@ class BannerController extends BaseController
             throw new HttpException(500, $errors);
         }
     }
+    
+
 
     public function listBanner(Request $request)
     {
@@ -104,4 +104,31 @@ class BannerController extends BaseController
             throw new HttpException(500, $th->getMessage()) ;
         }
     }
+
+    public function listBannerNormal(Request $request)
+    {
+        $input = $request->all();
+        try {
+            $banner = new Banner();
+            $data = $banner->searchBannerNormal($input); 
+            return $this->response->collection($data, new BannerTransformer);            
+        } catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage()) ;
+        }
+    }
+
+    public function  deleteBanner($id){
+        try {
+            $data = Banner::findOrFail($id);
+            $data->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Xóa config thành công"
+        ], 200);
+        } 
+        catch (\Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
 }
