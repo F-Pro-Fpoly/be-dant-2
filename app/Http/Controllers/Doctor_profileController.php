@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Doctor_profileController extends BaseController
 {
-    // add
+    // add Done
     public function addDoctor_profile(Request $request){
         $input = $request->all();
         (new InsertDoctor_profileValidate($input));
@@ -40,23 +40,14 @@ class Doctor_profileController extends BaseController
             throw new HttpException(500, $errors);
         }
     }
-    // select all ????
+    // select all ???? thiếu specialist name của transformer
     public function listDoctor_profile(Request $request){
         $input = $request->all();
-
         $Doctor_profile = new Doctor_profile();
-        if(!empty($input['get'])){
-            if($input['get'] == 'all'){
-                $Doctor_profile = $Doctor_profile->all();
-                return response()->json([
-                    'data' => $Doctor_profile
-                ],200);
-            }
-        }
         $data = $Doctor_profile->searchDoctor_profile($input);
         return $this->response->paginator($data, new Doctor_profileTransformer);
     }
-    //select ID
+    //select ID ??? thiếu specialist name của transformer
     public function Doctor_profileID(Request $request, $id){
         $input = $request->all();
         $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
@@ -64,7 +55,7 @@ class Doctor_profileController extends BaseController
         return $this->response->paginator($data, new Doctor_profileTransformer);
         
     }
-    // update
+    // update Done
     public function updateDoctor_profile(Request $request, $id){
         $input = $request->all();
         //(new UpdateDoctor_profileValidate($input));
@@ -97,7 +88,7 @@ class Doctor_profileController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
-    // delete
+    // delete Done
     public function deleteDoctor_profile($id){
         try {
             $data = Doctor_profile::where('id_user',$id)->first();
@@ -111,7 +102,7 @@ class Doctor_profileController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
-    // client
+    // client ??? dùng get bình thường
     public function Doctor_profile_ID(Request $request, $id){
         $Doctor_profile = Doctor_profile::select('doctor_profiles.*', 'users.name as doctor_name', 'specialists.name as specialists_name')
                         ->join('users', 'users.id', 'doctor_profiles.id_user')
