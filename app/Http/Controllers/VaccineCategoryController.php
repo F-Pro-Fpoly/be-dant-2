@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Transformer\Vaccine\VaccineTransformer;
 use App\Http\Transformer\VaccineCategory\VaccineCategoryTransformer;
 use App\Supports\TM_Error;
 use Illuminate\Http\Request;
@@ -49,18 +50,31 @@ class VaccineCategoryController extends BaseController
     public function update(Request $request, $id) {
         $input = $request->all();
         try {
+            $vaccine_cate = Vaccine_category::findOrFail($id);
             if(!empty($input['parent'])) {
                 $parent_id = $input['parent']['parent_id'];
                 if(!empty($parent_id)) {
                     $input['parent_id'] = $parent_id;
+                }else{
+                    $input['parent_id'] = null;
                 }
                 unset($input['parent']);
             }
-            $vaccine_cate = Vaccine_category::findOrFail($id);
             $vaccine_cate->update($input);
             return response()->json([
-                'message' => "thêm danh mục thành công"
+                'message' => "Cập nhập danh mục thành công"
             ], 200);
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+    }
+
+    public function show($id, Request $request) {
+        $input = $request->all();
+        try {
+            $vaccine_cate = Vaccine_category::findOrFail($id);
+            return $this->response->item($vaccine_cate, new VaccineCategoryTransformer());
         } catch (\Exception $ex) {
             $ex_handle = new TM_Error($ex);
             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
