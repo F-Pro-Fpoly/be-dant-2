@@ -9,7 +9,7 @@ use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Transformer\National\NationalTransformer;
 
-class NationalController extends Controller
+class NationalController extends BaseController
 {
        // add
        public function addNational(Request $request){
@@ -68,7 +68,10 @@ class NationalController extends Controller
         $input = $request->all();
         $national = new national();
         $data = $national->searchNational($input);
-        return $this->response->paginator($data, new NationalTransformer);
+        if(!empty($input['limit'])){
+            return $this->response->paginator($data, new NationalTransformer());
+        }
+        return $this->response->collection($data, new NationalTransformer());
     }
     //select ID
     public function listNational_ID($id){

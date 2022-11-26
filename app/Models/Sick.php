@@ -19,25 +19,42 @@ class Sick extends BaseModel
         'updated_by'
     ];
 
-    public function searchSick($input = []){
-        $dataInput =[];
-        if(!empty($input['name'])){
-            $dataInput[] = [
-                'name' , "like", "%".$input['name']."%"
-            ];
+    public function searchSick(array $input = []){
+        // $dataInput =[];
+        // if(!empty($input['name'])){
+        //     $dataInput[] = [
+        //         'name' , "like", "%".$input['name']."%"
+        //     ];
+        // }
+        // if(!empty($input['slug'])){
+        //     $dataInput[] = [
+        //         'slug' , "like", "%".$input['slug']."%"
+        //     ];
+        // }
+        // if(!empty($input['code'])){
+        //     $dataInput[] = [
+        //         'code' , "=",$input['code']
+        //     ];
+        // }
+        // $data = $this->search($dataInput, [], 5);
+        $query = $this->model();
+        if(!empty($input['name'])) {
+            $query->where('name', 'like', "%{$input['name']}%");
         }
         if(!empty($input['slug'])){
-            $dataInput[] = [
-                'slug' , "like", "%".$input['slug']."%"
-            ];
+            $query->where('slug', 'like', "%{$input['slug']}%");
         }
         if(!empty($input['code'])){
-            $dataInput[] = [
-                'code' , "=",$input['code']
-            ];
+            $query->where('code', $input['code']);
         }
-        $data = $this->search($dataInput, [], 5);
-        return $data;
+        if(!empty($input['is_active'])) {
+            $query->where('is_active', $input['is_active']);
+        }
+        if(!empty($input['limit'])){
+            return $query->paginate($input['limit']);
+        }else{
+            return $query->get();
+        }
     }
 
 }

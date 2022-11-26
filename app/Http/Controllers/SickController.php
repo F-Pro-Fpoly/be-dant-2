@@ -41,8 +41,10 @@ class SickController extends BaseController
         $input = $request->all();
         $sick = new sick();
         $data = $sick->searchSick($input);
+        if(empty($input['limit'])){
+            return $this->response->collection($data, new SickTransformer());
+        }
         return $this->response->paginator($data, new SickTransformer);
-
     }
 
     public function updateSick(Request $request, $id)

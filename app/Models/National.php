@@ -5,33 +5,38 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class National extends Model
+class National extends BaseModel
 {
     // use HasFactory;
     protected $table = "nationals";
     protected $fillable = [
         'code',
         'name',
-        'slug'
+        'slug',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'deleted',
+        'deleted_at',
+        'deleted_by'
     ];
     public function searchNational($input = []){
-        $dataInput =[];
+        $query = $this->model();
         if(!empty($input['name'])){
-            $dataInput[] = [
-                'name' , "like", "%".$input['name']."%"
-            ];
+            $query->where('name', 'like', "%{$input['name']}%");
         }
         if(!empty($input['slug'])){
-            $dataInput[] = [
-                'slug' , "like", "%".$input['slug']."%"
-            ];
+            $query->where('slug', $input['slug']);
         }
         if(!empty($input['code'])){
-            $dataInput[] = [
-                'code' , "=",$input['code']
-            ];
+            $query->where('code', $input['code']);
         }
-        $data = $this->search($dataInput, [], 5);
-        return $data;
+
+        if(!empty($input['limit'])){
+            return $query->paginate($input['limit']);
+        }else{
+            return $query->get();
+        }
     }
 }
