@@ -23,7 +23,7 @@ class InsertVaccineValidate extends ValidatorBase
         return [
             "code" => "required|unique:vaccines",
             'name' => "required|min:8",
-            'price' => "required|number",
+            'price' => "required",
             'description' => "required",
             'sick_ids' => "required",
             'category_ids' => 'required',
