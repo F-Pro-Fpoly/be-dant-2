@@ -269,9 +269,18 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         }
         // dd($schedule_dates);
 
-        $schedules = Schedule::where('date', $date)->where('doctor_id', $doctor_id)
-            ->where('status_code', 'STILLEMPTY')
-            ->get();
+        $query = Schedule::model()->where('date', $date)->where('doctor_id', $doctor_id)
+            ->where('status_code', 'STILLEMPTY');
+       
+        if(!empty($input['interval'])){
+        
+            $i = $input['interval'];
+            $query->whereHas('timeslot', function ( $query) use ($i) {
+                
+                $query->where('interval', '=', $i);
+            });     
+        }
+         $schedules = $query->get(); 
         
         foreach ($schedules as $key => $schedule) {
             $time_slot[] = [
