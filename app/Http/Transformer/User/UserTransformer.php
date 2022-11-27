@@ -51,7 +51,8 @@ class UserTransformer extends TransformerAbstract
         // dd($this->is_add_data_doctor);
         if($this->is_add_data_doctor) {
             $schudule_data = $user->get_data_schudule([
-                'date' => $this->input['schedule_date']??null
+                'date' => $this->input['schedule_date']??null,
+                'interval' => $this->input['interval']??null
             ]);
             $data = array_merge($data, $schudule_data);
         }
