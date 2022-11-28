@@ -29,6 +29,14 @@ class Vaccine extends BaseModel
         'deleted_by'
     ];
 
+    public function file() {
+        return $this->belongsTo(File::class, 'img_id', 'id');
+    }
+
+    public function national() {
+        return $this->belongsTo(National::class, 'national_id', 'id');
+    }
+
     public function searchVaccine($input = []){
         $dataInput =[];
         if(!empty($input['name'])){
