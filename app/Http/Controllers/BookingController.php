@@ -126,6 +126,24 @@ class BookingController extends BaseController
     }
 
 
+    public function cancelBooking(Request $request, $id)
+    {
+        $input = $request->all();
+        try{
+            $data = Booking::find($id);
+            $data->update([
+                'status_id' => $input['status_id']     
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => "Hủy lịch thành công"
+           ], 200);
+        }
+        catch (Exception $th){
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
     public function updateBooking(Request $request, $id){
        $input = $request->all();
        (new UpdateBookingValidate($input));
