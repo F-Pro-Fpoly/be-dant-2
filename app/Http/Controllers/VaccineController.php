@@ -6,6 +6,7 @@ use App\Http\Transformer\Vaccine\VaccineTransformer;
 use App\Http\Validators\Vaccine\InsertVaccineValidate;
 use App\Models\File;
 use App\Models\Vaccine;
+use App\Supports\TM_Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Exception;
@@ -65,23 +66,52 @@ class VaccineController extends BaseController
         return $this->response->paginator($data, new VaccineTransformer);
     }
 
+    public function show($id, Request $request) {
+        $input = $request->all();
+
+        try {
+            $vaccine = Vaccine::findOrFail($id);
+
+            return $this->response->item($vaccine, new VaccineTransformer());
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+    }
+
     public function updateVaccine(Request $request, $id)
     {
        $input = $request->all();
-       (new InsertVaccineValidate($input));
+    //    (new InsertVaccineValidate($input));
 
       try {
-            $data = Vaccine::find($id);
+            if(!empty($input['sick_ids'])) {
+                $sick_ids = json_encode($input['sick_ids']);
+            }
+            if(!empty($input['category_ids'])) {
+                $category_ids = json_encode($input['category_ids']);
+            }
+            if(!empty($input['img_link'])) {
+                $file = File::create([
+                    "alt" => $input['img_alt'] ?? null,
+                    "url" => $input['img_link'],
+                    "created_by" => auth()->user()->id
+                ]);
+            }
+            $data = Vaccine::findOrFail($id);
             if($data){
                 $data->update([
-                'code' => $input['code'] ?? $data->code,
-                'name' => $input['name'] ?? $data->name,
-                'slug' => Str::slug($input['name']) ,
-                "price" => $input['price'] ?? $data->price,
-                "description" => $input['description'] ?? $data->description,
-                "sick_id" => $input['sick_id'] ?? $data->sick_id,
-                "national_id" => $input['national_id'] ?? $data->national_id,
-                'updated_by' => auth()->user()->id
+                    'code' => $input['code'] ?? $data->code,
+                    'name' => $input['name'] ?? $data->name,
+                    'slug' => $input['slug'] ?? $data->slug ,
+                    "price" => $input['price'] ?? $data->price,
+                    "description" => $input['description'] ?? $data->description,
+                    "national_id" => $input['national_id'] ?? $data->national_id,
+                    'updated_by' => auth()->user()->id,
+                    'sick_ids' => $sick_ids ?? $data->sick_ids,
+                    'category_ids' => $category_ids ?? $data->category_ids,
+                    'img_id' => !empty($file) ? $file->id : $data->img_id,
+                    'is_active' => $input['is_active'] ?? $data->is_active
                 ]);
                 return response()->json([
                     'status' => 200,
