@@ -53,6 +53,7 @@ class VaccineTransformer extends TransformerAbstract
             'national_name' => $vaccine->national->name,
             'sick_ids' => $sick_ids,
             'category_ids' => $category_ids
+            'is_active' => $vaccine->is_active,
         ];
     }
 }

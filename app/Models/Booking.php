@@ -86,6 +86,9 @@ class Booking extends BaseModel
         if(!empty($input['user_id'])) {
             $query->where('doctor_id', '=', $input['user_id']);
         }
+        if(!empty($input['code'])) {
+            $query->where('code', '=', $input['code']);
+        }
         
 
         if(!empty($input['date'])) {
