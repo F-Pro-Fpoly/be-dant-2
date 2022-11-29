@@ -52,8 +52,8 @@ class VaccineTransformer extends TransformerAbstract
             'img_link' => $vaccine->file->url ? env('APP_URL', null)."{$vaccine->file->url}" : null,
             'national_name' => $vaccine->national->name,
             'sick_ids' => $sick_ids,
-            'category_ids' => $category_ids
-            'is_active' => $vaccine->is_active,
+            'category_ids' => $category_ids,
+            'is_active' => $vaccine->is_active
         ];
     }
 }
