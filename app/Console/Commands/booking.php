@@ -42,12 +42,11 @@ class booking extends Command
         
         $email = User::where('id', 27)->first();
         $e = $email->email;
-        Mail::send('email.test', function ($email) use ($e) {
+        Mail::send('email.test',compact('email'), function ($email) use ($e) {
             $email->from('phuly4795@gmail.com','Fpro Hopital');
-            $email->subject('Fpro Hopital - test');
-            $email->to("phuly4795@gmail.com", 'Quý khách');
+            $email->subject('Fpro Hopital - Trả lời liên hệ');
+            $email->to($e, 'Quý khách');
         });
-
 
 
     }

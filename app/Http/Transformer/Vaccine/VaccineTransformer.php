@@ -20,6 +20,7 @@ class VaccineTransformer extends TransformerAbstract
             'description' => $vaccine->description,
             'sick_id' => $vaccine->sick_id,
             'national_id' => $vaccine->national_id,
+            'is_active' => $vaccine->is_active,
         ];
     }
 }

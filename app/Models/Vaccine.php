@@ -29,7 +29,7 @@ class Vaccine extends BaseModel
         'deleted_by'
     ];
 
-    public function searchVaccine($input = []){
+    public function searchVaccine($input = [], $limit = null){
         $dataInput =[];
         if(!empty($input['name'])){
             $dataInput[] = [
@@ -46,12 +46,17 @@ class Vaccine extends BaseModel
                 'code' , "=",$input['code']
             ];
         }
+        if(!empty($input['is_active'])){
+            $dataInput[] = [
+                'is_active' , "=",$input['is_active']
+            ];
+        }
         if(!empty($input['price'])){
             $dataInput[] = [
                 'price' , "=",$input['price']
             ];
         }
-        $data = $this->search($dataInput, [], 5);
+        $data = $this->search($dataInput, [],$limit);
         return $data;
     }
 }
