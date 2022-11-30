@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Transformer\News\NewsTransformer;
 use App\Http\Validators\News\InsertNewsValidate;
 use App\Http\Validators\News\UpdateNewsValidate;
-use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
+use App\Models\News;
+use App\Models\News_view;
 use App\Models\News_category;
 use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -181,6 +183,12 @@ class NewsController extends BaseController
             $data->update([
                 'view' => $data->view + 1,
             ]);
+
+            $dataView = News_view::create([
+                'number' => 1,
+                'news_id' => $data->id
+            ]);
+
             $input = $request->all();
             $News = News::where('slug',$id)->where('status', 1)->first();
             $dataNews = $News->searchNews($input);
@@ -233,10 +241,40 @@ class NewsController extends BaseController
     //     $data = $News->searchNews($input);
     //     return $this->response->paginator($data, new NewsTransformer);
     // }
-       public function listall(Request $request){
+    public function listall(Request $request){
         $input = $request->all();
         $News = new News();
         $data = $News->searchNews($input);
         return $this->response->paginator($data, new NewsTransformer);
+    }
+
+    public function getTopWeek(){
+        try{
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
+            $now = date('Y-m-d H:i:s', strtotime('-1 week'));
+
+            $ts = strtotime($now);
+            $start = (date('w', $ts) == 0) ? $ts : strtotime('last monday', $ts);
+            $start_date = date('Y-m-d H:i:s', $start);
+            $end_date = date('Y-m-d H:i:s', strtotime('next sunday', $start));
+            
+            $data = News_view::select('news.*','news_category.name as category_name', News_view::raw('COUNT(news_views.news_id) as viewWeek'))
+                            ->join('news', 'news.id', 'news_views.news_id')
+                            ->join('news_category', 'news_category.id', 'news.category_id')
+                            ->where('news_views.created_at', ">", $start_date)
+                            ->where('news_views.created_at', "<", $end_date)
+                            ->groupBy('news_views.news_id')
+                            ->orderBy('viewWeek','desc')
+                            ->limit(4)
+                            ->get();    
+
+            return response()->json([
+                'status' => 200,
+                'data' => $data
+            ], 400);
+        }
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
     }
 }
