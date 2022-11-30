@@ -9,6 +9,8 @@ class Sick extends BaseModel
 {
     use HasFactory;
 
+    protected $table = "sicks";
+
     protected $fillable = [
         'name', 
         'code',
