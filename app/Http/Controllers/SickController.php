@@ -39,7 +39,7 @@ class SickController extends BaseController
     public function listSick(Request $request)
     {
         $input = $request->all();
-        $sick = new sick();
+        $sick = new Sick();
         $data = $sick->searchSick($input);
         if(empty($input['limit'])){
             return $this->response->collection($data, new SickTransformer());
