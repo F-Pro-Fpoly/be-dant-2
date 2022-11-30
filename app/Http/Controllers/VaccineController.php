@@ -62,8 +62,25 @@ class VaccineController extends BaseController
     {
         $input = $request->all();
         $vaccine = new Vaccine();
-        $data = $vaccine->searchVaccine($input);
+        $data = $vaccine->searchVaccine($input, 5);
         return $this->response->paginator($data, new VaccineTransformer);
+    }
+    public function listVaccineNormal(Request $request)
+    {
+        $input = $request->all();
+        $vaccine = new Vaccine();
+        $data = $vaccine->searchVaccine($input);
+        return $this->response->collection($data, new VaccineTransformer);
+    }
+    public function VaccineDetailNormal($id){
+        try {
+            $data =  Vaccine::findOrFail($id);              
+            return $this->response->item($data, new VaccineTransformer); 
+          
+        } catch (\Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }
     }
 
     public function show($id, Request $request) {

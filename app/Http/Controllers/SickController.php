@@ -46,11 +46,21 @@ class SickController extends BaseController
         }
         return $this->response->paginator($data, new SickTransformer);
     }
+    public function SickDetail(Request $request, $id)
+    {
+        $input = $request->all();
+        try {
+            $sick =  Sick::findOrFail($id);
+            return $this->response->item($sick, new SickTransformer());
+        } catch (\Exception $th) {
+            throw new HttpException($th->statusCode, $th->getMessage());         
+        }
+    }
 
     public function updateSick(Request $request, $id)
     {
        $input = $request->all();
-       (new InsertSickValidate($input));
+    //    (new InsertSickValidate($input));
 
       try {
             $data = Sick::find($id);

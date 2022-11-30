@@ -22,7 +22,7 @@ class Sick extends BaseModel
     ];
 
     public function searchSick(array $input = []){
-        // $dataInput =[];
+        $dataInput =[];
         // if(!empty($input['name'])){
         //     $dataInput[] = [
         //         'name' , "like", "%".$input['name']."%"
