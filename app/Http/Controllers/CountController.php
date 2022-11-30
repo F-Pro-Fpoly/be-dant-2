@@ -20,8 +20,9 @@ use App\Models\Contact;
 use App\Models\News_category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Http\Request;
+use App\Http\Transformer\Booking\BookingDPTransformer;
 
-use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CountController extends BaseController
 {
@@ -79,38 +80,45 @@ class CountController extends BaseController
 
         }
         function getStatistic() {
-            $User = User::all()->count();
-            $priceBookingInDepartment = Booking::join('departments', 'departments.id', 'bookings.department_id')->sum('departments.price');
-            $Booking = Booking::all()->count();
-
-            $Contact = Contact::all()->count();
-            $noReplyContact = Contact::where('status_id', 9)->count();
-
-            return response()->json([
-                'status' => 200,
-                'data' => [
-                    'user' => $User,
-                    'priceBooking' => $priceBookingInDepartment,
-                    'priceBooking_format' => number_format($priceBookingInDepartment)." VNĐ",
-                    'booking' => $Booking,
-                    'contact' => $Contact,
-                    'noReplyContact' => $noReplyContact,   
-                ]
-            ], 200);
+            try{
+                $User = User::all()->count();
+                $priceBookingInDepartment = Booking::join('departments', 'departments.id', 'bookings.department_id')->sum('departments.price');
+                $Booking = Booking::all()->count();
+    
+                $Contact = Contact::all()->count();
+                $noReplyContact = Contact::where('status_id', 9)->count();
+    
+                return response()->json([
+                    'status' => 200,
+                    'data' => [
+                        'user' => $User,
+                        'priceBooking' => $priceBookingInDepartment,
+                        'priceBooking_format' => number_format($priceBookingInDepartment)." VNĐ",
+                        'booking' => $Booking,
+                        'contact' => $Contact,
+                        'noReplyContact' => $noReplyContact,   
+                    ]
+                ], 200);
+            }
+            catch(\Exception $th){
+                $errors = $th->getMessage();
+                throw new HttpException(500, $errors);
+            }
+            
         }
         function getStatisticChart() {
-
-            $priceSpecialist = Booking::select('specialists.name',Department::raw('SUM(departments.price) as price'))
+            try{
+                $priceSpecialist = Booking::select('specialists.name as specialists_name',Department::raw('SUM(departments.price) as price'))
                                         ->join('departments', 'departments.id', 'bookings.department_id')
                                         ->join('specialists', 'specialists.id', 'departments.specialist_id')
                                         ->groupBy('specialists.name')
+                                        ->where('bookings.status_id', 4)
                                         ->get();            
-            return response()->json([
-                'status' => 200,
-                'data' => $priceSpecialist,  
-                    // 'numbber' => Number_format($priceSpecialist->price),
-            ], 200);
-        }
-
-        
+                return $this->response->collection($priceSpecialist, new BookingDPTransformer());
+            }
+            catch(\Exception $th){
+                $errors = $th->getMessage();
+                throw new HttpException(500, $errors);
+            }       
+        }       
 }
