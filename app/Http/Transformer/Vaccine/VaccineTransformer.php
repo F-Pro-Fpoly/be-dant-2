@@ -42,6 +42,7 @@ class VaccineTransformer extends TransformerAbstract
             'name' => $vaccine->name,
             'slug' => $vaccine->slug,
             'price' => $vaccine->price,
+            'price_formated' => number_format($vaccine->price)." VNĐ",
             'description' => $vaccine->description,
             'sick_id' => $vaccine->sick_id,
             'national_id' => $vaccine->national_id,
