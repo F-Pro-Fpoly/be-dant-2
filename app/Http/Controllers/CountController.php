@@ -21,7 +21,9 @@ use App\Models\News_category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Http\Request;
 
-class CountController extends Controller
+use Exception;
+
+class CountController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -76,5 +78,39 @@ class CountController extends Controller
             }
 
         }
+        function getStatistic() {
+            $User = User::all()->count();
+            $priceBookingInDepartment = Booking::join('departments', 'departments.id', 'bookings.department_id')->sum('departments.price');
+            $Booking = Booking::all()->count();
 
+            $Contact = Contact::all()->count();
+            $noReplyContact = Contact::where('status_id', 9)->count();
+
+            return response()->json([
+                'status' => 200,
+                'data' => [
+                    'user' => $User,
+                    'priceBooking' => $priceBookingInDepartment,
+                    'priceBooking_format' => number_format($priceBookingInDepartment)." VNĐ",
+                    'booking' => $Booking,
+                    'contact' => $Contact,
+                    'noReplyContact' => $noReplyContact,   
+                ]
+            ], 200);
+        }
+        function getStatisticChart() {
+
+            $priceSpecialist = Booking::select('specialists.name',Department::raw('SUM(departments.price) as price'))
+                                        ->join('departments', 'departments.id', 'bookings.department_id')
+                                        ->join('specialists', 'specialists.id', 'departments.specialist_id')
+                                        ->groupBy('specialists.name')
+                                        ->get();            
+            return response()->json([
+                'status' => 200,
+                'data' => $priceSpecialist,  
+                    // 'numbber' => Number_format($priceSpecialist->price),
+            ], 200);
+        }
+
+        
 }
