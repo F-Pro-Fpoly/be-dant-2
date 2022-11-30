@@ -13,8 +13,9 @@
 |
 */
 use App\Http\Model\User;
-
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Booking;
 $router->get('/', function () use ($router) {
     return $router->app->version() . " - FPro";
 });
@@ -63,7 +64,42 @@ $router->post("/auto-pull", function() {
 
 
 $router->get("/hello", function(){
-    return "hello";
+
+    $now = date("Y-m-d"); 
+
+    $emailList = DB::table('bookings')
+    ->select("users.email","users.name","bookings.id","timeslots.interval","timeslots.time_start","timeslots.time_end")
+    ->join('schedules','schedules.id', "=",'bookings.schedule_id')
+    ->join('users','users.id', "=", 'bookings.user_id')
+    ->join("timeslots", "timeslots.id", "=", "schedules.timeslot_id")
+    ->where("schedules.date" , $now)
+    ->get();
+
+    foreach ($emailList as $v) {
+
+        $booking = DB::table('bookings')
+        ->select("users.email","users.name","bookings.id","timeslots.interval","timeslots.time_start","timeslots.time_end")
+        ->join('schedules','schedules.id', "=",'bookings.schedule_id')
+        ->join('users','users.id', "=", 'bookings.user_id')
+        ->join("timeslots", "timeslots.id", "=", "schedules.timeslot_id")
+        ->where("bookings.id", $v->id)
+        ->first();
+    
+    }
+
+    $dataEmail = [];
+            
+    foreach ($emailList as $v) {
+
+        $dataEmail['email'][] = $v->email;
+    
+    }
+
+    Mail::send('email.booking', compact('booking'), function ($email) use ($dataEmail) {
+        $email->subject('T&PTimes - Tin HOT nè');
+        $email->to($dataEmail['email']);            
+    });
+    
 });
 
 $api = app('Dingo\Api\Routing\Router');

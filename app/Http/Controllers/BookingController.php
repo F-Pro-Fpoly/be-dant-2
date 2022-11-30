@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends BaseController
 {
@@ -126,6 +128,24 @@ class BookingController extends BaseController
     }
 
 
+    public function cancelBooking(Request $request, $id)
+    {
+        $input = $request->all();
+        try{
+            $data = Booking::find($id);
+            $data->update([
+                'status_id' => $input['status_id']     
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => "Hủy lịch thành công"
+           ], 200);
+        }
+        catch (Exception $th){
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
     public function updateBooking(Request $request, $id){
        $input = $request->all();
        (new UpdateBookingValidate($input));
@@ -203,6 +223,26 @@ class BookingController extends BaseController
             $schedule->update_schedule($inputSchule);
             $booking = new Booking();
             $booking->create_booking($input);
+
+            $e = $booking->email;
+            if(empty($e)){
+                $data = DB::table('bookings')
+                ->select('users.*',"bookings.code", 'bookings.created_at as ld','specialists.name as ck','schedules.date as nk', 'timeslots.time_start as bd', 'timeslots.time_end as kt')
+                ->join('users','users.id', "=", 'bookings.user_id')
+                ->join('specialists', 'specialists.id', "=", "bookings.specialist_id")
+                ->join('schedules', 'schedules.id', "=", "bookings.schedule_id")
+                ->join('timeslots', 'timeslots.id', "=", "schedules.timeslot_id")
+
+                ->where("bookings.id", $booking->id)
+                ->first();
+                $e = $data->email;
+            }
+
+            Mail::send('email.BookingBooked',compact('booking','data'), function ($email) use ($e) {
+                $email->from('phuly4795@gmail.com','Fpro Hopital');
+                $email->subject('Fpro Hopital - Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi');
+                $email->to($e, 'Quý khách');
+            });
 
 
             return response()->json([

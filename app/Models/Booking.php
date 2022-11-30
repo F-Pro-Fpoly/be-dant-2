@@ -86,6 +86,9 @@ class Booking extends BaseModel
         if(!empty($input['user_id'])) {
             $query->where('doctor_id', '=', $input['user_id']);
         }
+        if(!empty($input['code'])) {
+            $query->where('code', '=', $input['code']);
+        }
         
 
         if(!empty($input['date'])) {
@@ -131,7 +134,20 @@ class Booking extends BaseModel
         }
         
         if(!empty($input['status'])) {
-            $query->where('status_id', '=', $input['status']);
+            $mang  =  $input['status'];
+            $mang_tmp = explode(",", $mang);
+
+            $query->where(function ($q) use ($mang_tmp) {       
+            foreach($mang_tmp as $key => $v) {           
+                if($key > 0){
+                    $q->orWhere('status_id', '=', $v);
+                }else{
+                    $q->where('status_id', '=', $v);
+                }
+           
+            }
+         });
+            
         }
         $query->where('user_id', '=', $id);
         if(!empty($input['department_id'])){

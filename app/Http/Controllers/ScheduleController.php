@@ -89,12 +89,12 @@ class ScheduleController extends BaseController
 
     public function get_schedule_date_by_doctor(Request $request, $id) {
         $input = $request->all();
-
+      
         try {
             $user = User::findOrFail($id??null);
             $data_schedule = $user->get_data_schudule([
                 'date' => $input['date']??null,
-                'interval' => $input['interval']??null
+                'interval' => $input['interval'] ?? null
             ]);
             // dd($data_schedule);
             return response()->json([
