@@ -60,7 +60,7 @@ class SickController extends BaseController
     public function updateSick(Request $request, $id)
     {
        $input = $request->all();
-       (new InsertSickValidate($input));
+    //    (new InsertSickValidate($input));
 
       try {
             $data = Sick::find($id);
