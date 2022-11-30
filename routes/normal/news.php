@@ -12,5 +12,6 @@
         $api->post('/add_news', 'NewsController@addNews');
         $api->put('/update_news/{id:[0-9]+}', 'NewsController@updateNews');
         $api->get('/list', 'NewsController@listall');
+        $api->get('/topWeek', 'NewsController@getTopWeek');
     });
 ?>
