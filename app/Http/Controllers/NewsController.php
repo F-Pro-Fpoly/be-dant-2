@@ -271,7 +271,7 @@ class NewsController extends BaseController
             return response()->json([
                 'status' => 200,
                 'data' => $data
-            ], 400);
+            ], 200);
         }
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
