@@ -18,6 +18,7 @@ class Booking extends BaseModel
         'description',
         'infoAfterExamination',
         'reasonCancel',
+        'is_vaccine',
         'id_file',
         'email',
         'status_code',

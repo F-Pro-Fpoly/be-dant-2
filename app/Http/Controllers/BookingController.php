@@ -10,9 +10,12 @@ use App\Http\Validators\Booking\InsertBookingValidate;
 use App\Http\Validators\Booking\UpdateBookingValidate;
 use App\Models\Booking;
 use App\Models\File;
+use App\Models\Injection_info;
 use App\Models\Schedule;
+use App\Models\Specialist;
 use App\Models\status;
 use App\Models\User;
+use App\Supports\TM_Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -85,11 +88,15 @@ class BookingController extends BaseController
     }
 
     public function listMyBooking(Request $request, $id){
-       
-        $input = $request->all();
-        $booking = new Booking();
-        $data = $booking->searchMyBooking($input,$id);
-        return $this->response->collection($data, new BookingTransformer);
+       try {
+            $input = $request->all();
+            $booking = new Booking();
+            $data = $booking->searchMyBooking($input,$id);
+            return $this->response->collection($data, new BookingTransformer);
+       } catch (\Exception $th) {
+            $ex_handle = new TM_Error($th);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+       }
     }
     
 
@@ -250,6 +257,61 @@ class BookingController extends BaseController
             ],200);
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    public function create_booking_vaccine(Request $request) {
+        $input = $request->all();
+
+        $date = date('YmdHis', time());
+
+        try {
+            $user_id = auth()->user()->id ?? null;
+            $input['code'] = "BOOKING{$date}".random_int(10, 99);
+            // vaccine_code, user_id, 
+
+            if($user_id) {
+                $input['user_id'] = $user_id;
+            }
+            $input['status_id'] = 1;
+            $input['status_code'] = "NEW";
+            $input['is_vaccine'] = 1;
+            $input['type'] = 'LOGIN';
+
+            $specialist_vaccine = Specialist::where('code', 'vaccine')->first();
+
+            $input_booking = [
+                'code' => $input['code'],
+                'status_id' => 1,
+                'status_code' => 'NEW',
+                'vaccine_code' => $input['vaccine_code'] ?? null,
+                'is_vaccine' => 1,
+                'type' => 'LOGIN',
+                'user_id' => $user_id,
+                'description' => $input['description'] ?? null,
+                'specialist_id' => $specialist_vaccine->id ?? null
+            ];
+
+            $booking =  Booking::create($input_booking);
+            if(!empty($input['is_vaccine'])){
+                $input_injection = [
+                    'type' => 'screening_test',
+                    'time_apointment' => $input['date'] ?? null,
+                    'status_code' => 'NEW',
+                    'booking_id' => $booking->id ?? null,
+                    'booking_code' => $booking->code ?? null,
+                    'created_by' => $user_id
+                ];
+
+                Injection_info::create($input_injection);
+            }
+
+            return response()->json([
+                'message' => 'Đặt lịch tiêm thành công'
+            ], 200);
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
     }
 
