@@ -248,7 +248,7 @@ class NewsController extends BaseController
         return $this->response->paginator($data, new NewsTransformer);
     }
 
-    public function getTopWeek(){
+    public function getTopWeek1(){
         try{
             date_default_timezone_set('Asia/Ho_Chi_Minh');
             $now = date('Y-m-d H:i:s', strtotime('-1 week'));
@@ -268,6 +268,33 @@ class NewsController extends BaseController
                             ->limit(4)
                             ->get();    
 
+            return response()->json([
+                'status' => 200,
+                'data' => $data
+            ], 200);
+        }
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+    public function getTopWeek3(){
+        try{
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
+            $now = date('Y-m-d H:i:s', strtotime('-1 week'));
+
+            $ts = strtotime($now);
+            $start = (date('w', $ts) == 0) ? $ts : strtotime('last monday', $ts);
+            $start_date = date('Y-m-d H:i:s', $start);
+            $end_date = date('Y-m-d H:i:s', strtotime('next sunday', $start));
+            
+            $data = News_view::select('news.*','news_category.name as category_name', News_view::raw('COUNT(news_views.news_id) as viewWeek'))
+                            ->join('news', 'news.id', 'news_views.news_id')
+                            ->join('news_category', 'news_category.id', 'news.category_id')
+                            ->where('news_views.created_at', ">", $start_date)
+                            ->where('news_views.created_at', "<", $end_date)
+                            ->groupBy('news_views.news_id')
+                            ->orderBy('viewWeek','desc')
+                            ->skip(1)->take(3)->get();
             return response()->json([
                 'status' => 200,
                 'data' => $data

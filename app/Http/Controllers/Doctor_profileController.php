@@ -17,11 +17,10 @@ class Doctor_profileController extends BaseController
     // add Done
     public function addDoctor_profile(Request $request){
         $input = $request->all();
-        (new InsertDoctor_profileValidate($input));
         try{
             Doctor_profile::create([
                 'id_user' => auth()->user()->id,
-                'namelink' => $input['namelink'],
+                'namelink' => "fb" ,
                 'link' => $input['link'],
                 'context' => $input['context'],
                 'level' => $input['level'],
@@ -39,22 +38,44 @@ class Doctor_profileController extends BaseController
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
         }
-    }
-    // select all ???? thiếu specialist name của transformer
-    public function listDoctor_profile(Request $request){
-        $input = $request->all();
-        $Doctor_profile = new Doctor_profile();
-        $data = $Doctor_profile->searchDoctor_profile($input);
-        return $this->response->paginator($data, new Doctor_profileTransformer);
-    }
-    //select ID ??? thiếu specialist name của transformer
-    public function Doctor_profileID(Request $request, $id){
-        $input = $request->all();
-        $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
-        $data = $Doctor_profile->searchDoctor_profile($input);
-        return $this->response->paginator($data, new Doctor_profileTransformer);
+
+    
         
     }
+    // select all done
+    public function listDoctor_profile(Request $request){
+        try{
+            $input = $request->all();
+            $Doctor_profile = new Doctor_profile();
+            $data = $Doctor_profile->searchDoctor_profile($input);
+            return $this->response->paginator($data, new Doctor_profileTransformer);
+        }catch(Exception $th){
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }
+    }
+
+    //select ID DONE
+    public function Doctor_profileID(Request $request, $id){
+        try{
+            $input = $request->all();
+            $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
+
+           
+            if($Doctor_profile) {
+                return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
+            }else{
+                return ['data' => 'none'];
+            }
+         
+            
+            
+        } catch(Exception $th){
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        } 
+    }
+
     // update Done
     public function updateDoctor_profile(Request $request, $id){
         $input = $request->all();
@@ -63,8 +84,7 @@ class Doctor_profileController extends BaseController
             $data = Doctor_profile::where('id_user',$id)->first();
 
             if($data){
-                $data->update([
-                    'namelink' => $input['namelink'],
+                $data->update([              
                     'link' => $input['link'],
                     'context' => $input['context'],
                     'level' => $input['level'],
@@ -104,24 +124,15 @@ class Doctor_profileController extends BaseController
     }
     // client ??? dùng get bình thường
     public function Doctor_profile_ID(Request $request, $id){
-        $Doctor_profile = Doctor_profile::select('doctor_profiles.*', 'users.name as doctor_name', 'users.avatar as doctor_avatar','specialists.name as specialists_name')
-                        ->join('users', 'users.id', 'doctor_profiles.id_user')
-                        ->join('specialists', 'specialists.id', 'users.specailist_id')
-                        ->where('doctor_profiles.id_user',$id)->first();
-        if($Doctor_profile){
-            return response()->json([
-                'status'  => 200,
-                'data' => $Doctor_profile
-            ],200);
+        try{
+            $input = $request->all();
+            $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
+            return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
+            
+        } catch(Exception $th){
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
-        else{
-            return response()->json([
-                'status'  => 400,
-                'message' => 'Không tìm thấy thông tin bác sĩ này',
-            ],400);
-        }
-        
-        }
+    }
 }
-    
 

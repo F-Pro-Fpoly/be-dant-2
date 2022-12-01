@@ -41,42 +41,68 @@ class Specialist extends BaseModel
         return $this->belongsTo(File::class, 'thumbnail_id');
     }
     public function searchSpecialist($input = []){
-        $dataInput =[];
-        if(!empty($input['name'])){
-            $dataInput[] = [
-                'name' , "like", "%".$input['name']."%"
-            ];
+        $query = $this->model();
+
+        if(!empty($input['name'])) {
+            $query->where('name', 'like', "%{$input['name']}%");
         }
-        if(!empty($input['slug'])){
-            $dataInput[] = [
-                'slug' , "like", "%".$input['slug']."%"
-            ];
+        if(!empty($input['slug'])) {
+            $query->where('slug', $input['slug']);
         }
-        if(!empty($input['description'])){
-            $dataInput[] = [
-                'description' , "like", "%".$input['description']."%"
-            ];
+        if(!empty($input['code'])) {
+            $query->where('code', $input['code']);
         }
-        if(!empty($input['code'])){
-            $dataInput[] = [
-                'code' , "=",$input['code']
-            ];
+        if(!empty($input['status'])) {
+            $query->where('status', $input['status']);
         }
-        if(!empty($input['status'])){
-            $dataInput[] = [
-                'status' , "=" , $input['status']
-            ];
+        if(!empty($input['is_feature'])) {
+            $query->where('is_feature', $input['is_feature']);
         }
-        if(!empty($input['is_feature'])){
-            $dataInput[] = [
-                'is_feature' , "=" , $input['is_feature']
-            ];
+        if(!empty($input['is_vaccine'])) {
+            $query->where('code', '!=', 'vaccine');
         }
-        if(!empty($input['limit'])){
-            $data = $this->search($dataInput, [], $input['limit']);
-        }else{
-            $data = $this->search($dataInput);
+        if(!empty($input['limit'])) {
+            return $query->paginate($input['limit']);
         }
+        else{
+            return $query->get();
+        }
+        // $dataInput =[];
+        // if(!empty($input['name'])){
+        //     $dataInput[] = [
+        //         'name' , "like", "%".$input['name']."%"
+        //     ];
+        // }
+        // if(!empty($input['slug'])){
+        //     $dataInput[] = [
+        //         'slug' , "like", "%".$input['slug']."%"
+        //     ];
+        // }
+        // if(!empty($input['description'])){
+        //     $dataInput[] = [
+        //         'description' , "like", "%".$input['description']."%"
+        //     ];
+        // }
+        // if(!empty($input['code'])){
+        //     $dataInput[] = [
+        //         'code' , "=",$input['code']
+        //     ];
+        // }
+        // if(!empty($input['status'])){
+        //     $dataInput[] = [
+        //         'status' , "=" , $input['status']
+        //     ];
+        // }
+        // if(!empty($input['is_feature'])){
+        //     $dataInput[] = [
+        //         'is_feature' , "=" , $input['is_feature']
+        //     ];
+        // }
+        // if(!empty($input['limit'])){
+        //     $data = $this->search($dataInput, [], $input['limit']);
+        // }else{
+        //     $data = $this->search($dataInput);
+        // }
         return $data;
     }
 }

@@ -20,8 +20,11 @@ use App\Models\Contact;
 use App\Models\News_category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Http\Request;
+use App\Http\Transformer\Booking\BookingDPTransformer;
 
-class CountController extends Controller
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+class CountController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -76,5 +79,46 @@ class CountController extends Controller
             }
 
         }
-
+        function getStatistic() {
+            try{
+                $User = User::all()->count();
+                $priceBookingInDepartment = Booking::join('departments', 'departments.id', 'bookings.department_id')->sum('departments.price');
+                $Booking = Booking::all()->count();
+    
+                $Contact = Contact::all()->count();
+                $noReplyContact = Contact::where('status_id', 9)->count();
+    
+                return response()->json([
+                    'status' => 200,
+                    'data' => [
+                        'user' => $User,
+                        'priceBooking' => $priceBookingInDepartment,
+                        'priceBooking_format' => number_format($priceBookingInDepartment)." VNĐ",
+                        'booking' => $Booking,
+                        'contact' => $Contact,
+                        'noReplyContact' => $noReplyContact,   
+                    ]
+                ], 200);
+            }
+            catch(\Exception $th){
+                $errors = $th->getMessage();
+                throw new HttpException(500, $errors);
+            }
+            
+        }
+        function getStatisticChart() {
+            try{
+                $priceSpecialist = Booking::select('specialists.name as specialists_name',Department::raw('SUM(departments.price) as price'))
+                                        ->join('departments', 'departments.id', 'bookings.department_id')
+                                        ->join('specialists', 'specialists.id', 'departments.specialist_id')
+                                        ->groupBy('specialists.name')
+                                        ->where('bookings.status_id', 4)
+                                        ->get();            
+                return $this->response->collection($priceSpecialist, new BookingDPTransformer());
+            }
+            catch(\Exception $th){
+                $errors = $th->getMessage();
+                throw new HttpException(500, $errors);
+            }       
+        }       
 }
