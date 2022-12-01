@@ -15,63 +15,31 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class Doctor_profileController extends BaseController
 {
     // add Done
-    public function addDoctor_profile(Request $request, $id){
+    public function addDoctor_profile(Request $request){
         $input = $request->all();
-        if($id){
-            try{
-                $data = Doctor_profile::where('id_user',$id)->first();
-    
-                if($data){
-                    $data->update([
-                        'namelink' => $input['namelink'],
-                        'link' => $input['link'],
-                        'context' => $input['context'],
-                        'level' => $input['level'],
-                        'introduce' => $input['introduce'],
-                        'experience' => $input['experience'],
-                        'updated_by' => auth()->user()->id
-                    ]);
-                    return response()->json([
-                        'status'  => 200,
-                        'message' => 'Cập nhật thông tin thành công',
-                    ],200);
-                }
-                else{
-                    return response()->json([
-                        'status'  => 400,
-                        'message' => 'Không tìm thấy thông tin bác sĩ này',
-                    ],400);
-                }
-            }
-            catch (Exception $th){
-                throw new HttpException(500, $th->getMessage());
-            }
-            
+        try{
+            Doctor_profile::create([
+                'id_user' => auth()->user()->id,
+                'namelink' => "fb" ,
+                'link' => $input['link'],
+                'context' => $input['context'],
+                'level' => $input['level'],
+                'introduce' => $input['introduce'],
+                'experience' => $input['experience'],
+                'created_by' => auth()->user()->id
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Thêm thông tin thành công'
+            ],200);
+
+        } catch(Exception $th){
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
         }
-        else{
-            (new InsertDoctor_profileValidate($input));
-            try{
-                Doctor_profile::create([
-                    'id_user' => auth()->user()->id,
-                    'namelink' => $input['namelink'],
-                    'link' => $input['link'],
-                    'context' => $input['context'],
-                    'level' => $input['level'],
-                    'introduce' => $input['introduce'],
-                    'experience' => $input['experience'],
-                    'created_by' => auth()->user()->id
-                ]);
+
     
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Thêm thông tin thành công'
-                ],200);
-    
-            } catch(Exception $th){
-                $errors = $th->getMessage();
-                throw new HttpException(500, $errors);
-            }
-        }
         
     }
     // select all done
@@ -92,7 +60,15 @@ class Doctor_profileController extends BaseController
         try{
             $input = $request->all();
             $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
-            return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
+
+           
+            if($Doctor_profile) {
+                return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
+            }else{
+                return ['data' => 'none'];
+            }
+         
+            
             
         } catch(Exception $th){
             $errors = $th->getMessage();
@@ -108,8 +84,7 @@ class Doctor_profileController extends BaseController
             $data = Doctor_profile::where('id_user',$id)->first();
 
             if($data){
-                $data->update([
-                    'namelink' => $input['namelink'],
+                $data->update([              
                     'link' => $input['link'],
                     'context' => $input['context'],
                     'level' => $input['level'],
