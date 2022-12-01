@@ -46,7 +46,7 @@ class Contact extends BaseModel
             $query->where('status_id', '=', $input['status_id']);
         }
         
-        $query->orderBy('status_id','DESC');
+        $query->orderBy('created_at','DESC');
 
         if(!empty($input['limit'])){
             return $query->limit($input['limit'])->paginate();
