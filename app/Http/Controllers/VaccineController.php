@@ -69,8 +69,8 @@ class VaccineController extends BaseController
     {
         $input = $request->all();
         $vaccine = new Vaccine();
-        $data = $vaccine->searchVaccine($input);
-        return $this->response->collection($data, new VaccineTransformer);
+        $data = $vaccine->searchVaccine($input,10);
+        return $this->response->paginator($data, new VaccineTransformer);
     }
     public function VaccineDetailNormal($id){
         try {
