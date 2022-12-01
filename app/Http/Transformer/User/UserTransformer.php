@@ -42,10 +42,13 @@ class UserTransformer extends TransformerAbstract
             "user_info" => $user->user_info ?? null,
             'city_code' => $user->city_code,
             'city_name' => $user->city->name ?? null,
+            'city_full_name'=> $user->city->full_name ?? null,
             'district_code' => $user->district_code,
             'district_name' => $user->district->name ?? null,
+            'district_full_name' => $user->district->full_name ?? null,
             'ward_code' => $user->ward_code,
             'ward_name' => $user->ward->name ?? null,
+            'ward_full_name' => $user->ward->full_name ?? null,
             'birthday' => $user->birthday ?? null
         ];
         // dd($this->is_add_data_doctor);

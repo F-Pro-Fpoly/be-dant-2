@@ -30,7 +30,7 @@ class BookingTransformer extends TransformerAbstract
                 'file_name' => $booking->file->url ?? null,    
                 'status_id' => $booking->status_id,
                 'status_code' => $booking->status_code,
-                'status_name' => $booking->status->name,
+                'status_name' => $booking->status->name ?? null,
                 'address' => $booking->address,
                 'city_code' => $booking->city_code,
                 'type' => $booking->type,
@@ -40,9 +40,9 @@ class BookingTransformer extends TransformerAbstract
                 'district_code' => $booking->district_code,
                 'price' => $booking->price,
                 'ward_code' => $booking->ward_code,
-                'date' => $booking->schedule->date,
-                'time_start' =>$booking->schedule->timeslot->time_start,
-                'time_end' =>$booking->schedule->timeslot->time_end,
+                'date' => $booking->schedule->date ?? null,
+                'time_start' =>$booking->schedule->timeslot->time_start ?? null,
+                'time_end' =>$booking->schedule->timeslot->time_end ?? null,
             ];
         }
         else{
@@ -55,7 +55,7 @@ class BookingTransformer extends TransformerAbstract
             'schedule_id' => $booking->schedule_id,
             'schedule_name' => $booking->schedule->description ?? null,       
             'user_id' => $booking->user_id,
-            'customer_name' => $booking->user->name,
+            'customer_name' => $booking->user->name ?? null,
             'payment_method' => $booking->payment_method,    
             'description' => $booking->description ?? null,   
             'reasonCancel' => $booking->reasonCancel ?? null,   
@@ -63,11 +63,11 @@ class BookingTransformer extends TransformerAbstract
             'id_file' => $booking->id_file ?? null,    
             'file_name' => $booking->file->url ?? null,   
             'specialist_id' => $booking->specialist_id,
-            'specialist_name' => $booking->specialist->name,
-            'specialist_image' => $booking->specialist->file->url,
+            'specialist_name' => $booking->specialist->name ?? null,
+            'specialist_image' => $booking->specialist->file->url ?? null,
             'status_id' => $booking->status_id,
             'status_code' => $booking->status_code,
-            'status_name' => $booking->status->name,
+            'status_name' => $booking->status->name ?? null,
             'address' => $booking->user->address,
             'city_code' => $booking->user->city_code,
             'type' => $booking->type,
@@ -77,9 +77,9 @@ class BookingTransformer extends TransformerAbstract
             'district_code' => $booking->user->district_code,
             'price' => $booking->price,
             'ward_code' => $booking->user->ward_code,
-            'date' => $booking->schedule->date,
-            'time_start' =>$booking->schedule->timeslot->time_start,
-            'time_end' =>$booking->schedule->timeslot->time_end,
+            'date' => $booking->schedule->date ?? null,
+            'time_start' =>$booking->schedule->timeslot->time_start ?? null,
+            'time_end' =>$booking->schedule->timeslot->time_end ?? null,
         ];
         }
     

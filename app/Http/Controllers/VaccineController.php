@@ -69,12 +69,26 @@ class VaccineController extends BaseController
     {
         $input = $request->all();
         $vaccine = new Vaccine();
-        $data = $vaccine->searchVaccine($input);
-        return $this->response->collection($data, new VaccineTransformer);
+        $data = $vaccine->searchVaccine($input, $input['limit'] ?? null);
+        if(!empty($input['limit'])) {
+            return $this->response->paginator($data, new VaccineTransformer());
+        }
+        return $this->response->collection($data, new VaccineTransformer());
     }
     public function VaccineDetailNormal($id){
         try {
             $data =  Vaccine::findOrFail($id);              
+            return $this->response->item($data, new VaccineTransformer); 
+          
+        } catch (\Exception $th) {
+            $errors = $th->getMessage();
+            throw new HttpException(500, $errors);
+        }
+    }
+
+    public function getVaccineByCode ($code) {
+        try {
+            $data =  Vaccine::where('code', $code)->first();              
             return $this->response->item($data, new VaccineTransformer); 
           
         } catch (\Exception $th) {
@@ -99,7 +113,7 @@ class VaccineController extends BaseController
     public function updateVaccine(Request $request, $id)
     {
        $input = $request->all();
-    //    (new InsertVaccineValidate($input));
+       //(new InsertVaccineValidate($input));
 
       try {
             if(!empty($input['sick_ids'])) {
