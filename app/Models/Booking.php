@@ -77,7 +77,7 @@ class Booking extends BaseModel
                 'code' , "=",$input['code']
             ];
         }
-        $data = $this->search($dataInput, [], 100);
+        $data = $this->search($dataInput, [], 5);
         return $data;
     }
 
@@ -236,6 +236,10 @@ class Booking extends BaseModel
     public function Injection_info()
     {
        return $this->hasMany(Injection_info::class, "booking_id", 'id');
+    }
+    public function vaccine()
+    {
+       return $this->belongsTo(Vaccine::class, "vaccine_code", 'code');
     }
 
  

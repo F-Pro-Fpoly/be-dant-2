@@ -20,4 +20,5 @@ require_once __DIR__."/newsletter.php";
 require_once __DIR__."/CKBox.php";
 require_once __DIR__."/vaccine.php";
 require_once __DIR__."/doctor_profile.php";
+require_once __DIR__."/report.php";
 ?>
