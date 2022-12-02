@@ -183,6 +183,10 @@ class Booking extends BaseModel
     {
        return $this->hasMany(Injection_info::class, "booking_id", 'id');
     }
+    public function vaccine()
+    {
+       return $this->belongsTo(Vaccine::class, "vaccine_code", 'code');
+    }
 
  
     public function user(){
