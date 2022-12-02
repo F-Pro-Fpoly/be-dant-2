@@ -38,7 +38,7 @@ class ReportController extends Controller
       $input = $request->all();
       $date  = date('d_m_Y', time());
       $time = date('H-i-s', time());
-      $title ='';
+      $title ='Danh sách booking';
         try {
             $from = '';
             $to = '';
