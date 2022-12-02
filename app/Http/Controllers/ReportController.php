@@ -26,11 +26,10 @@ class ReportController extends Controller
             ->groupBy('specialists.name')
             ->where('bookings.status_id', 4)
             ->get();            
-            
+            return Excel::download(new Turnover($data), 'turnover_' . $date . '.xlsx');
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
-    return Excel::download(new Turnover($data), 'turnover_' . $date . '.xlsx');
    }
    public function BookingWithDay(Request $request)
    {
@@ -91,12 +90,11 @@ class ReportController extends Controller
                 }
                 $arr[] = $item;
             };
-
+            return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_' . $date . "_Time_" . $time . '.xlsx');
 
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
-    return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_' . $date . "_Time_" . $time . '.xlsx');
    }
    public function BookingWithCode(Request $request)
    {
@@ -143,6 +141,7 @@ class ReportController extends Controller
                 }
                 $arr[] = $item;
             };
+            return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_code_'. $code . '_' . $date . "_Time_" . $time . '.xlsx');
             } catch (\Exception $th) {
                 throw new HttpException(500, $th->getMessage());
             }
@@ -152,7 +151,6 @@ class ReportController extends Controller
                 'message' => 'Không tìm thấy code của booking này',
             ],400);
         }
-    return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_code_'. $code . '_' . $date . "_Time_" . $time . '.xlsx');
    }
 }
 
