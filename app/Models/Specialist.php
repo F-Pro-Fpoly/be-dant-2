@@ -103,6 +103,6 @@ class Specialist extends BaseModel
         // }else{
         //     $data = $this->search($dataInput);
         // }
-        return $data;
+        // return $data;
     }
 }

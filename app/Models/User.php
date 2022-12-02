@@ -181,6 +181,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $this->address = $input['address'];
         }
 
+        if(!empty($input['specailist_id'])) {
+            $input['specailist_code'] = Specialist::where('id', $input['specailist_id'])->value('code');
+
+            $this->specailist_id = $input['specailist_id'];
+        }
+
         if(!empty($input['birthday'])) {
             $this->birthday = $input['birthday'];
         }
