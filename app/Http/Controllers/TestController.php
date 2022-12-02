@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Role;
 use App\Models\Specialist;
 use Carbon\Carbon;
+use App\Exports\test;
+use App\Exports\UsersExport;
+use App\Models\Booking;
+use App\Models\Page;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TestController extends BaseController
 {
@@ -56,6 +62,17 @@ class TestController extends BaseController
         $data = $this->user->searchUser($inputArr);
 
         dd($data);
+    }
+
+
+    public function report()
+    {
+          //ob_end_clean();
+        $date = date('YmdHis', time());
+        $cate = Page::all();
+        //ob_start();
+        return Excel::download(new UsersExport, 'users.xlsx');
+       
     }
 
     
