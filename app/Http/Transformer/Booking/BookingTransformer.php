@@ -11,9 +11,19 @@ class BookingTransformer extends TransformerAbstract
 {
     public function transform(Booking $booking)
     {
-        
+
+        $time  = $booking->Injection_info;
+    
+        foreach($time as $item) {
+           
+            $times = $item->time_apointment;
+            $type = $item->type;
+            $status_code = $item->status_code;
+            $description = $item->description;
+        }
+
         if($booking->type == "NOLOGIN"){
-              return [
+              $data =  [
                 'id'   => $booking->id,
                 'code' => $booking->code,
                 'department_id' => $booking->department_id,
@@ -27,6 +37,7 @@ class BookingTransformer extends TransformerAbstract
                 'reasonCancel' => $booking->reasonCancel ?? null,    
                 'infoAfterExamination' => $booking->infoAfterExamination ?? null,    
                 'id_file' => $booking->id_file ?? null,    
+                'is_vaccine' => $booking->is_vaccine ?? null,    
                 'file_name' => $booking->file->url ?? null,    
                 'status_id' => $booking->status_id,
                 'status_code' => $booking->status_code,
@@ -43,11 +54,16 @@ class BookingTransformer extends TransformerAbstract
                 'date' => $booking->schedule->date ?? null,
                 'time_start' =>$booking->schedule->timeslot->time_start ?? null,
                 'time_end' =>$booking->schedule->timeslot->time_end ?? null,
+                'time_apointment' => $times ?? null,
+                'type' => $type ?? null,
+                'status_code' => $status_code ?? null,
+                'description' => $description ?? null
+
             ];
         }
         else{
               
-        return [
+        $data =  [
             'id'   => $booking->id,
             'code' => $booking->code,
             'department_id' => $booking->department_id,
@@ -63,6 +79,7 @@ class BookingTransformer extends TransformerAbstract
             'id_file' => $booking->id_file ?? null,    
             'file_name' => $booking->file->url ?? null,   
             'specialist_id' => $booking->specialist_id,
+            'is_vaccine' => $booking->is_vaccine,
             'specialist_name' => $booking->specialist->name ?? null,
             'specialist_image' => $booking->specialist->file->url ?? null,
             'status_id' => $booking->status_id,
@@ -80,8 +97,16 @@ class BookingTransformer extends TransformerAbstract
             'date' => $booking->schedule->date ?? null,
             'time_start' =>$booking->schedule->timeslot->time_start ?? null,
             'time_end' =>$booking->schedule->timeslot->time_end ?? null,
+            'time_apointment' => $times ?? null,
+            'type' => $type ?? null,
+            'status_code' => $status_code ?? null,
+            'description' => $description ?? null
         ];
         }
-    
+
+
+
+        return $data ;
+
     }
 }

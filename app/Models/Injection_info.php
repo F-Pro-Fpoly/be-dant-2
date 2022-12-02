@@ -26,4 +26,12 @@ class Injection_info extends BaseModel {
         'deleted_at',
         'deleted_by'
     ];
+
+    public function booking()
+    {
+       return $this->belongsTo(Booking::class, "booking_id", 'id');
+    }
+
+
 }
+

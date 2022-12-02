@@ -112,7 +112,7 @@ $app->singleton('filesystem', function ($app) {
 $app->configure('app');
 $app->configure('jwt');
 $app->configure('filesystems');
-
+$app->configure('excel');
 
 
 
@@ -163,6 +163,11 @@ $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 // send mail
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
+
+// excel
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+
+class_alias(Maatwebsite\Excel\Facades\Excel::class, "Excel");
 
 /*
 |--------------------------------------------------------------------------
