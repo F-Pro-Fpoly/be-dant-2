@@ -19,6 +19,7 @@ class Booking extends BaseModel
         'infoAfterExamination',
         'reasonCancel',
         'is_vaccine',
+        'vaccine_code',
         'id_file',
         'email',
         'status_code',
@@ -91,6 +92,13 @@ class Booking extends BaseModel
             $query->where('code', '=', $input['code']);
         }
         
+        if(!empty($input['is_vaccine'])) {
+            if($input['is_vaccine'] == 'vaccine') {
+                $query->where('is_vaccine', 1);
+            }elseif ($input['is_vaccine'] == 'booking') {
+                $query->where('is_vaccine', 0);
+            }
+        }
 
         if(!empty($input['date'])) {
             $date = $input['date'];
