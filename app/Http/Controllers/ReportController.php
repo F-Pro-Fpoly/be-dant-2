@@ -106,7 +106,10 @@ class ReportController extends Controller
       $time = date('H-i-s', time());
       $title ='';
       $code = "Code_Trống";
-      $dataCheck = Booking::where('code', $input['code'])->orderBy('created_at','desc')->get();                    
+      $dataCheck = "";
+      if(!empty($input['code'])){
+        $dataCheck = Booking::where('code', $input['code'])->orderBy('created_at','desc')->get();
+      }                        
       if($dataCheck){
         $code = $input['code'];
         try {;
