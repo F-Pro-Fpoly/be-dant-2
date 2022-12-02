@@ -115,8 +115,6 @@ $app->configure('filesystems');
 $app->configure('excel');
 
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
