@@ -66,7 +66,11 @@ class BookingController extends BaseController
     public function listBookingDoctor(Request $request){
         $input = $request->all();
         $booking = new Booking();
-        $data = $booking->searchBookingDoctor($input);
+        if(empty($input['is_vaccine'])) {
+            $data = $booking->searchBookingDoctor($input);
+        }else{
+            $data = $booking->searchBookingDoctor_v2($input);
+        }
         return $this->response->collection($data, new BookingTransformer);
     }
 
@@ -297,10 +301,11 @@ class BookingController extends BaseController
                 $input_injection = [
                     'type' => 'screening_test',
                     'time_apointment' => $input['date'] ?? null,
-                    'status_code' => 'NEW',
+                    'status_code' => 'NEWVACCINE',
                     'booking_id' => $booking->id ?? null,
                     'booking_code' => $booking->code ?? null,
-                    'created_by' => $user_id
+                    'created_by' => $user_id,
+                    'type_name' => 'Khám sàn lọc'
                 ];
 
                 Injection_info::create($input_injection);
