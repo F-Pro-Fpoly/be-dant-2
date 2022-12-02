@@ -16,8 +16,8 @@ class BookingTransformer extends TransformerAbstract
     
         foreach($time as $item) {
            
-            $times = $item->time_apointment;
-            $type = $item->type;
+            $times       = $item->time_apointment;
+            $type        = $item->type;
             $status_code = $item->status_code;
             $description = $item->description;
         }
@@ -55,9 +55,9 @@ class BookingTransformer extends TransformerAbstract
                 'time_start' =>$booking->schedule->timeslot->time_start ?? null,
                 'time_end' =>$booking->schedule->timeslot->time_end ?? null,
                 'time_apointment' => $times ?? null,
-                'type' => $type ?? null,
-                'status_code' => $status_code ?? null,
-                'description' => $description ?? null
+                'type_Injection_info' => $type ?? null,
+                'status_code_Injection_info' => $status_code ?? null,
+                'description_Injection_info' => $description ?? null
 
             ];
         }
@@ -98,9 +98,9 @@ class BookingTransformer extends TransformerAbstract
             'time_start' =>$booking->schedule->timeslot->time_start ?? null,
             'time_end' =>$booking->schedule->timeslot->time_end ?? null,
             'time_apointment' => $times ?? null,
-            'type' => $type ?? null,
-            'status_code' => $status_code ?? null,
-            'description' => $description ?? null
+            'type_Injection_info' => $type ?? null,
+            'status_code_Injection_info' => $status_code ?? null,
+            'description_Injection_info' => $description ?? null
         ];
         }
 
