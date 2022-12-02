@@ -304,7 +304,8 @@ class BookingController extends BaseController
                     'status_code' => 'NEWVACCINE',
                     'booking_id' => $booking->id ?? null,
                     'booking_code' => $booking->code ?? null,
-                    'created_by' => $user_id
+                    'created_by' => $user_id,
+                    'type_name' => 'Khám sàn lọc'
                 ];
 
                 Injection_info::create($input_injection);

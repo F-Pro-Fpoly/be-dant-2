@@ -17,6 +17,7 @@ class Injection_info extends BaseModel {
         'booking_id',
         'booking_code',
         'file_id',
+        'type_name',
         'description',
         'created_at',
         'created_by',
