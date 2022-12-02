@@ -32,6 +32,29 @@ class Injection_info extends BaseModel {
        return $this->belongsTo(Booking::class, "booking_id", 'id');
     }
 
+    public function file() {
+        return $this->belongsTo(File::class, 'file_id', 'id');
+    }
+
+    public function status() {
+        return $this->belongsTo(status::class, 'status_code', 'code');
+    }
+
+    public function update_injection_info(array $input = []) {
+        if(!empty($input['status_id'])) {
+            $status_code = status::where('id', $input['status_id'])->value('code');
+            $this->status_code = $status_code;
+        }
+        if(!empty($input['file_id'])) {
+            $this->file_id = $input['file_id'];
+        }
+
+        if(!empty($input['description'])) {
+            $this->description = $input['description'];
+        }
+
+        $this->save();
+    }
 
 }
 

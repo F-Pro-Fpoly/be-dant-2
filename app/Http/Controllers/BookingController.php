@@ -301,7 +301,7 @@ class BookingController extends BaseController
                 $input_injection = [
                     'type' => 'screening_test',
                     'time_apointment' => $input['date'] ?? null,
-                    'status_code' => 'NEW',
+                    'status_code' => 'NEWVACCINE',
                     'booking_id' => $booking->id ?? null,
                     'booking_code' => $booking->code ?? null,
                     'created_by' => $user_id
