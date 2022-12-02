@@ -76,7 +76,7 @@ class Booking extends BaseModel
                 'code' , "=",$input['code']
             ];
         }
-        $data = $this->search($dataInput, [], 100);
+        $data = $this->search($dataInput, [], 5);
         return $data;
     }
 
