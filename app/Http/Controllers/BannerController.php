@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Transformer\banner\BannerTransformer;
+use App\Http\Transformer\Banner\BannerTransformer;
 use App\Http\Validators\Banner\CreateBannerValidate;
 use App\Models\Banner;
 use App\Models\banner_detail;
