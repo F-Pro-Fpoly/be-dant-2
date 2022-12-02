@@ -44,6 +44,7 @@ class Booking extends BaseModel
         'deleted_by'
     ];
 
+
     public function searchBooking($input = []){
         $dataInput =[];
         if(!empty($input['department_id'])){
@@ -94,7 +95,7 @@ class Booking extends BaseModel
         
         if(!empty($input['is_vaccine'])) {
             if($input['is_vaccine'] == 'vaccine') {
-                $query->where('is_vaccine', 1);
+                $query->where('is_vaccine', 1)->orWhereNull('doctor_id', );
             }elseif ($input['is_vaccine'] == 'booking') {
                 $query->where('is_vaccine', 0);
             }
@@ -121,6 +122,59 @@ class Booking extends BaseModel
         }
     }
 
+    public function searchBookingDoctor_v2(array $input) {
+      
+        $query = $this->model();
+
+        // if(!empty($input['user_id'])) {
+        //     $query->where('doctor_id', '=', $input['user_id']);
+        // }
+
+        if(!empty($input['is_vaccine'])) {
+            if($input['is_vaccine'] == 'vaccine') {
+                if(!empty($input['user_id'])) {
+                    $doctor_id = $input['user_id'];
+                    $query->where(function($query) use ($doctor_id) {
+                        $query->where('doctor_id', $doctor_id);
+                    });
+                }
+            }elseif ($input['is_vaccine'] == 'booking') {
+                $query->where('is_vaccine', 0);
+            }
+        }
+
+        if(!empty($input['code'])) {
+            $query->where('code', '=', $input['code']);
+        }
+        
+        if(!empty($input['is_vaccine'])) {
+            if($input['is_vaccine'] == 'vaccine') {
+                $query->where('is_vaccine', 1)->orWhereNull('doctor_id');
+            }elseif ($input['is_vaccine'] == 'booking') {
+                $query->where('is_vaccine', 0);
+            }
+        }
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+          
+            $query->where(function($query) use($date) {    
+                $query->whereHas('Injection_info', function ( $query) use ($date) {
+                    $query->where('time_apointment', '=', $date);
+                });     
+            }); 
+        }
+        
+        if(!empty($input['status'])) {
+            $query->where('status_id', '=', $input['status']);
+        }
+        $query->orderBy('created_at','DESC');
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
+    }
    
 
     public function searchMyBooking(array $input, $id){  
