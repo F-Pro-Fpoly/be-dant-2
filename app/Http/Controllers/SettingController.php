@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Transformer\setting\SettingTransformer;
+use App\Http\Transformer\Setting\SettingTransformer;
 use App\Http\Validators\Settings\InsertSettingValidate;
 use App\Models\setting;
 use Illuminate\Http\Request;
