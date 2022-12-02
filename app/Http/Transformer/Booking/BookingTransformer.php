@@ -38,6 +38,8 @@ class BookingTransformer extends TransformerAbstract
                 'infoAfterExamination' => $booking->infoAfterExamination ?? null,    
                 'id_file' => $booking->id_file ?? null,    
                 'is_vaccine' => $booking->is_vaccine ?? null,    
+                'vaccine_code' => $booking->vaccine_code ?? null,    
+                'vaccine_name' => $booking->vaccine->name ?? null,    
                 'file_name' => $booking->file->url ?? null,    
                 'status_id' => $booking->status_id,
                 'status_code' => $booking->status_code,
@@ -57,7 +59,8 @@ class BookingTransformer extends TransformerAbstract
                 'time_apointment' => $times ?? null,
                 'type_Injection_info' => $type ?? null,
                 'status_code_Injection_info' => $status_code ?? null,
-                'description_Injection_info' => $description ?? null
+                'description_Injection_info' => $description ?? null,
+
 
             ];
         }
@@ -80,6 +83,8 @@ class BookingTransformer extends TransformerAbstract
             'file_name' => $booking->file->url ?? null,   
             'specialist_id' => $booking->specialist_id,
             'is_vaccine' => $booking->is_vaccine,
+            'vaccine_code' => $booking->vaccine_code ?? null,    
+            'vaccine_name' => $booking->vaccine->name ?? null,   
             'specialist_name' => $booking->specialist->name ?? null,
             'specialist_image' => $booking->specialist->file->url ?? null,
             'status_id' => $booking->status_id,

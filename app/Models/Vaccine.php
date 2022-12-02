@@ -33,6 +33,11 @@ class Vaccine extends BaseModel
         return $this->belongsTo(File::class, 'img_id', 'id');
     }
 
+    public function booking()
+    {
+       return $this->hasMany(Booking::class, 'vaccine_code', 'code');
+    }
+
     public function national() {
         return $this->belongsTo(National::class, 'national_id', 'id');
     }
