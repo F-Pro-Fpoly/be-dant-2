@@ -105,7 +105,9 @@ class ReportController extends Controller
       $date  = date('d_m_Y', time());
       $time = date('H-i-s', time());
       $title ='';
+      $code = "Code_Trống";
       if($input['code']){
+        $code = $input['code'];
         try {;
             $from = '';
             $to = '';
@@ -146,7 +148,7 @@ class ReportController extends Controller
                 'message' => 'Không tìm thấy code của booking này',
             ],400);
         }
-    return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_code_'. $input['code']. '_' . $date . "_Time_" . $time . '.xlsx');
+    return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_code_'. $code . '_' . $date . "_Time_" . $time . '.xlsx');
    }
 }
 
