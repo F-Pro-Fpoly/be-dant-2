@@ -1,8 +1,8 @@
 <?php
     $api -> group(['prefix' => 'report', ], function ($api) {
         $api->get('/turnover', 'ReportController@turnover');  
-        $api->post('/bookingDay', 'ReportController@BookingWithDay');
-        $api->post('/bookingCode', 'ReportController@BookingWithCode');    
+        $api->get('/bookingDay', 'ReportController@BookingWithDay');
+        $api->get('/bookingCode', 'ReportController@BookingWithCode');    
     });
 
 ?>
