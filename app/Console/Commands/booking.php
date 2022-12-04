@@ -49,6 +49,7 @@ class booking extends Command
         ->join('users','users.id', "=", 'bookings.user_id')
         ->join("timeslots", "timeslots.id", "=", "schedules.timeslot_id")
         ->where("schedules.date" , $now)
+        
         ->get();
     
         foreach ($emailList as $v) {
