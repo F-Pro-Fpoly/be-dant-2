@@ -64,6 +64,20 @@ class News_commentController extends BaseController
 
     function updateNews_comment(Request $request, $id){
         $input = $request->all();
+        $validator = Validator::make($request->all(), [
+            'content' => 'required',
+        ],[
+            'content.required' => 'Nội dung không được bỏ trống', 
+        ]);
+        
+        if($validator->fails()){
+            $arrRes = [
+                'errCode' => 1,
+                'message' => "Lỗi validate dữ liệu",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arrRes, 402);
+        }
         $data = News_comment::find($id);
         if($data->user_id == auth()->user->id){
             try{
@@ -129,6 +143,20 @@ class News_commentController extends BaseController
     }
     function updateNews_comment_admin(Request $request, $id){
         $input = $request->all();
+        $validator = Validator::make($request->all(), [
+            'content' => 'required',
+        ],[
+            'content.required' => 'Nội dung không được bỏ trống', 
+        ]);
+        
+        if($validator->fails()){
+            $arrRes = [
+                'errCode' => 1,
+                'message' => "Lỗi validate dữ liệu",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arrRes, 402);
+        }
         $data = News_comment::find($id);
         if($data){
             try{
