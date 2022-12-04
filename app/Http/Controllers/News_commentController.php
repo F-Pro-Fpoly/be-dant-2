@@ -9,12 +9,27 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Validator;
 
 class News_commentController extends BaseController
 {
     // dùng cho người dùng
     function addNews_comment(Request $request, $id){
         $input = $request->all();
+        $validator = Validator::make($request->all(), [
+            'content' => 'required',
+        ],[
+            'content.required' => 'Nội dung không được bỏ trống', 
+        ]);
+        
+        if($validator->fails()){
+            $arrRes = [
+                'errCode' => 1,
+                'message' => "Lỗi validate dữ liệu",
+                'data' => $validator->errors()
+            ];
+            return response()->json($arrRes, 402);
+        }
         $dataNews = News::where('slug', $id)->first();
         if($dataNews){
         try {
