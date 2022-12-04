@@ -121,10 +121,13 @@ class BookingController extends BaseController
                 $file_id = $file->id;
             }
 
+            $state_code = status::where('id', $input['statusBooking'])->first();
+
             $data->update([
                 "status_id"            => Arr::get($input, 'statusBooking',$data->status_id),
+                "status_code"          => $state_code->code,
                 "infoAfterExamination" => Arr::get($input, 'info',  $data->infoAfterExamination),
-                "reasonCancel" =>  Arr::get($input, 'reasonCancel',  $data->reasonCancel),
+                "reasonCancel"         =>  Arr::get($input, 'reasonCancel',  $data->reasonCancel),
                 "id_file"              => $file_id ?? $data->id_file,
             ]);
             return response()->json([
