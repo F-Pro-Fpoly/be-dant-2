@@ -15,10 +15,12 @@ class News_commentController extends BaseController
     // dùng cho người dùng
     function addNews_comment(Request $request, $id){
         $input = $request->all();
+        $dataNews = News::where('slug', $id)->first();
+        if($dataNews){
         try {
             News_comment::create([
                  'user_id' => auth()->user()->id,
-                 'news_id' => $id,
+                 'news_id' => $data->id,
                  'content' => $input['content'],
                  'status' => 1,
                  'created_by' => auth()->user()->id
@@ -35,6 +37,14 @@ class News_commentController extends BaseController
                 ],500
             );
         }
+    }else{
+        return response()->json(
+            [
+                'status' => 400,
+                'message' => "không tìm thấy tin này"
+            ],400
+        );
+    }
     }
 
     function updateNews_comment(Request $request, $id){
@@ -146,8 +156,17 @@ class News_commentController extends BaseController
     
     // Dùng bình thường để xem
     public function listNews_comment_by_newsID(Request $request, $id){
-        $input = $request->all();
-        $News_comment = News_comment::where('news_id', $id)->where('status', 1)->get();
-        return $this->response->collection($News_comment, new News_commentTransformer);
+        $dataNews = News::where('slug', $id)->first();
+        if($dataNews){
+            $input = $request->all();
+            $News_comment = News_comment::where('news_id', $dataNews->id)->where('status', 1)->get();
+            return $this->response->collection($News_comment, new News_commentTransformer);
+        }
+        else{
+            return response()->json([
+                    'status' => 400,
+                    'message' => "Không tìm thấy id tin cho bình luận nảy",
+            ],400);
+        }
     }
 }
