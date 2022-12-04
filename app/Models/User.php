@@ -183,7 +183,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         if(!empty($input['specailist_id'])) {
             $input['specailist_code'] = Specialist::where('id', $input['specailist_id'])->value('code');
-
             $this->specailist_id = $input['specailist_id'];
         }
 
@@ -196,6 +195,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         }
         if(!empty($input['password'])){
             $this->password = Hash::make($input['password']);
+        }
+
+        if(!empty($input['specailist_code'])) {
+            $this->specailist_code = $input['specailist_code'];
         }
 
         if(!empty($input['name'])){
