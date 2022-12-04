@@ -77,9 +77,9 @@ class News_commentController extends BaseController
             }
             else{
                 return response()->json([
-                    'status' => 200,
+                    'status' => 400,
                     'message' => "Bạn không thể xóa bình luận này vì nó không phải của bạn"
-                ], 200);
+                ], 400);
             }
         }
         catch (Exception $th) {
