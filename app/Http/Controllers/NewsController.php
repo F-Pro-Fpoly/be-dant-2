@@ -265,8 +265,7 @@ class NewsController extends BaseController
                             ->where('news_views.created_at', "<", $end_date)
                             ->groupBy('news_views.news_id')
                             ->orderBy('viewWeek','desc')
-                            ->limit(4)
-                            ->get();    
+                            ->first();    
 
             return response()->json([
                 'status' => 200,
