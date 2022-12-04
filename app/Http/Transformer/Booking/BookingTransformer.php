@@ -20,6 +20,7 @@ class BookingTransformer extends TransformerAbstract
             $times       = $item->time_apointment;
             $type        = $item->type;
             $status_code = $item->status_code;
+            $type_name = $item->type_name;
             $description = $item->description;
         }
 
@@ -61,6 +62,7 @@ class BookingTransformer extends TransformerAbstract
                 'time_end' =>$booking->schedule->timeslot->time_end ?? null,
                 'time_apointment' => $times ?? null,
                 'type_Injection_info' => $type ?? null,
+                'type_Injection_info_name' => $type_name ?? null,
                 'status_code_Injection_info' => $status_code ?? null,
                 'description_Injection_info' => $description ?? null,
 
@@ -107,6 +109,7 @@ class BookingTransformer extends TransformerAbstract
                 'time_end' =>$booking->schedule->timeslot->time_end ?? null,
                 'time_apointment' => $times ?? null,
                 'type_Injection_info' => $type ?? null,
+                'type_Injection_info_name' => $type_name ?? null,
                 'status_code_Injection_info' => $status_code ?? null,
                 'description_Injection_info' => $description ?? null
             ];
