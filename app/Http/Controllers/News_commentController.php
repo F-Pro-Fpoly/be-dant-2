@@ -86,6 +86,11 @@ class News_commentController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
+    public function OneNews_comment_by_newsID(Request $request, $id){
+        $input = $request->all();
+        $News_comment = News_comment::where('status', 1)->get();
+        return $this->response->collection($News_comment, new News_commentTransformer);
+    }
     // dùng cho admin
     public function listNews_comment_by_newsID_admin(Request $request, $id){
         $input = $request->all();
