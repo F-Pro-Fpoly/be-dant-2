@@ -265,7 +265,8 @@ class NewsController extends BaseController
                             ->where('news_views.created_at', "<", $end_date)
                             ->groupBy('news_views.news_id')
                             ->orderBy('viewWeek','desc')
-                            ->first();    
+                            ->take(1)->get(); // Lộc shadow đòi dùng take cho thành data:{[dữ liệu]}
+                            //->first();  dùng first ra data:{dữ liệu} lộc shadow không sài được  
 
             return response()->json([
                 'status' => 200,
