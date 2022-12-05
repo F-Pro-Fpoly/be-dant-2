@@ -16,9 +16,9 @@
         $api->delete('/delete_news_comment/{id:[0-9]+}', 'News_commentController@deleteNews_comment_admin');
 
     });
-    $api -> group(['prefix' => 'news_comment', 'middleware' => 'role:customer, admin'], function ($api) {
+    $api -> group(['prefix' => 'news_comment', 'middleware' => 'role:customer, admin,doctor'], function ($api) {
         $api->get('/one_news_comment/{id:[0-9]+}', 'News_commentController@OneNews_comment_by_newsID');
-        $api->get('/add_news_comment/{id:[0-9]+}', 'News_commentController@addNews_comment');
+        $api->post('/add_news_comment/{id}', 'News_commentController@addNews_comment');
         $api->put('/update_news_comment/{id:[0-9]+}', 'News_commentController@updateNews_comment');
         $api->delete('/delete_news_comment/{id:[0-9]+}', 'News_commentController@deleteNews_comment');
     });
