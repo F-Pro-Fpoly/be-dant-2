@@ -21,7 +21,6 @@ class News_commentController extends BaseController
         ],[
             'content.required' => 'Nội dung không được bỏ trống', 
         ]);
-        
         if($validator->fails()){
             $arrRes = [
                 'errCode' => 1,
@@ -35,7 +34,7 @@ class News_commentController extends BaseController
         try {
             News_comment::create([
                  'user_id' => auth()->user()->id,
-                 'news_id' => $data->id,
+                 'news_id' => $dataNews->id,
                  'content' => $input['content'],
                  'status' => 1,
                  'created_by' => auth()->user()->id
