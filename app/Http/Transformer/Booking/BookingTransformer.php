@@ -65,7 +65,7 @@ class BookingTransformer extends TransformerAbstract
                 'type_Injection_info_name' => $type_name ?? null,
                 'status_code_Injection_info' => $status_code ?? null,
                 'description_Injection_info' => $description ?? null,
-
+                
 
             ];
         }
