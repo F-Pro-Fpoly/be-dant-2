@@ -68,8 +68,32 @@ class SettingController extends BaseController
         // (new PageUpdatePageValidate($input));
        try {
             $data = setting::findOrFail($id);
-                $data->update([
 
+                if(!empty($input['logo'])){
+                    $file  = $request->file('logo')->store('images','public');    
+                    $data->description  = $file;
+                    $data->save();
+                }
+
+                if(!empty($input['favicon'])){
+                    $file  = $request->file('favicon')->store('images','public');    
+                    $data->description  = $file;
+                    $data->save();
+                }
+
+                if(!empty($input['socialFaceBook'])){
+                    $file  = $request->file('socialFaceBook')->store('images','public');    
+                    $data->description  = $file;
+                    $data->save();
+                }
+
+                if(!empty($input['socialYoutube'])){
+                    $file  = $request->file('socialYoutube')->store('images','public');    
+                    $data->description  = $file;
+                    $data->save();
+                }
+            
+                $data->update([
                     'code' =>  Arr::get($input, 'code',  $data->name),
                     'status' =>Arr::get($input, 'status',  $data->status),
                     'description' => Arr::get($input, 'description',  $data->description),    
@@ -84,7 +108,7 @@ class SettingController extends BaseController
         throw new HttpException(500, $th->getMessage());
     }
     }
-    // // delete
+    // delete
     public function deleteSetting($id){
         try {
             $data = setting::findOrFail($id);
@@ -101,10 +125,58 @@ class SettingController extends BaseController
     // list page all soft by sort
     public function listSettingNormal(){
         try {       
-            $page = setting::model()->where('status',1)->orderBy('updated_at','DESC')->get();
+
+            //logo
+            $logo = setting::select('description')->where('code', 'logo')->where('status',1)->first();
+            view()->share('logo', $logo);
+
+            //favicon
+            $favicon = setting::select('description')->where('code', 'favicon')->where('status',1)->first();
+            view()->share('favicon', $favicon);
+
+            //coppyright
+            $copyright = setting::select('description')->where('code', 'copyright')->where('status',1)->first();
+            view()->share('copyright', $copyright);
+            
+
+            //email
+            $email = setting::select('description')->where('code', 'email')->where('status',1)->first();
+            view()->share('email', $email); 
+
+            //phone
+            $phone = setting::select('description')->where('code', 'phone')->where('status',1)->first();
+            view()->share('pohne', $phone);
+
+            //address
+            $address = setting::select('description')->where('code', 'address')->where('status',1)->first();
+            view()->share('copyright', $address);
+            
+            //SocialFaceBook
+            $SocialFaceBook = setting::select('description', 'link')->where('code', 'SocialFaceBook')->where('status',1)->first();
+            view()->share('copyright', $SocialFaceBook);
+
+            //address
+            $SocialYoutube = setting::select('description', 'link')->where('code', 'SocialYoutube')->where('status',1)->first();
+            view()->share('copyright', $SocialYoutube);
+
+            //NameCompany
+            $NameCompany = setting::select('description')->where('code', 'NameCompany')->where('status',1)->first();
+            view()->share('NameCompany', $NameCompany);
+
+
             return response()->json([
                 'status' => 200,
-                'data' => $page,
+                'data' =>[ 
+                    "logo" =>   $logo,
+                    "favicon" => $favicon,
+                    "copyright" => $copyright,
+                    "email" => $email,
+                    "phone" => $phone,
+                    "address" => $address,
+                    "SocialFaceBook" => $SocialFaceBook,
+                    "SocialYoutube" => $SocialYoutube,
+                    "NameCompany" => $NameCompany,
+                ]
             ], 200);
         } 
         catch (\Exception $th) {

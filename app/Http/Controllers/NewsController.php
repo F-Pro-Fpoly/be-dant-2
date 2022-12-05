@@ -9,6 +9,7 @@ use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
 use App\Models\File;
 use App\Models\News_category;
+use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -22,6 +23,7 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
+<<<<<<< HEAD
             if(!empty($input['file'])) {
                 $file = $request->file('file')->store('images','public');
                 $file = File::create([
@@ -43,6 +45,24 @@ class NewsController extends BaseController
 
 
         ]);
+=======
+            
+            $file_name = $input['file_name'] ?? null;
+           News::create([
+                'code' => $input['code'],
+                'slug' => $input['slug'],
+                'featured' => $input['featured'],
+                'status' => $input['status'],
+                'category_id' => $input['category_id'],
+                'name' => $input['name'],
+                'file' => $file_name,
+                'content' => $input['content'],
+                'views' => 0,
+                'created_by' => auth()->user()->id ?? null,
+           ]);
+        //    dd($path);
+
+>>>>>>> 7c5f6f0c42e03b2264d044079273dba62ab42e85
 
            return response()->json([
                 'status' => 200,
@@ -52,7 +72,7 @@ class NewsController extends BaseController
            return response()->json(
                 [
                     'status' => 500,
-                    'message' => $th->getMessage() 
+                    'message' => $th->getMessage()
                 ],500
                 );
         }
@@ -65,6 +85,16 @@ class NewsController extends BaseController
         return $this->response->paginator($data, new NewsTransformer);
     }
 
+    public function listNews_all(Request $request){
+        $data = News::where('status', 1)->get();
+        $data_count = News::where('status', 1)->count();
+        return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'data_count' => $data_count
+        ],200);
+    }
+
     public function listNews_category(Request $request){
         $input = $request->all();
         $News_category = new News_category();
@@ -72,19 +102,56 @@ class NewsController extends BaseController
         return $this->response->paginator($data, new News_categoryTransformer);
     }
 
+    public function listNews_category_all(Request $request){
+        $data = News_category::where('status', 1)->get();
+        $data = News_category::where('status', 1)->get();
+        return response()->json([
+                'status' => 200,
+                'data' => $data
+            ],200);
+    }
+
+    function getNews_ID($id){
+        $data = News::find($id);
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy một tin thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin này"
+           ], 400);
+        }
+    }
+
     public function updateNews(Request $request, $id){
        $input = $request->all();
        (new UpdateNewsValidate($input));
 
-        try {
+       try{
+
+            $file_name = $input['file_name'] ?? null;
+            // return $file_name;
             $data = News::find($id);
             if($data){
                 $data->update([
-                    //code chỉnh sửa
+                    'slug' => $input['slug'] ?? $data->slug,
+                    'featured' => $input['featured'] ?? $data->featured,
+                    'status' => $input['status'] ?? $data->status,
+                    'category_id' => $input['category_id'] ?? $data->category_id,
+                    'name' => $input['name'] ?? $data->name,
+                    'file' => $file_name ?? $data->file,
+                    'content' => $input['content'] ?? $data->content,
+                    'updated_by' => auth()->user()->id ?? null
                 ]);
+                
                 return response()->json([
                     'status' => 200,
-                    'message' => "Cập nhật đặt tin thành công"
+                    'message' => "Cập nhật tin thành công"
                ], 200);
             }
             else{
@@ -93,7 +160,7 @@ class NewsController extends BaseController
                     'message' => 'Không tìm thấy tin',
                 ],400);
             }
-        } 
+        }
         catch (Exception $th){
             throw new HttpException(500, $th->getMessage());
         }
@@ -111,6 +178,61 @@ class NewsController extends BaseController
         }
         catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    // dùng cho client
+    function getNewsID($id){
+        $data = News::where('slug',$id)->where('status', 1)->first();
+        if($data){
+            $data->update([
+                'view' => $data->view + 1,
+            ]);
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy một tin thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin này"
+           ], 400);
+        }
+    }
+
+    function getNews_featured(){
+        $data = News::where('status', 1)->where('featured', 1)->limit(3)->get();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy 3 tin nổi bật thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin nỗi bật này"
+           ], 400);
+        }
+    }
+
+    function getNews_new(){
+        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->limit(9)->get();
+        if($data){
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+                'message' => "Lấy 3 tin nổi bật thành công"
+           ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 400,
+                'message' => "Không tìm thấy tin nỗi bật này"
+           ], 400);
         }
     }
 }

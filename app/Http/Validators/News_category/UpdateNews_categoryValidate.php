@@ -4,7 +4,7 @@ namespace App\Http\Validators\News_category;
 
 use App\Http\Validators\ValidatorBase;
 
-
+    
 class UpdateNews_categoryValidate extends ValidatorBase
 {
 
@@ -21,10 +21,17 @@ class UpdateNews_categoryValidate extends ValidatorBase
     protected function rules()
     {
         return [
+<<<<<<< HEAD
             'code' => 'required|min:5|max:255|unique:news',
             'slug' => 'required|unique:news',
             'status' => 'required',
             'name' => 'required|min:5|max:255',
+=======
+            "code" => "required|min:5|max:255",
+            "slug" => "required",
+            "status" => "required",
+            "name" => "required|min:5|max:255",
+>>>>>>> 7c5f6f0c42e03b2264d044079273dba62ab42e85
         ];
     }
 

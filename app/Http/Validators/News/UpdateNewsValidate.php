@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Validators\Booking;
+namespace App\Http\Validators\News;
 
 use App\Http\Validators\ValidatorBase;
 
 
-class UpdateBookingValidate extends ValidatorBase
+class UpdateNewsValidate extends ValidatorBase
 {
 
     public function __construct($input)
@@ -21,14 +21,14 @@ class UpdateBookingValidate extends ValidatorBase
     protected function rules()
     {
         return [
-            "code" => "required|min:5|max:255|unique:news",
-            "slug" => "required|unique:news",
-            "status" => "required",
-            "featured" => "required",
-            "category_id" => "required",
-            "file" => "required",
-            "content" => "required",
-            "name" => "required|min:5|max:255",
+            // "code" => "required|min:5|max:255",
+            // "slug" => "required",
+            // "status" => "required",
+            // "featured" => "required",
+            // "category_id" => "required",
+            // "file" => "required",
+            // "content" => "required",
+            // "name" => "required|min:5|max:255",
         ];
     }
 

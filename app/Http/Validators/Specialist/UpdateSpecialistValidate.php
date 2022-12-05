@@ -23,7 +23,7 @@ class UpdateSpecialistValidate extends ValidatorBase
         return [
             'code' => 'min:5|max:255',
             'name' => 'min:5|max:255',
-            'description' => 'min:8|max:255',
+            'description' => 'min:8',
         ];
     }
 

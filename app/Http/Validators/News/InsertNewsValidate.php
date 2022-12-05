@@ -26,7 +26,7 @@ class InsertNewsValidate extends ValidatorBase
             "status" => "required",
             "featured" => "required",
             "category_id" => "required",
-            "file" => "required",
+            // "file" => "required",
             "content" => "required",
             "name" => "required|min:5|max:255",
         ];

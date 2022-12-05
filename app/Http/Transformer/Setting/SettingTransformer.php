@@ -18,7 +18,7 @@ class SettingTransformer extends TransformerAbstract
             'code' => $setting->code,          
             'status' => $setting->status,
             'description' => $setting->description,
-            'created_at' => date_format($setting->created_at, "d/m/Y"),
+            'updated_at' => date_format($setting->updated_at, "d/m/Y"),
         ];
     }
 }
