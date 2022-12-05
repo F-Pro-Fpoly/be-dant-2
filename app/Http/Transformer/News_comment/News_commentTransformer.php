@@ -18,6 +18,7 @@ class News_commentTransformer extends TransformerAbstract
             'news_id' => $news_comment->news_id,
             'user_id' => $news_comment->user_id,
             'user_name' => $news_comment->user->name,
+            'user_avatar' => $news_comment->user->avatar,
             'content' => $news_comment->content,
             'status' => $news_comment->status,
             'created_at' => $news_comment->created_at->format('d-m-Y H:i:s'),
