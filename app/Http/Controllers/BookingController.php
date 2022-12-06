@@ -249,16 +249,15 @@ class BookingController extends BaseController
 
                 ->where("bookings.id", $booking->id)
                 ->first();
-                $e = $data->email;
+                $e = $data->email ?? null; 
             }
-
-            Mail::send('email.BookingBooked',compact('booking','data'), function ($email) use ($e) {
-                $email->from('phuly4795@gmail.com','Fpro Hopital');
-                $email->subject('Fpro Hopital - Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi');
-                $email->to($e, 'Quý khách');
-            });
-
-
+            if(!empty($data)){
+                Mail::send('email.BookingBooked',compact('booking','data'), function ($email) use ($e) {
+                    $email->from('phuly4795@gmail.com','Fpro Hopital');
+                    $email->subject('Fpro Hopital - Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi');
+                    $email->to($e, 'Quý khách');
+                });
+            }
             return response()->json([
                 'message' => "Thêm booking thành công"
             ],200);

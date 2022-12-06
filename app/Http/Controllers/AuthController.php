@@ -98,7 +98,7 @@ class AuthController extends BaseController
     public function login (Request $request) {
         $validator = Validator::make($request->all(), [
             'email'=> 'email|required|min:8',
-            'password' => 'required|min:8'
+            'password' => 'required|min:6'
         ]);
 
 

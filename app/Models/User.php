@@ -92,6 +92,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->hasOne(Doctor_profile::class, 'id_user');
     }
 
+    public function news_comment() {
+        return $this->belongsTo(news_comment::class, 'user_id', 'id');
+    }
+
     public function searchUser($input = []){
         $dataInput = [];
         if(!empty($input['email'])){

@@ -82,7 +82,7 @@ class CountController extends BaseController
         function getStatistic() {
             try{
                 $User = User::all()->count();
-                $priceBookingInDepartment = Booking::join('departments', 'departments.id', 'bookings.department_id')->sum('departments.price');
+                $priceBookingInDepartment = Booking::join('departments', 'departments.id', 'bookings.department_id')->where('bookings.status_id', 4)->sum('departments.price');
                 $Booking = Booking::all()->count();
     
                 $Contact = Contact::all()->count();

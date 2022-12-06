@@ -12,5 +12,6 @@
         $api->get('/list', 'NewsController@listall');
         $api->get('/topWeek1', 'NewsController@getTopWeek1');
         $api->get('/topWeek3', 'NewsController@getTopWeek3');
+        $api->get('/news-comment/{id}', 'News_commentController@listNews_comment_by_newsID');
     });
 ?>
