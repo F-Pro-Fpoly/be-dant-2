@@ -158,4 +158,55 @@ class AuthController extends BaseController
         }
 
     }
+
+       public function loginGoogle(Request $request) {
+        $checkEmail = User::where('email', $request->profileObj['email'])->exists();
+        try{
+            if($checkEmail == true){
+                $user = User::where('email', $request->profileObj['email'])->first();
+                $token = auth()->login($user);
+                $user->avatar = strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar);
+                
+                $arrRes = [
+                    'errCode'=> 0,
+                    'message' => 'Đăng nhập thành công',
+                    'data' => [
+                        "user" => $user,
+                        'token' => $token
+                    ]
+                ];
+                return response()->json($arrRes, 201);
+            }
+            else{
+                $data = [
+                    'name' => $request->profileObj['name'],
+                    'username' => 'google'.$request->profileObj['googleId'],
+                    'email' => $request->profileObj['email'],
+                    'password'=> Hash::make($request->profileObj['googleId']),
+                    'address' => $input['address'] ?? null,
+                    'phone' => $input['phone'] ?? null,
+                    'role_id' => 3,
+                    'active' => 1,
+                    'avatar' => $request->profileObj['imageUrl'] ?? 'https://cdn-icons-png.flaticon.com/512/219/219983.png'
+                ];
+                $user = User::create($data);
+
+                $token = auth()->login($user);
+                $user->avatar = strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar);
+                
+                $arrRes = [
+                    'errCode'=> 0,
+                    'message' => 'Đăng nhập thành công',
+                    'data' => [
+                        "user" => $user,
+                        'token' => $token
+                    ]
+                ];
+                return response()->json($arrRes, 201);
+            }
+        }catch (\Exception $th) {
+            $res = new TM_Error($th);
+            return $this->response->error($res->getMessage(), $res->getStatusCode());
+        }
+    }
 }

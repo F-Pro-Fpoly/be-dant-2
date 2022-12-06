@@ -28,6 +28,7 @@ $router->get('/', function () use ($router) {
 });
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
+$router->get('/login-google', 'AuthController@loginGoogle');
 
 // national
 $router->group(['prefix' => 'admin/national'], function ($router){
