@@ -116,7 +116,7 @@ class Booking extends BaseModel
         }
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
-            return $query->limit($input['limit'])->paginate();
+            return $query->paginate($input['limit']);
         }else{
             return $query->get();
         }
@@ -170,7 +170,7 @@ class Booking extends BaseModel
         }
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
-            return $query->limit($input['limit'])->paginate();
+            return $query->paginate($input['limit']);
         }else{
             return $query->get();
         }
