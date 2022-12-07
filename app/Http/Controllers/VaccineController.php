@@ -175,4 +175,15 @@ class VaccineController extends BaseController
         throw new HttpException(500, $errors);
         }
     }
+
+    public function list_DM(Request $request){
+        $input = $request->all();
+        $categoty_ids = $request->category_ids;
+        $a =  Vaccine::whereJsonContains('category_ids', (int) $categoty_ids)->get();
+        // $data = $a->searchVaccine($input, $input['limit'] ?? null);
+        if(!empty($input['limit'])) {
+            return $this->response->paginator($a, new VaccineTransformer());
+        }
+        return $this->response->collection($a, new VaccineTransformer()); 
+    }
 }
