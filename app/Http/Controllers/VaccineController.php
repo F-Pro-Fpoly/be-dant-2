@@ -34,7 +34,7 @@ class VaccineController extends BaseController
                     "created_by" => auth()->user()->id
                 ]);
             }
-            Vaccine::create([
+            Vaccine::create([ 
                 "code" => $input['code'], 
                 "name" => $input['name'], 
                 "slug" => $input['slug']??Str::slug($input['name']),
@@ -180,7 +180,6 @@ class VaccineController extends BaseController
         $input = $request->all();
         $categoty_ids = $request->category_ids;
         $a =  Vaccine::whereJsonContains('category_ids', (int) $categoty_ids)->get();
-        // $data = $a->searchVaccine($input, $input['limit'] ?? null);
         if(!empty($input['limit'])) {
             return $this->response->paginator($a, new VaccineTransformer());
         }
