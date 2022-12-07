@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Supports\TM_Error;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends BaseController
 {
@@ -189,6 +190,53 @@ class UserController extends BaseController
 
            
            
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+
+    public function forgetPassword(Request $request) {
+        $input = $request->all();
+        try {
+            $user = User::where('email', $input['email'])->first();
+            if($user){
+
+                Mail::send('email.forgetPass', compact('user'), function ($email) use ($user) {
+                    $email->subject('FPRO - THAY ĐỔI MẬT KHẨU');
+                    $email->to($user->email);            
+                });      
+                
+            }
+            else{
+                throw new HttpException(400, "Không tồn tại email ".$input['email']." trong hệ thống");
+            }       
+           
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    public function ChangePass(Request $request, $id)
+    {
+        $input = $request->all();
+        try {
+            $user = User::find($id);
+            if($input['new_pass'] == $input['comfirm_pass']){
+                $user->update([
+                    'password' =>  Hash::make($input['new_pass']),
+                    'updated_by' => $user->id,            
+                ]);
+                return response()->json([
+                    'message' => "Cập nhập người dùng thành công",
+                    'status' => 201
+                ], 201);
+            }else{
+                return response()->json([
+                    'message' => "Mật khẩu không trùng nhau!",
+                    'status' => 401
+                ], 401);
+            }
         } catch (Exception $th) {
             throw new HttpException(500, $th->getMessage());
         }
