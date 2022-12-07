@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\Injection_info\CreateInjectionInfoValidate;
+use App\Http\Validators\Injection_info\CreateInjectionInfoValidate;
 use App\Models\Booking;
 use App\Models\File;
 use App\Models\Injection_info;
