@@ -71,7 +71,7 @@ class BookingController extends BaseController
         }else{
             $data = $booking->searchBookingDoctor_v2($input);
         }
-        return $this->response->collection($data, new BookingTransformer);
+        return $this->response->paginator($data, new BookingTransformer);
     }
 
     public function statusBooking(Request $request){
