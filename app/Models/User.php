@@ -327,10 +327,15 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $query->where('name', 'like', "%{$input['name']}%");
         }
 
+        if(!empty($input['date'])) {
+            $query->where('date', '=', $input['date']);
+        }
+
+
+
+
         $query->where('role_id', 3);
-        // $query->whereHas( 'users' ,function ($q) {
-           
-        // });
+
 
         if(!empty($input['limit'])) {
             return $query->paginate($input['limit']);
