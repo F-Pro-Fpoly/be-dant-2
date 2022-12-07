@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Middleware\Injection_info;
+namespace App\Http\Validators\Injection_info;
 use App\Http\Validators\ValidatorBase;
 
 class CreateInjectionInfoValidate extends ValidatorBase
