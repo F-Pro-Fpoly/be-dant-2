@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\InsertUserRequest;
+use App\Http\Transformer\Booking\BookingTransformer;
 use App\Http\Transformer\User\UserTransformer;
 use App\Http\Validators\User\InsertUserValidate;
 use App\Http\Validators\User\UpdateUserValidate;
+use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Supports\TM_Error;
 
 class UserController extends BaseController
 {
@@ -237,5 +240,28 @@ class UserController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
+
+    public function listPatient(Request $request){
+        $input = $request->all();
+        try {    
+            $user = new User();
+            $data = $user->searchListPatient($input);
+            return $this->response->paginator($data, new UserTransformer);
+        } catch (\Exception $th) {
+             $ex_handle = new TM_Error($th);
+             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+     }
+    public function listPatientDetail(Request $request,$id){
+        $input = $request->all();
+        try {    
+        
+            $booking =  Booking::where('user_id', $id)->get();
+            return $this->response->collection($booking, new BookingTransformer);
+        } catch (\Exception $th) {
+             $ex_handle = new TM_Error($th);
+             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+     }
 
 }
