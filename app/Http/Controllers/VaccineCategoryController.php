@@ -80,4 +80,20 @@ class VaccineCategoryController extends BaseController
             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
     }
+     public function list_dmCategory(Request $request){
+        $input = $request->all();
+
+        try {
+            $vaccine_cate = (new Vaccine_category())->search_vaccine_category($input);
+
+            if(!empty($input['limit'])) {
+                return $this->response->paginator($vaccine_cate, new VaccineCategoryTransformer());
+            }
+
+            return $this->response->collection($vaccine_cate, new VaccineCategoryTransformer());
+        } catch (\Exception $ex) {
+            $ex_processed = new TM_Error($ex);
+            return $this->response->error($ex_processed->getMessage(), $ex_processed->getStatusCode());
+        }
+     }
 }
