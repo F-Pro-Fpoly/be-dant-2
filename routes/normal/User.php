@@ -6,7 +6,8 @@
     
     // $api->get('/list-user', 'TestController@listUser'); 
     // $api->get('/test-search', 'TestController@testSearch'); 
-    // $api->post('/file', 'TestController@addImg'); 
+    $api->post('/user/forgetPass', 'UserController@forgetPassword'); 
+    $api->post('/user/ChangePass/{id}', 'UserController@ChangePass'); 
     $api->get('/user/list', 'UserController@listUser');
     $api->put('/user/update-client', [
         'uses' => 'UserController@updateClient',
