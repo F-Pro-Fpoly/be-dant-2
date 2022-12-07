@@ -130,7 +130,7 @@ class Booking extends BaseModel
             $query->where('user_id', '=', $input['user_id']);
         }
 
-        if(!empty($input['is_vaccine'])) {
+        if(isset($input['is_vaccine'])) {
             $query->where('is_vaccine', '=', $input['is_vaccine']);
         }
        
