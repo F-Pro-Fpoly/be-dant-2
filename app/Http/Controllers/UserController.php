@@ -300,12 +300,12 @@ class UserController extends BaseController
              return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
      }
-    public function listPatientDetail(Request $request,$id){
+    public function listPatientDetail(Request $request){
         $input = $request->all();
-        try {    
-        
-            $booking =  Booking::where('user_id', $id)->get();
-            return $this->response->collection($booking, new BookingTransformer);
+        try {        
+            // $booking =  Booking::where('user_id', $id)->get();
+            $booking = (new Booking())->searchBookingPariend($input);
+            return $this->response->paginator($booking, new BookingTransformer);
         } catch (\Exception $th) {
              $ex_handle = new TM_Error($th);
              return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());

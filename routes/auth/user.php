@@ -7,7 +7,7 @@ $api -> group(['prefix' => 'user'], function ($api) {
         $api->delete('/delete/{id}', 'UserController@deleteUser');
         $api->put('/updateByName', 'UserController@updateByName');
         $api->get('/listPatient', 'UserController@listPatient');
-        $api->get('/listPatientDetail/{id}', 'UserController@listPatientDetail');
+        $api->get('/listPatientDetail', 'UserController@listPatientDetail');
     });
   
     $api->get('/info', 'UserController@getInfo');
