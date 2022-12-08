@@ -110,7 +110,7 @@ class CountController extends BaseController
             try{
                 $priceSpecialist = Booking::select('specialists.name as specialists_name',Department::raw('SUM(departments.price) as price'))
                                         ->join('departments', 'departments.id', 'bookings.department_id')
-                                        ->join('specialists', 'specialists.id', 'departments.specialist_id')
+                                        ->join('specialists', 'specialists.id', 'bookings.specialist_id')
                                         ->groupBy('specialists.name')
                                         ->where('bookings.status_id', 4)
                                         ->get();            
