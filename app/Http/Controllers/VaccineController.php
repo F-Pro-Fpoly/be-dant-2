@@ -178,11 +178,18 @@ class VaccineController extends BaseController
 
     public function list_DM(Request $request){
         $input = $request->all();
-        $categoty_ids = $request->category_ids;
-        $a =  Vaccine::whereJsonContains('category_ids', (int) $categoty_ids)->get();
-        if(!empty($input['limit'])) {
-            return $this->response->paginator($a, new VaccineTransformer());
+        $category_ids = $request->category_ids ?? null;
+        if($category_ids){
+            $a =  Vaccine::whereJsonContains('category_ids', (int) $category_ids)->get();
+            if(!empty($input['limit'])) {
+                return $this->response->paginator($a, new VaccineTransformer());
+            }
+            return $this->response->collection($a, new VaccineTransformer()); 
         }
-        return $this->response->collection($a, new VaccineTransformer()); 
+        else{
+            return response()->json([
+                'message' => 'Vui lòng nhập category_ids'
+            ], 400);
+        }
     }
 }
