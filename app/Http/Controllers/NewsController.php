@@ -6,12 +6,8 @@ use App\Http\Transformer\News\NewsTransformer;
 use App\Http\Validators\News\InsertNewsValidate;
 use App\Http\Validators\News\UpdateNewsValidate;
 use App\Http\Transformer\News_category\News_categoryTransformer;
-<<<<<<< HEAD
-use App\Models\File;
-=======
 use App\Models\News;
 use App\Models\News_view;
->>>>>>> 2d162b208f526f74dba07ecd9efb9fce3d9865a3
 use App\Models\News_category;
 use App\Models\File;
 use Exception;
@@ -35,34 +31,7 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            if(!empty($input['file'])) {
-                $file = $request->file('file')->store('images','public');
-                $file = File::create([
-                    'alt' => $input['alt']??null,
-                    'url' => $file,
-                    "created_by" => auth()->user()->id,
-                ]);
-            }
 
-           News::create([
-            'code'        =>    $input['code'],
-            'slug'        =>    $input['slug'],
-            'featured'    =>    $input['featured'],
-            'status'      =>    $input['status'] ? 1: 2,
-            'category_id' =>    $input['category_id'],
-            'name'        =>    $input['name'],
-            'content'     =>    $input['content'],
-            'view'        =>    $input['view'],
-
-
-        ]);
-=======
-            
-=======
-
->>>>>>> 2d162b208f526f74dba07ecd9efb9fce3d9865a3
             $file_name = $input['file_name'] ?? null;
            News::create([
                 'code' => $input['code'],
@@ -89,12 +58,6 @@ class NewsController extends BaseController
                 
            }
         //    dd($path);
-<<<<<<< HEAD
-
->>>>>>> 7c5f6f0c42e03b2264d044079273dba62ab42e85
-
-=======
->>>>>>> 2d162b208f526f74dba07ecd9efb9fce3d9865a3
            return response()->json([
                 'status' => 200,
                 'message' => "Thêm tin thành công",
