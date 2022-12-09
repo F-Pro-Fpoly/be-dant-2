@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Validators\Injection_info\CreateInjectionInfoValidate;
+use App\Models\Booking;
 use App\Models\File;
 use App\Models\Injection_info;
 use App\Supports\TM_Error;
@@ -33,6 +35,38 @@ class Injection_infoController extends BaseController
             return response()->json([
                 'message' => 'Cập nhập thành cônng'
             ], 200);
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+    }
+
+    public function create_injection_info (Request $request) 
+    {
+        $input = $request->all();
+
+        (new CreateInjectionInfoValidate($input));
+
+        try {
+            if(!empty($input['booking_id'])){
+                $booking_code = Booking::where('id', $input['booking_id'])->value('code');
+            }
+
+            $input_injection_info = [
+                'type' => $input['type'],
+                'time_apointment' => $input['time_apointment'],
+                'type_name' => $input['type_name'],
+                'status_code' => $input['status_code'],
+                'booking_id' => $input['booking_id'],
+                'booking_code' => $booking_code ?? null
+            ];
+
+            Injection_info::create($input_injection_info);
+
+            return response()->json([
+                'message' => 'Thêm lịch thành công'
+            ],200);
         } catch (\Exception $ex) {
             $ex_handle = new TM_Error($ex);
 

@@ -316,4 +316,35 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
         return $schudule_data;
     }
+
+
+
+    public function searchListPatient($input = []){  
+
+        $query = $this->model();
+
+        if(!empty($input['name'])) {
+            $query->where('name', 'like', "%{$input['name']}%");
+        }
+
+        if(!empty($input['date'])) {
+            $query->where('date', '=', $input['date']);
+        }
+
+
+
+
+        $query->where('role_id', 3);
+
+
+        if(!empty($input['limit'])) {
+            return $query->paginate($input['limit']);
+        }
+        else{
+            return $query->get();
+        }
+
+    }
+
+
 }

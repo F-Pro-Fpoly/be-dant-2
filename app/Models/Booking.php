@@ -116,7 +116,27 @@ class Booking extends BaseModel
         }
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
-            return $query->limit($input['limit'])->paginate();
+            return $query->paginate($input['limit']);
+        }else{
+            return $query->get();
+        }
+    }
+
+    public function searchBookingPariend(array $input) {
+      
+        $query = $this->model();
+
+        if(!empty($input['user_id'])) {
+            $query->where('user_id', '=', $input['user_id']);
+        }
+
+        if(isset($input['is_vaccine'])) {
+            $query->where('is_vaccine', '=', $input['is_vaccine']);
+        }
+       
+        $query->orderBy('created_at','DESC');
+        if(!empty($input['limit'])){
+            return $query->paginate($input['limit']);
         }else{
             return $query->get();
         }
@@ -170,7 +190,7 @@ class Booking extends BaseModel
         }
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
-            return $query->limit($input['limit'])->paginate();
+            return $query->paginate($input['limit']);
         }else{
             return $query->get();
         }
@@ -225,7 +245,7 @@ class Booking extends BaseModel
 
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
-            return $query->limit($input['limit'])->paginate();
+            return $query->paginate($input['limit']);
         }else{
             return $query->get();
         }

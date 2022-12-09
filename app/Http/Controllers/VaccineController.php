@@ -34,7 +34,7 @@ class VaccineController extends BaseController
                     "created_by" => auth()->user()->id
                 ]);
             }
-            Vaccine::create([
+            Vaccine::create([ 
                 "code" => $input['code'], 
                 "name" => $input['name'], 
                 "slug" => $input['slug']??Str::slug($input['name']),
@@ -173,6 +173,23 @@ class VaccineController extends BaseController
        catch (Exception $th) {
         $errors = $th->getMessage();
         throw new HttpException(500, $errors);
+        }
+    }
+
+    public function list_DM(Request $request){
+        $input = $request->all();
+        $category_ids = $request->category_ids ?? null;
+        if($category_ids){
+            $a =  Vaccine::whereJsonContains('category_ids', (int) $category_ids)->get();
+            if(!empty($input['limit'])) {
+                return $this->response->paginator($a, new VaccineTransformer());
+            }
+            return $this->response->collection($a, new VaccineTransformer()); 
+        }
+        else{
+            return response()->json([
+                'message' => 'Vui lòng nhập category_ids'
+            ], 400);
         }
     }
 }

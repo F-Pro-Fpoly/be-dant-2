@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\InsertUserRequest;
+use App\Http\Transformer\Booking\BookingTransformer;
 use App\Http\Transformer\User\UserTransformer;
 use App\Http\Validators\User\InsertUserValidate;
 use App\Http\Validators\User\UpdateUserValidate;
+use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Supports\TM_Error;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends BaseController
 {
@@ -192,6 +196,53 @@ class UserController extends BaseController
     }
 
 
+    public function forgetPassword(Request $request) {
+        $input = $request->all();
+        try {
+            $user = User::where('email', $input['email'])->first();
+            if($user){
+
+                Mail::send('email.forgetPass', compact('user'), function ($email) use ($user) {
+                    $email->subject('FPRO - THAY ĐỔI MẬT KHẨU');
+                    $email->to($user->email);            
+                });      
+                
+            }
+            else{
+                throw new HttpException(400, "Không tồn tại email ".$input['email']." trong hệ thống");
+            }       
+           
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+    public function ChangePass(Request $request, $id)
+    {
+        $input = $request->all();
+        try {
+            $user = User::find($id);
+            if($input['new_pass'] == $input['comfirm_pass']){
+                $user->update([
+                    'password' =>  Hash::make($input['new_pass']),
+                    'updated_by' => $user->id,            
+                ]);
+                return response()->json([
+                    'message' => "Cập nhập người dùng thành công",
+                    'status' => 201
+                ], 201);
+            }else{
+                return response()->json([
+                    'message' => "Mật khẩu không trùng nhau!",
+                    'status' => 401
+                ], 401);
+            }
+        } catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+
+
     public function getInfo(Request $request){
         $input = $request->all();
         $id = auth()->user()->id;
@@ -237,5 +288,28 @@ class UserController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
+
+    public function listPatient(Request $request){
+        $input = $request->all();
+        try {    
+            $user = new User();
+            $data = $user->searchListPatient($input);
+            return $this->response->paginator($data, new UserTransformer);
+        } catch (\Exception $th) {
+             $ex_handle = new TM_Error($th);
+             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+     }
+    public function listPatientDetail(Request $request){
+        $input = $request->all();
+        try {        
+            // $booking =  Booking::where('user_id', $id)->get();
+            $booking = (new Booking())->searchBookingPariend($input);
+            return $this->response->paginator($booking, new BookingTransformer);
+        } catch (\Exception $th) {
+             $ex_handle = new TM_Error($th);
+             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+     }
 
 }
