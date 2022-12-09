@@ -16,8 +16,12 @@ class ContactTransformer extends TransformerAbstract
             'name' => $Contact->name,
             'email' => $Contact->email,
             'content' => $Contact->contents,
+            'reply_contact' => $Contact->reply_contact ?? null, 
             'type' => $Contact->type,
-
-        ];
+            'phone' => $Contact->phone,
+            'status_id' => $Contact->status_id,
+            'status' => $Contact->status->name,
+            'created_at' => date_format($Contact->created_at, "Y/m/d")
+        ];  
     }
 }

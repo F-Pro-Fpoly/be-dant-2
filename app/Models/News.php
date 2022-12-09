@@ -65,6 +65,10 @@ class News extends BaseModel
     }
 
     public function news_category(){
-        return $this->belongsTo(News_category::class);
+        return $this->belongsTo(News_category::class, 'category_id', 'id');
+    }
+
+    public function news_comment(){
+        return $this->belongsTo(news_comment::class);
     }
 }

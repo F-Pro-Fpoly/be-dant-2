@@ -88,6 +88,14 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $this->belongsTo(Ward::class, 'ward_code', 'code');
     }
 
+    public function doctor_profile() {
+        return $this->hasOne(Doctor_profile::class, 'id_user');
+    }
+
+    public function news_comment() {
+        return $this->belongsTo(news_comment::class, 'user_id', 'id');
+    }
+
     public function searchUser($input = []){
         $dataInput = [];
         if(!empty($input['email'])){
@@ -135,6 +143,37 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         return $data;
     }
 
+    public function searchUserV2(array $input = []) {
+        $query = $this->model();
+
+        if(!empty($input['name'])) {
+            $query->where('name', 'like', "%{$input['name']}%");
+        }
+        if(!empty($input['code'])) {
+            $query->where('code', $input['code']);
+        }
+        if(!empty($input['username'])){
+            $query->where('username', $input['username']);
+        }
+        if(!empty($input['email'])) {
+            $query->where('email', 'like', "%{$input['email']}%");
+        }
+        if(!empty($input['role_id'])) {
+            $query->where('role_id', $input['role_id']);
+        }
+        if(!empty($input['role_code'])) {
+            $role_id = Role::where('code', $input['role_code'])->value('id');
+            $query->where('role_id', $role_id);
+        }
+
+        if(!empty($input['limit'])) {
+            return $query->paginate($input['limit']);
+        }
+        else{
+            return $query->get();
+        }
+    }
+
     public function updateUser(array $input = [])
     {
       
@@ -146,6 +185,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $this->address = $input['address'];
         }
 
+        if(!empty($input['specailist_id'])) {
+            $input['specailist_code'] = Specialist::where('id', $input['specailist_id'])->value('code');
+            $this->specailist_id = $input['specailist_id'];
+        }
+
         if(!empty($input['birthday'])) {
             $this->birthday = $input['birthday'];
         }
@@ -155,6 +199,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         }
         if(!empty($input['password'])){
             $this->password = Hash::make($input['password']);
+        }
+
+        if(!empty($input['specailist_code'])) {
+            $this->specailist_code = $input['specailist_code'];
         }
 
         if(!empty($input['name'])){
@@ -234,9 +282,18 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         }
         // dd($schedule_dates);
 
-        $schedules = Schedule::where('date', $date)->where('doctor_id', $doctor_id)
-            ->where('status_code', 'STILLEMPTY')
-            ->get();
+        $query = Schedule::model()->where('date', $date)->where('doctor_id', $doctor_id)
+            ->where('status_code', 'STILLEMPTY');
+       
+        if(!empty($input['interval'])){
+        
+            $i = $input['interval'];
+            $query->whereHas('timeslot', function ( $query) use ($i) {
+                
+                $query->where('interval', '=', $i);
+            });     
+        }
+         $schedules = $query->get(); 
         
         foreach ($schedules as $key => $schedule) {
             $time_slot[] = [
@@ -244,6 +301,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
                 'time_end' => \Carbon\Carbon::createFromFormat('H:i:s',$schedule->timeslot->time_end)->format('h:i'),
                 'status_code'=>$schedule->status_code,
                 'status_id' => $schedule->status_id,
+                'interval' => $schedule->timeslot->interval,
                 'id' => $schedule->id
             ];
         }

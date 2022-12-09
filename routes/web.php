@@ -12,7 +12,15 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+
+use App\Exports\test;
 use App\Http\Model\User;
+use App\Models\Booking;
+use App\Models\Page;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+
+$router->get("/hello", 'TestController@report');
 
 
 $router->get('/', function () use ($router) {
@@ -20,7 +28,6 @@ $router->get('/', function () use ($router) {
 });
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
-
 
 // national
 $router->group(['prefix' => 'admin/national'], function ($router){
@@ -63,9 +70,6 @@ $router->post("/auto-pull", function() {
 });
 
 
-$router->get("/hello", function(){
-    return "hello";
-});
 
 $api = app('Dingo\Api\Routing\Router');
 

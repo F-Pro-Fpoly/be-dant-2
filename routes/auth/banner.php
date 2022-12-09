@@ -4,6 +4,6 @@
         $api->post('/add', 'BannerController@addBanner');
         $api->get('/detail/{id:[0-9]+}', 'BannerController@bannerDetail');
         $api->put('/edit/{id:[0-9]+}', 'BannerController@updateBanner');
-        // $api->delete('/delete/{id:[0-9]+}', 'SettingController@deleteSetting');
+        $api->delete('/delete/{id:[0-9]+}', 'BannerController@deleteBanner');
     });
 ?>

@@ -146,7 +146,6 @@ class News_categoryController extends BaseController
         $data = $News->searchNews($input);
         return $this->response->paginator($data, new NewsTransformer);
     }
-
     public function getNewsInCategory($id){
         if($id)
             try {

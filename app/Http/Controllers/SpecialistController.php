@@ -138,7 +138,11 @@ class SpecialistController extends BaseController
         try {
             $specialist = new Specialist;
             $data = $specialist->searchSpecialist($input);
+            if(!empty($input['limit'])){
+                return $this->response->paginator($data, new SpecialistTransformer);
+            }
             return $this->response->collection($data, new SpecialistTransformer);
+            
         } 
         catch (\Exception $th) {
             $errors = $th->getMessage();

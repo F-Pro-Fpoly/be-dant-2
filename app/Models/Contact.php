@@ -8,9 +8,11 @@ class Contact extends BaseModel
 {
     protected $table = 'contacts';
     protected $fillable = [
+        'id',
         'name',
         'email',
         'contents',
+        'reply_contact',
         'type',
         'phone',
         'created_at',
@@ -23,30 +25,40 @@ class Contact extends BaseModel
     ];
 
 
-    public function searchContact($input = []){
-        $dataInput =[];
-        if(!empty($input['name'])){
-            $dataInput[] = [
-                'name' , "like", "%".$input['name']."%"
-            ];
+    public function searchContact( array  $input){
+
+
+        $query = $this->model();
+
+        if(!empty($input['name'])) {
+            $query->where('name', 'like', "%".$input['name']."%");
         }
-        if(!empty($input['email'])){
-            $dataInput[] = [
-                'email' , "like", "%".$input['email']."%"
-            ];
+        if(!empty($input['contents'])) {
+            $query->where('contents', 'like', "%".$input['contents']."%");
         }
-        if(!empty($input['contents'])){
-            $dataInput[] = [
-                'contents' , "like", "%".$input['contents']."%"
-            ];
+        if(!empty($input['email'])) {
+            $query->where('email', 'like', "%".$input['email']."%");
         }
-        if(!empty($input['type'])){
-            $dataInput[] = [
-                'type' , "=",$input['type']
-            ];
+        if(!empty($input['type'])) {
+            $query->where('type', '=', $input['type']);
         }
-        $data = $this->search($dataInput, [], 5);
-        return $data;
+        if(!empty($input['status_id'])) {
+            $query->where('status_id', '=', $input['status_id']);
+        }
+        
+        $query->orderBy('created_at','DESC');
+
+        if(!empty($input['limit'])){
+            return $query->paginate($input['limit']);
+        }else{
+            return $query->get();
+        }
+
+    }
+
+
+    public function status(){
+        return $this->belongsTo(status::class , 'status_id', 'id');
     }
 
 }

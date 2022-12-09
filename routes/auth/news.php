@@ -9,6 +9,18 @@
         $api->get('/news-new', 'NewsController@getNews_new');
         $api->post('/add_news', 'NewsController@addNews');
         $api->put('/update_news/{id:[0-9]+}', 'NewsController@updateNews');
+
+        $api->get('/list_news_comment/{id:[0-9]+}', 'News_commentController@listNews_comment_by_newsID_admin');
+        $api->get('/one_news_comment/{id:[0-9]+}', 'News_commentController@OneNews_comment_by_newsID_admin');
+        $api->put('/update_news_comment/{id:[0-9]+}', 'News_commentController@updateNews_comment_admin');
+        $api->delete('/delete_news_comment/{id:[0-9]+}', 'News_commentController@deleteNews_comment_admin');
+
+    });
+    $api -> group(['prefix' => 'news_comment'], function ($api) {
+        $api->get('/one_news_comment/{id:[0-9]+}', 'News_commentController@OneNews_comment_by_newsID');
+        $api->post('/add_news_comment/{id}', 'News_commentController@addNews_comment');
+        $api->put('/update_news_comment/{id:[0-9]+}', 'News_commentController@updateNews_comment');
+        $api->delete('/delete_news_comment/{id:[0-9]+}', 'News_commentController@deleteNews_comment');
     });
 
 ?>

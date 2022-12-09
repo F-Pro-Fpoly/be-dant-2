@@ -112,9 +112,7 @@ $app->singleton('filesystem', function ($app) {
 $app->configure('app');
 $app->configure('jwt');
 $app->configure('filesystems');
-
-
-
+$app->configure('excel');
 
 
 /*
@@ -161,6 +159,14 @@ $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
+// send mail
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
+
+// excel
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+
+class_alias(Maatwebsite\Excel\Facades\Excel::class, "Excel");
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -172,7 +178,8 @@ $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 |
 */
 
-
+$app->configure('services');
+$app->configure('mail');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

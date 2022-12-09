@@ -24,8 +24,10 @@ class ScheduleController extends BaseController
     public function listSchedule(Request $request) {
         $input = $request->all();
         try {
-            if(auth()->user()->role_id == 2) {
-                $input['created_by'] = auth()->user()->id;
+            if(empty($input['created_by'])){
+                if(auth()->user()->role_id == 2) {
+                    $input['created_by'] = auth()->user()->id;
+                }
             }
             $schedule = (new Schedule())->searchSchedule($input);
             // return $schedule;
@@ -39,8 +41,11 @@ class ScheduleController extends BaseController
     public function createSchedule(Request $request) {
         $input = $request -> all();
         (new CreateScheduleValidate($input));
-
-        $user_created = auth()->user()->id;
+        if(empty($input['doctor_id'])){
+            $user_created = auth()->user()->id;
+        }else{
+            $user_created = $input['doctor_id'];
+        }
         try {
             if(is_array($input['timeslot_id'])) {
                 foreach($input['timeslot_id'] as $index => $item) {
@@ -71,7 +76,9 @@ class ScheduleController extends BaseController
     public function getTimeslot(Request $request) {
         $input = $request -> all();
         try {
-            $input['doctor_id'] = auth()->user()->id;
+            if(empty($input['doctor_id'])){
+                $input['doctor_id'] = auth()->user()->id;
+            }
             $timeslot = (new Timeslot())->searchTimeSlot($input);
 
             return $this->response->collection($timeslot, new TimeSlotTransformer());
@@ -82,11 +89,12 @@ class ScheduleController extends BaseController
 
     public function get_schedule_date_by_doctor(Request $request, $id) {
         $input = $request->all();
-
+      
         try {
             $user = User::findOrFail($id??null);
             $data_schedule = $user->get_data_schudule([
-                'date' => $input['date']??null
+                'date' => $input['date']??null,
+                'interval' => $input['interval'] ?? null
             ]);
             // dd($data_schedule);
             return response()->json([

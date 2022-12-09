@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder;
 class Booking extends BaseModel
 {
     use HasFactory;
@@ -15,9 +15,17 @@ class Booking extends BaseModel
         'user_id',
         'doctor_id',
         'status_id',
+        'description',
+        'infoAfterExamination',
+        'reasonCancel',
+        'is_vaccine',
+        'vaccine_code',
+        'id_file',
+        'email',
         'status_code',
         'payment_method',
         'address',
+        'specialist_id',
         'city_code',
         'customer_name',
         'type',
@@ -35,6 +43,7 @@ class Booking extends BaseModel
         'deleted_at',
         'deleted_by'
     ];
+
 
     public function searchBooking($input = []){
         $dataInput =[];
@@ -58,6 +67,11 @@ class Booking extends BaseModel
                 'user_id' , "=" ,$input['user_id']
             ];
         }
+        if(!empty($input['date'])){
+            $dataInput[] = [
+                'date' , "=" ,$input['date']
+            ];
+        }
         if(!empty($input['code'])){
             $dataInput[] = [
                 'code' , "=",$input['code']
@@ -67,47 +81,174 @@ class Booking extends BaseModel
         return $data;
     }
 
-    public function searchMyBooking($input = [], $id, $with=[] ,$limit = null){  
-        $dataInput =[];
 
- 
+    public function searchBookingDoctor(array $input) {
+      
+        $query = $this->model();
+
+        if(!empty($input['user_id'])) {
+            $query->where('doctor_id', '=', $input['user_id']);
+        }
+        if(!empty($input['code'])) {
+            $query->where('code', '=', $input['code']);
+        }
         
+        if(!empty($input['is_vaccine'])) {
+            if($input['is_vaccine'] == 'vaccine') {
+                $query->where('is_vaccine', 1)->orWhereNull('doctor_id', );
+            }elseif ($input['is_vaccine'] == 'booking') {
+                $query->where('is_vaccine', 0);
+            }
+        }
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+          
+            $query->where(function($query) use($date) {    
+                $query->whereHas('schedule', function ( $query) use ($date) {
+                    $query->where('date', '=', $date);
+                });     
+            }); 
+        }
+        
+        if(!empty($input['status'])) {
+            $query->where('status_id', '=', $input['status']);
+        }
+        $query->orderBy('created_at','DESC');
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
+    }
+
+    public function searchBookingDoctor_v2(array $input) {
+      
+        $query = $this->model();
+
+        // if(!empty($input['user_id'])) {
+        //     $query->where('doctor_id', '=', $input['user_id']);
+        // }
+
+        if(!empty($input['is_vaccine'])) {
+            if($input['is_vaccine'] == 'vaccine') {
+                if(!empty($input['user_id'])) {
+                    $doctor_id = $input['user_id'];
+                    $query->where(function($query) use ($doctor_id) {
+                        $query->where('doctor_id', $doctor_id);
+                    });
+                }
+            }elseif ($input['is_vaccine'] == 'booking') {
+                $query->where('is_vaccine', 0);
+            }
+        }
+
+        if(!empty($input['code'])) {
+            $query->where('code', '=', $input['code']);
+        }
+        
+        if(!empty($input['is_vaccine'])) {
+            if($input['is_vaccine'] == 'vaccine') {
+                $query->where('is_vaccine', 1)->orWhereNull('doctor_id');
+            }elseif ($input['is_vaccine'] == 'booking') {
+                $query->where('is_vaccine', 0);
+            }
+        }
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+          
+            $query->where(function($query) use($date) {    
+                $query->whereHas('Injection_info', function ( $query) use ($date) {
+                    $query->where('time_apointment', '=', $date);
+                });     
+            }); 
+        }
+        
+        if(!empty($input['status'])) {
+            $query->where('status_id', '=', $input['status']);
+        }
+        $query->orderBy('created_at','DESC');
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
+    }
+   
+
+    public function searchMyBooking(array $input, $id){  
+
+        $query = $this->model();
+
+        if(!empty($input['user_id'])) {
+            $query->where('doctor_id', '=', $input['user_id']);
+        }
+        
+
+        if(!empty($input['date'])) {
+            $date = $input['date'];
+          
+            $query->where(function($query) use($date) {    
+                $query->whereHas('schedule', function ( $query) use ($date) {
+                    $query->where('date', '=', $date);
+                });     
+            }); 
+        }
+        
+        if(!empty($input['status'])) {
+            $mang  =  $input['status'];
+            $mang_tmp = explode(",", $mang);
+
+            $query->where(function ($q) use ($mang_tmp) {       
+            foreach($mang_tmp as $key => $v) {           
+                if($key > 0){
+                    $q->orWhere('status_id', '=', $v);
+                }else{
+                    $q->where('status_id', '=', $v);
+                }
+           
+            }
+         });
+            
+        }
+        $query->where('user_id', '=', $id);
         if(!empty($input['department_id'])){
-            $dataInput[] = [
-                'department_id' , "=" ,$input['department_id']
-            ];
+            $query->where('department_id', '=', $input['department_id']);
         }
         if(!empty($input['schedule_id'])){
-            $dataInput[] = [
-                'schedule_id' , "=" ,$input['schedule_id']
-            ];
-        }
-        $dataInput[] = [
-            'user_id' , "=" , $id
-        ];
-        // if(!empty($input['timeSlot_id'])){
-        //     $dataInput[] = [
-        //         'timeSlot_id' , "=" ,$input['timeSlot_id']
-        //     ];
-        // }
-        if(!empty($input['user_id'])){
-            $dataInput[] = [
-                'user_id' , "=" ,$input['user_id']
-            ];
+            $query->where('schedule_id', '=', $input['schedule_id']);
         }
         if(!empty($input['code'])){
-            $dataInput[] = [
-                'code' , "=",$input['code']
-            ];
+            $query->where('code', '=', $input['code']);
         }
-        $data = $this->search($dataInput, [], $limit);
-        return $data;
+
+        $query->orderBy('created_at','DESC');
+        if(!empty($input['limit'])){
+            return $query->limit($input['limit'])->paginate();
+        }else{
+            return $query->get();
+        }
+
     }
 
 
+    public function Injection_info()
+    {
+       return $this->hasMany(Injection_info::class, "booking_id", 'id');
+    }
+    public function vaccine()
+    {
+       return $this->belongsTo(Vaccine::class, "vaccine_code", 'code');
+    }
+
  
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function doctor(){
+        return $this->belongsTo(User::class, 'doctor_id', 'id');
     }
 
     public function department(){
@@ -120,6 +261,15 @@ class Booking extends BaseModel
 
     public function status(){
         return $this->belongsTo(status::class , 'status_id', 'id');
+    }
+
+    public function specialist(){
+        return $this->belongsTo(Specialist::class , 'specialist_id', 'id');
+    }
+
+
+    public function file(){
+        return $this->belongsTo(File::class, 'id_file');
     }
 
     public function create_booking($input) {
@@ -153,6 +303,9 @@ class Booking extends BaseModel
         if(!empty($input['city_code'])) {
             $this->city_code = $input['city_code'];
         }
+        if(!empty($input['specialist_id'])){
+            $this->specialist_id = $input['specialist_id'];
+        }
         if(!empty($input['customer_name'])) {
             $this->customer_name = $input['customer_name'];
         }
@@ -176,6 +329,12 @@ class Booking extends BaseModel
         }
         if(!empty($input['created_by'])) {
             $this->created_by = $input['created_by'];
+        }
+        if(!empty($input['description'])) {
+            $this->description = $input['description'];
+        }
+        if(!empty($input['email'])){
+            $this->email = $input['email'];
         }
 
         $this->save();

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Transformer\setting\SettingTransformer;
+use App\Http\Transformer\Setting\SettingTransformer;
 use App\Http\Validators\Settings\InsertSettingValidate;
 use App\Models\setting;
 use Illuminate\Http\Request;
@@ -92,6 +92,17 @@ class SettingController extends BaseController
                     $data->description  = $file;
                     $data->save();
                 }
+                if(!empty($input['SocialTiktok'])){
+                    $file  = $request->file('SocialTiktok')->store('images','public');    
+                    $data->description  = $file;
+                    $data->save();
+                }
+
+                if(!empty($input['SocialGroup'])){
+                    $file  = $request->file('SocialGroup')->store('images','public');    
+                    $data->description  = $file;
+                    $data->save();
+                }
             
                 $data->update([
                     'code' =>  Arr::get($input, 'code',  $data->name),
@@ -158,6 +169,14 @@ class SettingController extends BaseController
             //address
             $SocialYoutube = setting::select('description', 'link')->where('code', 'SocialYoutube')->where('status',1)->first();
             view()->share('copyright', $SocialYoutube);
+            
+            //address
+            $SocialTiktok = setting::select('description', 'link')->where('code', 'SocialTiktok')->where('status',1)->first();
+            view()->share('SocialTiktok', $SocialTiktok);
+
+            //address
+            $SocialGroup = setting::select('description', 'link')->where('code', 'SocialGroup')->where('status',1)->first();
+            view()->share('SocialGroup', $SocialGroup);
 
             //NameCompany
             $NameCompany = setting::select('description')->where('code', 'NameCompany')->where('status',1)->first();
@@ -175,6 +194,8 @@ class SettingController extends BaseController
                     "address" => $address,
                     "SocialFaceBook" => $SocialFaceBook,
                     "SocialYoutube" => $SocialYoutube,
+                    "SocialTiktok" => $SocialTiktok,
+                    "SocialGroup" => $SocialGroup,
                     "NameCompany" => $NameCompany,
                 ]
             ], 200);

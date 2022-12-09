@@ -2,6 +2,7 @@
 namespace App\Http\Transformer\News;
 
 use App\Models\News;
+
 use Dingo\Api\Http\Request;
 use Dingo\Api\Transformer\Binding;
 use Dingo\Api\Contract\Transformer\Adapter;
@@ -21,7 +22,9 @@ class NewsTransformer extends TransformerAbstract
             'name' => $news->name,
             'file' => $news->file,
             'content' => $news->content,
-            'views' => $news->view
+            'views' => $news->view,
+            'created_at' => $news->created_at->format('d-m-Y'),
+            'category_name' => $news->news_category->name ?? null,
         ];
     }
 }

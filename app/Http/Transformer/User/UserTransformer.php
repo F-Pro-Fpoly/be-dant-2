@@ -37,21 +37,25 @@ class UserTransformer extends TransformerAbstract
             'department_id' => $user->department_id ?? null,
             'department_name' => $user->department->name ??null,
             "gender" => $user->gender ?? null,
-            "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL', 'http://localhost:8080').$user->avatar),
+            "avatar" =>  strstr($user->avatar, "http") != false  ? $user->avatar :(env('APP_URL').$user->avatar),
             "thumbnail_name" => $user->avatar,
             "user_info" => $user->user_info ?? null,
             'city_code' => $user->city_code,
             'city_name' => $user->city->name ?? null,
+            'city_full_name'=> $user->city->full_name ?? null,
             'district_code' => $user->district_code,
             'district_name' => $user->district->name ?? null,
+            'district_full_name' => $user->district->full_name ?? null,
             'ward_code' => $user->ward_code,
             'ward_name' => $user->ward->name ?? null,
+            'ward_full_name' => $user->ward->full_name ?? null,
             'birthday' => $user->birthday ?? null
         ];
         // dd($this->is_add_data_doctor);
         if($this->is_add_data_doctor) {
             $schudule_data = $user->get_data_schudule([
-                'date' => $this->input['schedule_date']??null
+                'date' => $this->input['schedule_date']??null,
+                'interval' => $this->input['interval']??null
             ]);
             $data = array_merge($data, $schudule_data);
         }

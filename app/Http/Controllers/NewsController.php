@@ -5,15 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Transformer\News\NewsTransformer;
 use App\Http\Validators\News\InsertNewsValidate;
 use App\Http\Validators\News\UpdateNewsValidate;
-use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
+<<<<<<< HEAD
 use App\Models\File;
+=======
+use App\Models\News;
+use App\Models\News_view;
+>>>>>>> 2d162b208f526f74dba07ecd9efb9fce3d9865a3
 use App\Models\News_category;
 use App\Models\File;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SendNewsletter;
+use App\Mail\OrderShipped;
+use App\Supports\TM_Error;
 
 class NewsController extends BaseController
 {
@@ -23,6 +35,7 @@ class NewsController extends BaseController
         (new InsertNewsValidate($input));
 
         try {
+<<<<<<< HEAD
 <<<<<<< HEAD
             if(!empty($input['file'])) {
                 $file = $request->file('file')->store('images','public');
@@ -47,6 +60,9 @@ class NewsController extends BaseController
         ]);
 =======
             
+=======
+
+>>>>>>> 2d162b208f526f74dba07ecd9efb9fce3d9865a3
             $file_name = $input['file_name'] ?? null;
            News::create([
                 'code' => $input['code'],
@@ -58,15 +74,31 @@ class NewsController extends BaseController
                 'file' => $file_name,
                 'content' => $input['content'],
                 'views' => 0,
-                'created_by' => auth()->user()->id ?? null,
+                'created_by' => auth()->user()->id ?? null
            ]);
+            $messager = "";
+            if($input['featured'] == 1){
+                try{
+                    $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
+                    Queue::push(new SendNewsletter($dataNews));
+                    $messager = "Gửi mail thành công";
+                }
+                catch(\Throwable $th){
+                    $messager = $th->getMessage();
+                }
+                
+           }
         //    dd($path);
+<<<<<<< HEAD
 
 >>>>>>> 7c5f6f0c42e03b2264d044079273dba62ab42e85
 
+=======
+>>>>>>> 2d162b208f526f74dba07ecd9efb9fce3d9865a3
            return response()->json([
                 'status' => 200,
-                'message' => "Thêm tin thành công"
+                'message' => "Thêm tin thành công",
+                'mail' => $messager,
            ], 200);
         } catch (\Throwable $th) {
            return response()->json(
@@ -148,7 +180,7 @@ class NewsController extends BaseController
                     'content' => $input['content'] ?? $data->content,
                     'updated_by' => auth()->user()->id ?? null
                 ]);
-                
+
                 return response()->json([
                     'status' => 200,
                     'message' => "Cập nhật tin thành công"
@@ -182,17 +214,22 @@ class NewsController extends BaseController
     }
 
     // dùng cho client
-    function getNewsID($id){
+    function getNewsID(Request $request, $id){
         $data = News::where('slug',$id)->where('status', 1)->first();
         if($data){
             $data->update([
                 'view' => $data->view + 1,
             ]);
-            return response()->json([
-                'status' => 200,
-                'data' => $data,
-                'message' => "Lấy một tin thành công"
-           ], 200);
+
+            $dataView = News_view::create([
+                'number' => 1,
+                'news_id' => $data->id
+            ]);
+
+            $input = $request->all();
+            $News = News::where('slug',$id)->where('status', 1)->first();
+            $dataNews = $News->searchNews($input);
+            return $this->response->item($News, new NewsTransformer);
         }
         else{
             return response()->json([
@@ -203,12 +240,12 @@ class NewsController extends BaseController
     }
 
     function getNews_featured(){
-        $data = News::where('status', 1)->where('featured', 1)->limit(3)->get();
+        $data = News::where('status', 1)->where('featured', 1)->limit(9)->get();
         if($data){
             return response()->json([
                 'status' => 200,
                 'data' => $data,
-                'message' => "Lấy 3 tin nổi bật thành công"
+                'message' => "Lấy 9 tin nổi bật thành công"
            ], 200);
         }
         else{
@@ -220,12 +257,12 @@ class NewsController extends BaseController
     }
 
     function getNews_new(){
-        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->limit(9)->get();
+        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->limit(3)->get();
         if($data){
             return response()->json([
                 'status' => 200,
                 'data' => $data,
-                'message' => "Lấy 3 tin nổi bật thành công"
+                'message' => "Lấy 3 tin mới thành công"
            ], 200);
         }
         else{
@@ -233,6 +270,75 @@ class NewsController extends BaseController
                 'status' => 400,
                 'message' => "Không tìm thấy tin nỗi bật này"
            ], 400);
+        }
+    }
+    // public function listall(Request $request){
+    //     $input = $request->all();
+    //     $News = News::where('status', 1)->orderBy('created_at', 'DESC')->get();
+    //     $data = $News->searchNews($input);
+    //     return $this->response->paginator($data, new NewsTransformer);
+    // }
+    public function listall(Request $request){
+        $input = $request->all();
+        $News = new News();
+        $data = $News->searchNews($input);
+        return $this->response->paginator($data, new NewsTransformer);
+    }
+
+    public function getTopWeek1(){
+        try{
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
+            $now = date('Y-m-d H:i:s', strtotime('-1 week'));
+
+            $ts = strtotime($now);
+            $start = (date('w', $ts) == 0) ? $ts : strtotime('last monday', $ts);
+            $start_date = date('Y-m-d H:i:s', $start);
+            $end_date = date('Y-m-d H:i:s', strtotime('next sunday', $start));
+            
+            $data = News_view::select('news.*','news_category.name as category_name', News_view::raw('COUNT(news_views.news_id) as viewWeek'))
+                            ->join('news', 'news.id', 'news_views.news_id')
+                            ->join('news_category', 'news_category.id', 'news.category_id')
+                            ->where('news_views.created_at', ">", $start_date)
+                            ->where('news_views.created_at', "<", $end_date)
+                            ->groupBy('news_views.news_id')
+                            ->orderBy('viewWeek','desc')
+                            ->take(1)->get(); // Lộc shadow đòi dùng take cho thành data:{[dữ liệu]}
+                            //->first();  dùng first ra data:{dữ liệu} lộc shadow không sài được  
+
+            return response()->json([
+                'status' => 200,
+                'data' => $data
+            ], 200);
+        }
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
+    public function getTopWeek3(){
+        try{
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
+            $now = date('Y-m-d H:i:s', strtotime('-1 week'));
+
+            $ts = strtotime($now);
+            $start = (date('w', $ts) == 0) ? $ts : strtotime('last monday', $ts);
+            $start_date = date('Y-m-d H:i:s', $start);
+            $end_date = date('Y-m-d H:i:s', strtotime('next sunday', $start));
+            
+            $data = News_view::select('news.*','news_category.name as category_name', News_view::raw('COUNT(news_views.news_id) as viewWeek'))
+                            ->join('news', 'news.id', 'news_views.news_id')
+                            ->join('news_category', 'news_category.id', 'news.category_id')
+                            ->where('news_views.created_at', ">", $start_date)
+                            ->where('news_views.created_at', "<", $end_date)
+                            ->groupBy('news_views.news_id')
+                            ->orderBy('viewWeek','desc')
+                            ->skip(1)->take(3)->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $data
+            ], 200);
+        }
+        catch (Exception $th) {
+            throw new HttpException(500, $th->getMessage());
         }
     }
 }
