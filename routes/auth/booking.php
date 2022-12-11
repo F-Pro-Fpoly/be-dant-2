@@ -6,7 +6,7 @@
         $api->post('/add', 'BookingController@addBooking');
         $api->put('/edit/{id:[0-9]+}', 'BookingController@updateBooking');
         $api->put('/updateBooking/{id:[0-9]+}', 'BookingController@updateBookingDoctor');
- 
+        $api->get('/list-booking-vaccine/{user_id}', 'BookingController@get_booking_vaccine');
         $api->delete('/delete/{id:[0-9]+}', 'BookingController@deleteBooking');
     });
     $api -> group(['prefix' => 'booking', 'middleware' => 'auth'], function ($api) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Transformer\Booking\BookingTransformer;
+use App\Http\Transformer\Booking\BookingVaccineTransformer;
 use App\Http\Transformer\Booking\StatusTransformer;
 use App\Http\Validators\Booking\CreateBookingNoAuthValidate;
 use App\Http\Validators\Booking\CreateBookingValidate;
@@ -336,5 +337,25 @@ class BookingController extends BaseController
         $input['status_code'] = 'NEW';
         $input['type'] = 'NOLOGIN';
         return $input;
+    }
+
+
+    public function get_booking_vaccine($user_id, Request $request) {
+        $input = $request->all();
+
+        try {
+            $is_booking_vaccine = Booking::where('user_id', $user_id)->where('is_vaccine', 1)->exists();
+            if(!$is_booking_vaccine) {
+                return $this->response->error("Bệnh nhân này chưa tiêm mũi vaccine nào", 400);
+            }
+            $booking = Booking::where('user_id', $user_id)->where('is_vaccine', 1)->get();
+
+
+            return $this->response->collection($booking, new BookingVaccineTransformer());
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
     }
 }

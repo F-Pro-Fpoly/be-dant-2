@@ -73,4 +73,29 @@ class Injection_infoController extends BaseController
             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
     }
+
+    // public function get_list_injection_info(Request $request, $user_id) {
+    //     $input = $request->all();
+
+    //     try {
+    //         $is_booking_vaccine = Booking::where('user_id', $user_id)->where('is_vaccine', 1)->exists();
+    //         if(!$is_booking_vaccine) {
+    //             return $this->response->error("Bệnh nhân này chưa tiêm mũi vaccine nào", 400);
+    //         }
+            
+    //         $injection_info = Injection_info::model()
+    //         ->whereHas('booking', function ($query) use ($user_id) {
+    //             $query->where('user_id', $user_id)->where('is_vaccine', 1);
+    //         })->get();
+    //         // dd(123);
+    //         // dd($injection_info);
+    //         // return $injection_info;
+
+    //         return $this->response->collection($injection_info, );
+
+    //     } catch (\Exception $ex) {
+    //         $ex_handle = new TM_Error($ex);
+    //         return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+    //     }
+    // }
 }
