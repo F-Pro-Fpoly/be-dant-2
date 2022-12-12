@@ -22,10 +22,11 @@ class ReportController extends Controller
            
             $data = Booking::select('specialists.name as specialists_name',Department::raw('SUM(departments.price) as price'))
             ->join('departments', 'departments.id', 'bookings.department_id')
-            ->join('specialists', 'specialists.id', 'departments.specialist_id')
+            ->join('specialists', 'specialists.id', 'bookings.specialist_id')
             ->groupBy('specialists.name')
             ->where('bookings.status_id', 4)
-            ->get();            
+            ->get();                         
+            
             return Excel::download(new Turnover($data), 'turnover_' . $date . '.xlsx');
         } catch (\Exception $th) {
             throw new HttpException(500, $th->getMessage());
