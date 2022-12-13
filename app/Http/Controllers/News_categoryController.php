@@ -150,15 +150,23 @@ class News_categoryController extends BaseController
     public function getNewsInCategory($id){
         if($id)
             try {
-                $data = News::where('category_id', $id)->where('status', 1)->get();
-                return response()->json([
-                    'status' => 200,
-                    'data' => $data,
-                    'message' => "Danh sách tin theo loại tin"
-                ], 200);
+                $input['category_id'] = $id;
+                $dataCheck = News::where('category_id', $id)->where('status', 1)->get();
+                if($dataCheck == ''){
+                    $News = new News();
+                    $data = $News->searchNews($input);
+                    return $this->response->paginator($data, new NewsTransformer);
+                }
+                else{
+                    return response()->json([
+                        'status' => 400,
+                        'message' => "Không tồn tại danh sách tin theo loại này"
+                    ], 400);
+                }
+                
             }
-            catch (Exception $th) {
-            throw new HttpException(500, $th->getMessage());
+                catch (Exception $th) {
+                throw new HttpException(500, $th->getMessage());
             }
         else{
             return response()->json([
