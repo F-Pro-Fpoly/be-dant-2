@@ -18,6 +18,7 @@ use App\Models\timeslotDetail;
 use App\Models\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleController extends BaseController
 {
@@ -40,27 +41,66 @@ class ScheduleController extends BaseController
 
     public function createSchedule(Request $request) {
         $input = $request -> all();
-        (new CreateScheduleValidate($input));
+        // (new CreateScheduleValidate($input));
         if(empty($input['doctor_id'])){
             $user_created = auth()->user()->id;
         }else{
             $user_created = $input['doctor_id'];
         }
         try {
-            if(is_array($input['timeslot_id'])) {
-                foreach($input['timeslot_id'] as $index => $item) {
-                    $date_time = date("YmdHis", time());
-                    $code = "LICH{$date_time}".rand(0, 1000);
-                    Schedule::create([
-                        'code' => $code,
-                        'date' => $input['date'],
-                        'timeslot_id' => $item,
-                        'status_id' => 6,
-                        'status_code' => "STILLEMPTY",
-                        'description' => null,
-                        'doctor_id' => $user_created,
-                        'created_by' => $user_created
-                    ]);
+            if(!empty($input['make_dates'])) {
+                $start = new DateTime($input['date']);
+                $end   = new DateTime($input['end_date']);
+                $interval = new \DateInterval('P1D');
+                $period = new \DatePeriod($start, $interval, $end);
+                $dates = [];
+                foreach ($period as $key => $value) {
+                    $dates[] = $value->format('Y-m-d') ;      
+                }
+                $dates[] = $input['end_date'];
+                // get timelotall
+                $timeslots = Timeslot::all();
+                $timeslot_ids = [];
+                foreach($timeslots as $timeslot) {
+                    $timeslot_ids [] = $timeslot->id;
+                }
+
+
+                foreach($dates as $date) {
+                    foreach($timeslot_ids as $index => $item) {
+                        $date_time = date("YmdHis", time());
+                        $code = "LICH{$date_time}".rand(0, 9999);
+                        $check_date = Schedule::where('date', $date)->where('timeslot_id', $item)->where('doctor_id', $user_created)->exists();
+                        if(!$check_date){
+                            Schedule::create([
+                                'code' => $code,
+                                'date' => $date,
+                                'timeslot_id' => $item,
+                                'status_id' => 6,
+                                'status_code' => "STILLEMPTY",
+                                'description' => null,
+                                'doctor_id' => $user_created,
+                                'created_by' => $user_created
+                            ]);
+                        }
+                    }
+                }
+            }else{
+                if(is_array($input['timeslot_id'])) {
+                    foreach($input['timeslot_id'] as $index => $item) {
+                        $date_time = date("YmdHis", time());
+                        $code = "LICH{$date_time}".rand(0, 1000);
+                        Schedule::create([
+                            'code' => $code,
+                            'date' => $input['date'],
+                            'timeslot_id' => $item,
+                            'status_id' => 6,
+                            'status_code' => "STILLEMPTY",
+                            'description' => null,
+                            'doctor_id' => $user_created,
+                            'created_by' => $user_created
+                        ]);
+                    }
                 }
             }
 
@@ -69,6 +109,7 @@ class ScheduleController extends BaseController
             ], 200);
             
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw new HttpException(500, $th->getMessage());
         }
     }
