@@ -58,10 +58,9 @@ class Doctor_profileController extends BaseController
     //select ID DONE
     public function Doctor_profileID(Request $request, $id){
         try{
+   
             $input = $request->all();
             $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
-
-           
             if($Doctor_profile) {
                 return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
             }else{
@@ -127,8 +126,12 @@ class Doctor_profileController extends BaseController
         try{
             $input = $request->all();
             $Doctor_profile = Doctor_profile::where('doctor_profiles.id_user',$id)->first();
-            return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
-            
+            if($Doctor_profile){
+                return $this->response->item($Doctor_profile, new Doctor_profileTransformer);
+            }else{
+                return ['data' => 'none'];
+            }
+         
         } catch(Exception $th){
             $errors = $th->getMessage();
             throw new HttpException(500, $errors);
