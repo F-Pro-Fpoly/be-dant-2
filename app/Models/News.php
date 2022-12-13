@@ -55,6 +55,12 @@ class News extends BaseModel
                 'name' , "=",$input['name']
             ];
         }
+        if(!empty($input['category_id_cl'])){
+            $dataInput[] = [
+                'category_id' , "=",$input['category_id_cl'],
+                'status', '=', 1
+            ];
+        }
         $data = $this->search($dataInput, [], 5);
         return $data;
     }
