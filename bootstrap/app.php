@@ -152,6 +152,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 // Uncomment this line
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 
 // Add this line
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
@@ -180,6 +181,7 @@ class_alias(Maatwebsite\Excel\Facades\Excel::class, "Excel");
 
 $app->configure('services');
 $app->configure('mail');
+$app->configure('dompdf');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
