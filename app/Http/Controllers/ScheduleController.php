@@ -70,8 +70,8 @@ class ScheduleController extends BaseController
                     foreach($timeslot_ids as $index => $item) {
                         $date_time = date("YmdHis", time());
                         $code = "LICH{$date_time}".rand(0, 9999);
-                        $check_date = Schedule::where('date', $date)->where('timeslot_id', $item)->where('doctor_id', $user_created)->exists();
-                        if(!$check_date){
+                        $check_schudule = Schedule::where('date', $date)->where('timeslot_id', $item)->where('doctor_id', $user_created)->exists();
+                        if(!$check_schudule){
                             Schedule::create([
                                 'code' => $code,
                                 'date' => $date,
@@ -89,17 +89,21 @@ class ScheduleController extends BaseController
                 if(is_array($input['timeslot_id'])) {
                     foreach($input['timeslot_id'] as $index => $item) {
                         $date_time = date("YmdHis", time());
+                        $code = "LICH{$date_time}".rand(0, 9999);
+                        $check_schudule = Schedule::where('date', $input['date'])->where('timeslot_id', $item)->where('doctor_id', $user_created)->exists();
                         $code = "LICH{$date_time}".rand(0, 1000);
-                        Schedule::create([
-                            'code' => $code,
-                            'date' => $input['date'],
-                            'timeslot_id' => $item,
-                            'status_id' => 6,
-                            'status_code' => "STILLEMPTY",
-                            'description' => null,
-                            'doctor_id' => $user_created,
-                            'created_by' => $user_created
-                        ]);
+                        if(!$check_schudule){
+                            Schedule::create([
+                                'code' => $code,
+                                'date' => $input['date'],
+                                'timeslot_id' => $item,
+                                'status_id' => 6,
+                                'status_code' => "STILLEMPTY",
+                                'description' => null,
+                                'doctor_id' => $user_created,
+                                'created_by' => $user_created
+                            ]);
+                        }
                     }
                 }
             }
