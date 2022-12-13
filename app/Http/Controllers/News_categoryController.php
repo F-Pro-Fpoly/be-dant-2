@@ -150,7 +150,7 @@ class News_categoryController extends BaseController
     public function getNewsInCategory($id){
         if($id){
             try {
-                $input['category_id'] = $id;
+                $input['category_id_cl'] = $id;
                 $dataCheck = News::where('category_id', $id)->where('status', 1)->get();
 
                 if( 0 < ( $cnt = count($dataCheck))){
