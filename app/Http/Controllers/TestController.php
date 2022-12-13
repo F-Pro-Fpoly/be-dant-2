@@ -16,7 +16,8 @@ use App\Models\Booking;
 use App\Models\Page;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-
+// use PhpOffice\PhpSpreadsheet\Writer\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 class TestController extends BaseController
 {
     protected $role;
@@ -76,20 +77,8 @@ class TestController extends BaseController
     }
 
     public function exportPDF() {
-        $html = view('pdf.test_pdf');
-
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename=pdf_test.pdf');
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        // header('Content-Length: ' . filesize($html));
-        ob_clean();
-        flush();
-        readfile($html);
-        exit;
+        $pdf = Pdf::loadView('pdf.test_pdf');
+        return $pdf->download('test_pdf.pdf');
     }
 
     
