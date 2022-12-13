@@ -147,9 +147,10 @@ class News_categoryController extends BaseController
         $data = $News->searchNews($input);
         return $this->response->paginator($data, new NewsTransformer);
     }
-    public function getNewsInCategory($id){
+    public function getNewsInCategory(Request $request, $id){
         if($id){
             try {
+                $input = $request->all();
                 $input['category_id_cl'] = $id;
                 $dataCheck = News::where('category_id', $id)->where('status', 1)->get();
 
