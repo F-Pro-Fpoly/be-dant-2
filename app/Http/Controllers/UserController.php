@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Supports\TM_Error;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends BaseController
@@ -310,6 +311,26 @@ class UserController extends BaseController
              $ex_handle = new TM_Error($th);
              return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
-     }
+    }
+
+    public function exportPDFMedicalRecord(Request $request, $id) {
+        $input = $request->all();
+
+        try {
+            $user = User::findOrFail($id);
+            $booking = Booking::model()->where('user_id', $id)-> where('is_vaccine', 0)->get();
+            $booking_vaccine = Booking::model()->where('user_id', $id) -> where('is_vaccine', 1)->get();
+            $pdf = Pdf::loadView('pdf.medical_record', [
+                'user' => $user,
+                'bookings' => $booking,
+                'booking_vaccines' => $booking_vaccine
+            ]);
+            return $pdf->download('ho_so_benh_an.pdf');
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+
+    }
 
 }
