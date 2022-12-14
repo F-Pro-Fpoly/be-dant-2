@@ -9,6 +9,10 @@ $api -> group(['prefix' => 'user'], function ($api) {
         $api->get('/listPatient', 'UserController@listPatient');
         $api->get('/listPatientDetail', 'UserController@listPatientDetail');
     });
+
+    $api->group(['middleware' => 'role:doctor'], function ($api) {
+        $api->get('/get-medical-record/{id}', 'UserController@exportPDFMedicalRecord');
+    });
   
     $api->get('/info', 'UserController@getInfo');
     $api->get('/{id}', 'UserController@getUser');
