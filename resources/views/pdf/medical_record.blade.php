@@ -123,7 +123,7 @@
             </h3>
             @foreach ($booking_vaccines as $booking_vaccine)    
                 <div class="medical-content">
-                    <h4 class="medical-content-title">{{$booking_vaccine->vaccine_code->name ?? ''}}</h4>
+                    <h4 class="medical-content-title">{{$booking_vaccine->vaccine->name ?? ''}}</h4>
                     <div class="medical-content-item">
                         @php
                             $injection_infos = $booking_vaccine->Injection_info ?? null;
@@ -154,7 +154,7 @@
                 </div>
             @endforeach
 
-            <div class="medical-content">
+            {{-- <div class="medical-content">
                 <h4 class="medical-content-title">VẮC XIN 6 TRONG 1 HEXAXIM (6IN1)</h4>
                 <div class="medical-content-item">
                     <div class="medical-vaccine">
@@ -176,7 +176,7 @@
                         <span>Trạng thái: Hủy</span>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             
         </div>
     </div>
