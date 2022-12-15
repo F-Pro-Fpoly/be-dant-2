@@ -24,18 +24,18 @@ class News_comment extends BaseModel
 
 
     public function searchNews_comment($input = []){
-        $dataInput = [];
-        if(!empty($input['news_id'])){
-            $dataInput[] = [
-                'news_id' , "=", $input['news_id']
-            ];
-        };
+        // $dataInput = [];
+        // if(!empty($input['news_id'])){
+        //     $dataInput[] = [
+        //         'news_id' , "=", $input['news_id']
+        //     ];
+        // };
 
-        if(!empty($input['status'])){
-            $dataInput[] = [
-                'status' , "like", "%".$input['status']."%"
-            ];
-        };
+        // if(!empty($input['status'])){
+        //     $dataInput[] = [
+        //         'status' , "like", "%".$input['status']."%"
+        //     ];
+        // };
 
         // if(!empty($input['id'])) {
         //     $query->where('id', 'like', "%".$input['id']."%")
@@ -58,9 +58,19 @@ class News_comment extends BaseModel
         //     ->where('status', '=', '1');
         // }
 
-        $data = $this->search($dataInput, [], 5);
-        return $data;
+        // $data = $this->search($dataInput, [], 5);
+        $query = $this->model();
+        if(!empty($input['news_id'])){
+            $query->where('news_id', $input['news_id']);
+        }
 
+        if(!empty($input['status'])){
+            $query->where('status', 'like', "%".$input['status']."%");
+        }
+
+        $query->orderBy('created_at', 'desc');
+       
+        return  $query->paginate(5);
     }
 
 
