@@ -148,10 +148,17 @@ class BookingController extends BaseController
         $input = $request->all();
         try{
             $data = Booking::find($id);
+            $schedule =  $data->schedule_id;
             $data->update([
-                'status_id' => $input['status_id']     
+                'status_id' => $input['status_id'],
+                'schedule_id' => null   
             ]);
-            // $returnStatus = 
+            $returnStatus = Schedule::find($schedule);
+            $returnStatus->update([
+                'status_code' => "STILLEMPTY",
+                'status_id' => 6,
+                 
+            ]);
             return response()->json([
                 'status' => 200,
                 'message' => "Hủy lịch thành công"
