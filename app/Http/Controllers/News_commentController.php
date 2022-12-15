@@ -201,8 +201,11 @@ class News_commentController extends BaseController
         $dataNews = News::where('slug', $id)->first();
         if($dataNews){
             $input = $request->all();
-            $News_comment = News_comment::where('news_id', $dataNews->id)->where('status', 1)->get();
-            return $this->response->collection($News_comment, new News_commentTransformer);
+            $input['news_id'] = $dataNews->id;
+            $input['status'] = 1;
+            $News_comment = new News_comment();
+            $data = $News_comment->searchNews_comment($input);
+            return $this->response->paginator($data, new News_commentTransformer);
         }
         else{
             return response()->json([
