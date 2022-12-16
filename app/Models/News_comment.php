@@ -24,28 +24,53 @@ class News_comment extends BaseModel
 
 
     public function searchNews_comment($input = []){
+        // $dataInput = [];
+        // if(!empty($input['news_id'])){
+        //     $dataInput[] = [
+        //         'news_id' , "=", $input['news_id']
+        //     ];
+        // };
 
+        // if(!empty($input['status'])){
+        //     $dataInput[] = [
+        //         'status' , "like", "%".$input['status']."%"
+        //     ];
+        // };
+
+        // if(!empty($input['id'])) {
+        //     $query->where('id', 'like', "%".$input['id']."%")
+        //     ->where('status', '=', '1');
+        // }
+        // if(!empty($input['user_id'])) {
+        //     $query->where('user_id', 'like', "%".$input['user_id']."%")
+        //     ->where('status', '=', '1');
+        // }
+        // if(!empty($input['news_id'])) {
+        //     $query->where('news_id', 'like', "%".$input['news_id']."%")
+        //     ->where('status', '=', '1');
+        // }
+        // if(!empty($input['content'])) {
+        //     $query->where('content', '=', $input['content'])
+        //     ->where('status', '=', '1');
+        // }
+        // if(!empty($input['status'])) {
+        //     $query->where('status', '=', $input['status'])
+        //     ->where('status', '=', '1');
+        // }
+
+        // $data = $this->search($dataInput, [], 5);
         $query = $this->model();
-
-        if(!empty($input['id'])) {
-            $query->where('id', 'like', "%".$input['id']."%");
-        }
-        if(!empty($input['user_id'])) {
-            $query->where('user_id', 'like', "%".$input['user_id']."%");
-        }
-        if(!empty($input['news_id'])) {
-            $query->where('news_id', 'like', "%".$input['news_id']."%");
-        }
-        if(!empty($input['content'])) {
-            $query->where('content', '=', $input['content']);
-        }
-        if(!empty($input['status'])) {
-            $query->where('status', '=', $input['status']);
+        if(!empty($input['news_id'])){
+            $query->where('news_id', $input['news_id']);
         }
 
-        $data = $this->search($query, [], 5);
-        return $data;
+        if(!empty($input['status'])){
+            $query->where('status', 'like', "%".$input['status']."%");
+        }
 
+        $query->orderBy('created_at', 'desc');
+       
+        return  $query->paginate(5);
     }
 
 

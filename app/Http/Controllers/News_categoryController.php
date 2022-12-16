@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Transformer\News\NewsTransformer;
-use App\Http\Validators\News_category\InsertNews_categoryValidate;
-use App\Http\Validators\News_category\UpdateNews_categoryValidate;
 use App\Models\News;
 use App\Http\Transformer\News_category\News_categoryTransformer;
+use App\Http\Validators\News_category\InsertNews_categoryValidate;
+use App\Http\Validators\News_category\UpdateNews_categoryValidate;
 use App\Models\News_category;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,7 +21,6 @@ class News_categoryController extends BaseController
         (new InsertNews_categoryValidate($input));
 
         try {
-
            News_category::create([
                 //code thêm
                 'code' => $input['code'],
