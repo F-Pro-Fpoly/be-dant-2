@@ -179,12 +179,18 @@ class VaccineController extends BaseController
     public function list_DM(Request $request){
         $input = $request->all();
         $category_ids = $request->category_ids ?? null;
+        $vaccine =  Vaccine::model();
         if($category_ids){
-            $a =  Vaccine::whereJsonContains('category_ids', (int) $category_ids)->get();
-            if(!empty($input['limit'])) {
-                return $this->response->paginator($a, new VaccineTransformer());
+            $vaccine->whereJsonContains('category_ids', (int) $category_ids);
+            if(!empty($input['name'])) {
+                $vaccine->where('name', 'like', "%{$input['name']}%");
             }
-            return $this->response->collection($a, new VaccineTransformer()); 
+            $vaccine = $vaccine->get();
+
+            if(!empty($input['limit'])) {
+                return $this->response->paginator($vaccine, new VaccineTransformer());
+            }
+            return $this->response->collection($vaccine, new VaccineTransformer()); 
         }
         else{
             return response()->json([
