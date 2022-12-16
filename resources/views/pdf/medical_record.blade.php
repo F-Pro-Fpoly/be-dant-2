@@ -94,7 +94,7 @@
                     </span>
                 </p>
                 <p>
-                    <b>Số điện thoại</b>
+                    <b>Số điện thoại: </b>
                     <span>{{$user->phone ?? ''}}</span>
                 </p>
             </div>
