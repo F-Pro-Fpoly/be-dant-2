@@ -32,7 +32,7 @@ class UserController extends BaseController
                 'email' => $input['email'],
                 'name' => $input['name'],
                 'active' => $input['active'] ?? 1,
-                'avatar' => 'https://cdn-icons-png.flaticon.com/512/219/219983.png',
+                'avatar' => 'images/2OBdWSlWquh734MRIRI8eskSSQcaCjMZ61YBQLKX.png',
                 'role_id' => $input['role_id'] ?? 3,
             ]);
 
