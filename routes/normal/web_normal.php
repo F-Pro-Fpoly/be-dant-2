@@ -23,4 +23,5 @@ require_once __DIR__."/vaccine_category.php";
 require_once __DIR__."/doctor_profile.php";
 require_once __DIR__."/report.php";
 require_once __DIR__."/test.php";
+require_once __DIR__."/payment.php";
 ?>

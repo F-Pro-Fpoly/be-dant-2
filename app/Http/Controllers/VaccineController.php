@@ -6,6 +6,7 @@ use App\Http\Transformer\Vaccine\VaccineTransformer;
 use App\Http\Validators\Vaccine\InsertVaccineValidate;
 use App\Models\File;
 use App\Models\Vaccine;
+use App\Models\Vaccine_category;
 use App\Supports\TM_Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -178,13 +179,18 @@ class VaccineController extends BaseController
 
     public function list_DM(Request $request){
         $input = $request->all();
-        $category_ids = $request->category_ids ?? null;
+        $slug = $input['slug']?? null;
+        // $category_ids = $request->category_ids ?? null;
+        // dd($slug);
         $vaccine =  Vaccine::model();
-        if($category_ids){
-            $vaccine->whereJsonContains('category_ids', (int) $category_ids);
+        $vaccine_cate = Vaccine_category::where('slug', $slug)->first();
+        if($vaccine_cate){
+            // $vaccine_cate->where('slug', $slug);
+            $vaccine->whereJsonContains('category_ids', (int) $vaccine_cate->id);
             if(!empty($input['name'])) {
                 $vaccine->where('name', 'like', "%{$input['name']}%");
             }
+            // $vaccine_cate = $vaccine_cate->first();
             $vaccine = $vaccine->get();
 
             if(!empty($input['limit'])) {

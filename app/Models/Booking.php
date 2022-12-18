@@ -351,7 +351,11 @@ class Booking extends BaseModel
             $this->created_by = $input['created_by'];
         }
         if(!empty($input['description'])) {
-            $this->description = $input['description'];
+            if($input['payment_method'] == "vnpay") {
+                $this->description = null;
+            }else{
+                $this->description = $input['description'];
+            }
         }
         if(!empty($input['email'])){
             $this->email = $input['email'];
