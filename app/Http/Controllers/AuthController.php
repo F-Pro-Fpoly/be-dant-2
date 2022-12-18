@@ -14,6 +14,38 @@ use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends BaseController
 {
+    public function refeshAuth (Request $request) {
+        $input = $request->all();
+
+        try {
+            $ath = auth()->user();
+            if(!$ath){
+                return $this->response->error("Bạn chưa đăng nhập", 400);
+            }
+
+
+            $new_token  = auth()->refresh();
+            $user = auth()->user();
+            $user->avatar = $_ENV['APP_URL'].$user->avatar;
+
+            $arrRes = [
+                'errCode'=> 0,
+                'message' => 'Tác vụ thành công',
+                'data' => [
+                    "user" => $user,
+                    'token' => $new_token
+                ]
+            ];
+
+
+            return response()->json($arrRes, 200);
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+
+            return $this->response->error($ex_handle->getMessage(), $ex_handle-> getStatusCode());
+        }
+    }
+
     public function register(Request $request) {
         $validator = Validator::make($request->all(),[
             'name' => 'required|min:8|max:255',
