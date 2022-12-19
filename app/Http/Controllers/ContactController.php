@@ -28,7 +28,7 @@ class ContactController extends BaseController
             'name.required' => 'Tên không được bỏ trống', 
             'email.required' => 'Email không được bỏ trống',
             'contents.required' => 'Nội dung không được bỏ trống', 
-            'phone.required' => 'Số điện th không được bỏ trống', 
+            'phone.required' => 'Số điện thoại không được bỏ trống', 
           
         ]);
         
@@ -82,7 +82,7 @@ class ContactController extends BaseController
 
             return response()->json([
                 'status' => 200,
-                'message' => "Thêm contact thành công",
+                'message' => "Liên hệ đã gửi thành công",
             ], 200);
                 
         } catch(\Throwable $th){
@@ -103,7 +103,7 @@ class ContactController extends BaseController
             $data->delete();
             return response()->json([
                 'status' => 200,
-                'message' => "Xóa Contacts thành công"
+                'message' => "Xóa liên hệ thành công"
         ], 200);
         } 
         catch (Exception $th) {
