@@ -21,6 +21,7 @@ class ContactTransformer extends TransformerAbstract
             'phone' => $Contact->phone,
             'status_id' => $Contact->status_id,
             'status' => $Contact->status->name,
+            'id_contact_firebase' => $Contact->id_contact_firebase ?? null,
             'created_at' => date_format($Contact->created_at, "Y/m/d")
         ];  
     }

@@ -15,6 +15,7 @@ class Contact extends BaseModel
         'reply_contact',
         'type',
         'phone',
+        'id_contact_firebase',
         'created_at',
         'created_by',
         'updated_at',

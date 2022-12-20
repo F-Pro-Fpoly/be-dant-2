@@ -48,6 +48,7 @@ class ContactController extends BaseController
                 'contents'  => $request->contents,
                 'phone'     => $request->phone,
                 'type'      => $request->type, 
+                'id_contact_firebase'      => $request->id_contact_firebase, 
             ]);
 
             
