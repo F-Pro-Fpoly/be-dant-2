@@ -6,11 +6,12 @@ use App\Exports\Turnover;
 use App\Exports\BookingWithDay;
 use App\Models\Booking;
 use App\Models\Department;
+use App\Supports\TM_Error;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ReportController extends Controller
+class ReportController extends BaseController
 {
    public function turnover(Request $request)
    {
@@ -153,5 +154,60 @@ class ReportController extends Controller
             ],400);
         }
    }
+
+    public function exportBookingByUser($user_id, Request $request) 
+    {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $input = $request->all();
+        $date  = date('d_m_Y', time());
+        $time = date('H-i-s', time());
+        $title ='Danh sách booking';
+
+        try {
+            $from = null;
+            $to = null;
+            $data = Booking::model();
+            if(!empty($input['from'])) {
+                $from = $input['from'];
+                $data->where('created_at', '>=',$from);
+            }
+            if(!empty($input['to'])) {
+                $to = $input['to'];
+                $data->where('created_at', '<=' ,$to);
+            }
+            $data->where('user_id', $user_id);
+            $data = $data->get();
+           
+            $arr = [];
+            $number = 0;
+            foreach ($data as $item){
+                $number += 1;
+                $item -> specialist_name = $item -> specialist -> name ?? null;
+                $item -> department_name = $item -> department -> name ?? null;
+                $item -> doctor_name = $item -> doctor -> name ?? null;
+                $item -> status_name = $item -> status -> name ?? null;
+                $item -> schedule_name = $item -> schedule -> code ?? null;
+                $item -> vaccine_name = $item -> vaccine -> name ?? null;
+                $item -> STT = $number;
+                if($item->type === 'LOGIN'){
+                    $item -> customer_name = $item -> user -> name ?? null;
+                    $item->address = $item -> user -> address ?? null ;
+                    $item->city = $item -> user -> city -> name ?? null ;
+                    $item->customer_name = $item -> user -> name ?? null ;
+                    $item->phone = $item -> user -> phone ?? null ;
+                    $item->email = $item -> user -> email ?? null ;
+                    $item->birthday = $item -> user -> date ?? null ;
+                    $item->district_code = $item -> user -> district -> name ?? null ;
+                    $item->ward_code = $item -> user -> ward -> name ?? null ;
+                    $item->birthday = $item -> user -> date ?? null ;
+                }
+                $arr[] = $item;
+            };
+            return Excel::download(new BookingWithDay($arr, $from, $to, $title), 'booking_' . $date . "_Time_" . $time . '.xlsx');
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+    }
 }
 
