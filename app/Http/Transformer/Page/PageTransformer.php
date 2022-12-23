@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Transformer\page;
+namespace App\Http\Transformer\Page;
 
-use App\Models\page;
+use App\Models\Page;
 use App\Models\Specialist;
 use Dingo\Api\Http\Request;
 use Dingo\Api\Transformer\Binding;
@@ -10,7 +10,7 @@ use League\Fractal\TransformerAbstract;
 
 class PageTransformer extends TransformerAbstract
 {
-    public function transform(page $page)
+    public function transform(Page $page)
     {
         return [
             'id'   => $page->id,         
