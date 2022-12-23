@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Transformer\page\PageTransformer;
+use App\Http\Transformer\Page\PageTransformer;
 use App\Http\Validators\Page\InsertPageValidate;
 use App\Http\Validators\page\UpdatePageValidate as PageUpdatePageValidate;
 use App\Http\Validators\Specialist\UpdatePageValidate;
