@@ -22,7 +22,7 @@ class PaymentController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $id_booking = "BOOKING{$date}".random_int(10, 99);
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "https://fpro.newweb.vn/cam-on-da-dat-lich";
+        $vnp_Returnurl = "http://fpro.newweb.vn/thong-bao-da-dat-lich";
         $vnp_TmnCode = "LYIUHWCF";//Mã website tại VNPAY 
         $vnp_HashSecret = "MRNHXQYFSGCDEDNEKKVNEYYUIQYPCDJG"; //Chuỗi bí mật
 
@@ -80,55 +80,7 @@ class PaymentController extends Controller
             , 'message' => 'success'
             , 'data' => $vnp_Url);
             if (isset($_POST['redirect'])) {    
-              
-              
-                $user_id = auth()->user()->id ?? null;
-                $input['code'] = $id_booking;
-                $doctor_id = $input['doctor_id'];
-                $user = User::findOrFail($doctor_id);
-                $department_id = $user->department_id ?? null;
-                $input['department_id'] = $department_id;
-                // get specialist_id
-                $input['specialist_id'] = $user->specailist_id ?? null;
-                if(!empty($user_id)){
-                    $input['user_id'] = $user_id;
-                    $input = $this->handle_data_booking_auth($input);
-                }else{
-                    $input = $this->handle_data_booking_noAuth($input);
-                }
-    
-                // Cập nhập status schedule
-                $inputSchule = [
-                    'status_id' => 7,
-                    'status_code' => 'BOOKED'
-                ];
-                $schedule = Schedule::findOrFail($input['schedule_id']);
-                $schedule->update_schedule($inputSchule);
-                $booking = new Booking();
-                $booking->create_booking($input);
-                
-
-                $e = $booking->email;
-                if(empty($e)){
-                    $data = DB::table('bookings')
-                    ->select('users.*',"bookings.code", 'bookings.created_at as ld','specialists.name as ck','schedules.date as nk', 'timeslots.time_start as bd', 'timeslots.time_end as kt')
-                    ->join('users','users.id', "=", 'bookings.user_id')
-                    ->join('specialists', 'specialists.id', "=", "bookings.specialist_id")
-                    ->join('schedules', 'schedules.id', "=", "bookings.schedule_id")
-                    ->join('timeslots', 'timeslots.id', "=", "schedules.timeslot_id")
-    
-                    ->where("bookings.id", $booking->id)
-                    ->first();
-                    $e = $data->email ?? null; 
-                }
-                if(!empty($data)){
-                    Mail::send('email.BookingBooked',compact('booking','data'), function ($email) use ($e) {
-                        $email->from('phuly4795@gmail.com','Fpro Hopital');
-                        $email->subject('Fpro Hopital - Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi');
-                        $email->to($e, 'Quý khách');
-                    });
-                }
-
+                echo json_encode($returnData);
                 die();
                     
             } else {
@@ -157,7 +109,28 @@ class PaymentController extends Controller
                     $schedule->update_schedule($inputSchule);
                     $booking = new Booking();
                     $booking->create_booking($input);
-                   
+                       
+
+                $e = $booking->email;
+                if(empty($e)){
+                    $data = DB::table('bookings')
+                    ->select('users.*',"bookings.code", 'bookings.created_at as ld','specialists.name as ck','schedules.date as nk', 'timeslots.time_start as bd', 'timeslots.time_end as kt')
+                    ->join('users','users.id', "=", 'bookings.user_id')
+                    ->join('specialists', 'specialists.id', "=", "bookings.specialist_id")
+                    ->join('schedules', 'schedules.id', "=", "bookings.schedule_id")
+                    ->join('timeslots', 'timeslots.id', "=", "schedules.timeslot_id")
+    
+                    ->where("bookings.id", $booking->id)
+                    ->first();
+                    $e = $data->email ?? null; 
+                }
+                if(!empty($data)){
+                    Mail::send('email.BookingBooked',compact('booking','data'), function ($email) use ($e) {
+                        $email->from('phuly4795@gmail.com','Fpro Hopital');
+                        $email->subject('Fpro Hopital - Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi');
+                        $email->to($e, 'Quý khách');
+                    });
+                }
                 echo json_encode($returnData);
             }
             // vui lòng tham khảo thêm tại code demo

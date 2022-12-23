@@ -165,6 +165,9 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             $role_id = Role::where('code', $input['role_code'])->value('id');
             $query->where('role_id', $role_id);
         }
+        if(!empty($input['specailist_id'])) {
+            $query->where('specailist_id', $input['specailist_id']);
+        }
 
         if(!empty($input['limit'])) {
             return $query->paginate($input['limit']);

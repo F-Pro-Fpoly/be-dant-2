@@ -18,6 +18,7 @@ class ContactController extends BaseController
 {
     //add
     public function addContact(Request $request){
+       
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required',
@@ -40,7 +41,7 @@ class ContactController extends BaseController
                 ],400
             );
         }
-
+       
         try{
             $contact = Contact::create([
                 'name'      => $request->name,
@@ -51,36 +52,7 @@ class ContactController extends BaseController
                 'id_contact_firebase'      => $request->id_contact_firebase, 
             ]);
 
-            
-              // bắn  thông báo firebase
-
-            //   $fields  = [      
-            //     'id' =>  mt_rand(100000,999999),
-            //     'notification' => "Có một liên hệ mới",   
-            //     "content"  => $request->contents,
-            //     "user_name" => $request->name
-            // ];
-            // $curl = curl_init();
-
-            // curl_setopt_array($curl, array(
-            //     CURLOPT_URL =>  env('FIREBASE_DBR_URL', ''),
-            //     CURLOPT_RETURNTRANSFER => true,
-            //     CURLOPT_ENCODING => '',
-            //     CURLOPT_MAXREDIRS => 10,
-            //     CURLOPT_TIMEOUT => 0,
-            //     CURLOPT_FOLLOWLOCATION => true,
-            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            //     CURLOPT_CUSTOMREQUEST => 'POST',
-            //     CURLOPT_POSTFIELDS =>json_encode($fields),
-            //     CURLOPT_HTTPHEADER => array(
-            //     'Content-Type: application/json'
-            //     ),
-            // ));
-            
-            // $response = curl_exec($curl);
-            
-            // curl_close($curl);
-
+         
             return response()->json([
                 'status' => 200,
                 'message' => "Liên hệ đã gửi thành công",
