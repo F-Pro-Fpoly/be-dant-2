@@ -13,6 +13,7 @@
         $api->get('/mylist/user_id={id:[0-9]+}', 'BookingController@listMyBooking');
         $api->get('/detail/{id:[0-9]+}', 'BookingController@detailBooking');
         $api->put('/updateCancel/{id:[0-9]+}', 'BookingController@cancelBooking');
+        $api->put('/updateCancel_Code/{code}', 'BookingController@cancelBooking_code');
     });
 
 ?>
