@@ -84,7 +84,7 @@ class Department extends BaseModel
             
             // dd(123);
             foreach($input['docters'] as $docters) {
-                $user = User::where("username", $docters['doctor_name'])->first();
+                $user = User::where("username", $docters['username'])->first();
                 // dd($user);
                 $user->department_id = $department_id;
                 $user->save();
