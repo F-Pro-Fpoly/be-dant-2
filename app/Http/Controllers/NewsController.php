@@ -79,9 +79,9 @@ class NewsController extends BaseController
         $data = $News->searchNews($input);
         return $this->response->paginator($data, new NewsTransformer);
     }
-
+///////
     public function listNews_all(Request $request){
-        $data = News::where('status', 1)->get();
+        $data = News::where('status', 1)->orderBy('created_at', 'DESC')->get();
         $data_count = News::where('status', 1)->count();
         return response()->json([
                 'status' => 200,
