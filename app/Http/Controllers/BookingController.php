@@ -168,6 +168,31 @@ class BookingController extends BaseController
             throw new HttpException(500, $th->getMessage());
         }
     }
+    public function cancelBooking_code(Request $request, $code)
+    {
+        $input = $request->all();
+        try{
+            $data = Booking::where('code', $code)->first();
+            $schedule =  $data->schedule_id;
+            $data->update([
+                'status_id' => $input['status_id'],
+                'schedule_id' => null   
+            ]);
+            $returnStatus = Schedule::find($schedule);
+            $returnStatus->update([
+                'status_code' => "STILLEMPTY",
+                'status_id' => 6,
+                 
+            ]);
+            return response()->json([
+                'status' => 200,
+                'message' => "Hủy lịch theo code thành công"
+           ], 200);
+        }
+        catch (Exception $th){
+            throw new HttpException(500, $th->getMessage());
+        }
+    }
 
     public function updateBooking(Request $request, $id){
        $input = $request->all();
