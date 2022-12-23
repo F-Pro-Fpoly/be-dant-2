@@ -22,7 +22,7 @@ class PaymentController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $id_booking = "BOOKING{$date}".random_int(10, 99);
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://localhost:3000/thong-bao-da-dat-lich";
+        $vnp_Returnurl = "http://fpro.newweb.vn/thong-bao-da-dat-lich";
         $vnp_TmnCode = "LYIUHWCF";//Mã website tại VNPAY 
         $vnp_HashSecret = "MRNHXQYFSGCDEDNEKKVNEYYUIQYPCDJG"; //Chuỗi bí mật
 
