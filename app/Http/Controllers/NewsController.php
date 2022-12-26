@@ -25,16 +25,7 @@ use App\Supports\TM_Error;
 
 class NewsController extends BaseController
 {
-    public function sendNewsLatter(){
-        try{
-            $dataNews = News::where('status', 1)->orderBy('created_at', 'DESC')->first();
-            Queue::push(new SendNewsletter($dataNews));
-            $messager = "Gửi mail thành công";
-        }
-        catch(\Throwable $th){
-            $messager = $th->getMessage();
-        }
-    }
+    
    public function addNews(Request $request)
     {
         $input = $request->all();
