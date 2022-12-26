@@ -65,10 +65,12 @@ class BookingController extends BaseController
     }
 
     public function listBookingDoctor(Request $request){
+       
         $input = $request->all();
         $booking = new Booking();
         if(empty($input['is_vaccine'])) {
             $data = $booking->searchBookingDoctor($input);
+          
         }else{
             $data = $booking->searchBookingDoctor_v2($input);
         }
