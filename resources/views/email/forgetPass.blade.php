@@ -35,7 +35,7 @@
                     <h3>Chào: {{$user->name}}</h3>
                     <hr>
                     <p>để thay đổi mật khẩu vui lòng nhấn vào đường link dưới đây: </p>
-                    <a href="https://fpro.newweb.vn/{{$user->id}}">Nhấn vào đây</a>
+                    <a href="https://fpro.newweb.vn/changePassword/{{$user->id}}">Nhấn vào đây</a>
                     </div>
  
 
