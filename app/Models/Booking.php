@@ -114,6 +114,8 @@ class Booking extends BaseModel
         if(!empty($input['status'])) {
             $query->where('status_id', '=', $input['status']);
         }
+
+        $query->whereNotNull('user_id');
         $query->orderBy('created_at','DESC');
         if(!empty($input['limit'])){
             return $query->paginate($input['limit']);
