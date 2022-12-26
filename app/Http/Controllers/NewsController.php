@@ -25,6 +25,7 @@ use App\Supports\TM_Error;
 
 class NewsController extends BaseController
 {
+    
    public function addNews(Request $request)
     {
         $input = $request->all();
@@ -235,18 +236,18 @@ class NewsController extends BaseController
            ], 400);
         }
     }
+    public function listall(Request $request){
+        $input = $request->all();
+        $News = News::where('status', 1)->orderBy('created_at', 'DESC')->paginate($input['limit']??5);
+        //$data = $News->searchNews($input);
+        return $this->response->paginator($News, new NewsTransformer);
+    }
     // public function listall(Request $request){
     //     $input = $request->all();
-    //     $News = News::where('status', 1)->orderBy('created_at', 'DESC')->get();
+    //     $News = new News();
     //     $data = $News->searchNews($input);
     //     return $this->response->paginator($data, new NewsTransformer);
     // }
-    public function listall(Request $request){
-        $input = $request->all();
-        $News = new News();
-        $data = $News->searchNews($input);
-        return $this->response->paginator($data, new NewsTransformer);
-    }
 
     public function getTopWeek1(){
         try{
