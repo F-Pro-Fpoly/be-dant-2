@@ -44,7 +44,8 @@ class SendNewsletter extends Job implements ShouldQueue
 
         Mail::send('email.Newsletter', compact('dataNews'), function ($messager) use ($title_mail, $data){
             $messager->to($data['email'])->subject($title_mail);
-            $messager->from($data['email'], $title_mail);
+            $messager->from('phuly4795@gmail.com', 'Fpro Hopital');
+            //$messager->from($data['email'], $title_mail);
         });
         return response()->json([
             "message" => "Gửi mail thành công"
