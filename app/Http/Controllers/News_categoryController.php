@@ -153,18 +153,22 @@ class News_categoryController extends BaseController
                 $input['category_id_cl'] = $id;
                 $dataCheck = News::where('category_id', $id)->where('status', 1)->get();
 
-                if( 0 < ( $cnt = count($dataCheck))){
-                    $News = new News();
-                    $data = $News->searchNews($input);
-                    return $this->response->paginator($data, new NewsTransformer);
-                }
-                else{
-                    return response()->json([
-                        'status' => 400,
-                        'arr' => $dataCheck,
-                        'message' => "Không tồn tại danh sách tin theo loại này"
-                    ], 400);
-                }              
+                // if( 0 < ( $cnt = count($dataCheck))){
+                //     $News = new News();
+                //     $data = $News->searchNews($input);
+                //     return $this->response->paginator($data, new NewsTransformer);
+                // }
+                // else{
+                //     return response()->json([
+                //         'status' => 400,
+                //         'arr' => $dataCheck,
+                //         'message' => "Không tồn tại danh sách tin theo loại này"
+                //     ], 400);
+                // }
+                
+                $News = new News();
+                $data = $News->searchNews($input);
+                return $this->response->paginator($data, new NewsTransformer);
             }
                 catch (Exception $th) {
                 throw new HttpException(500, $th->getMessage());
