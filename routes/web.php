@@ -22,7 +22,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 $router->get("/hello", 'TestController@report');
 
-
 $router->get('/', function () use ($router) {
     return $router->app->version() . " - FPro";
 });
