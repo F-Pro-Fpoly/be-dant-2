@@ -116,7 +116,7 @@ class ContactController extends BaseController
             $contact->save();
             
             $e = $contact->email;
-            Mail::send('email.contactEmail',compact('contact'), function ($email) use ($e) {
+            Mail::send('email.ContactEmail',compact('contact'), function ($email) use ($e) {
                 $email->from('phuly4795@gmail.com','Fpro Hopital');
                 $email->subject('Fpro Hopital - Trả lời liên hệ');
                 $email->to($e, 'Quý khách');
