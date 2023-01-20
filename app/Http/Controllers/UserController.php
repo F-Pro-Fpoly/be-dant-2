@@ -332,5 +332,26 @@ class UserController extends BaseController
         }
 
     }
+    
+    public function exportPDFBooking(Request $request, $id) {
+        $input = $request->all();
+
+        try {
+            $use = auth()->user()->id ?? null;
+            $user = User::findOrFail($use);
+            $booking = Booking::model()->where('id', $id)-> where('is_vaccine', 0)->get();
+            // $booking_vaccine = Booking::model()->where('user_id', $id) -> where('is_vaccine', 1)->get();
+            $pdf = Pdf::loadView('pdf.pdfbooking', [
+                'user' => $user,
+                'bookings' => $booking,
+                // 'booking_vaccines' => $booking_vaccine
+            ]);
+            return $pdf->download('ho_so_benh.pdf');
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
+
+    }
 
 }
