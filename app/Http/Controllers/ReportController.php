@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exports\Turnover;
 use App\Exports\BookingWithDay;
+use App\Exports\Top10News;
 use App\Models\Booking;
 use App\Models\Department;
+use App\Models\News;
 use App\Supports\TM_Error;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -208,6 +210,38 @@ class ReportController extends BaseController
             $ex_handle = new TM_Error($ex);
             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
+    }
+    public function NewTopView(Request $request)
+    {
+        
+       date_default_timezone_set('Asia/Ho_Chi_Minh');
+       $input = $request->all();
+        $from = $input['from'];
+        $to = $input['to'];
+        $date  = date('d_m_Y', time());
+       $title ='Danh sách top 10 lượt xem nhiều nhất';
+       
+         try {
+            if(empty($input['from'])){
+                return $this->response->error('không được bỏ trống dữ liệu', 400);
+            }
+            if(empty($input['to'])){
+                return $this->response->error('không được bỏ trống dữ liệu', 400);
+            }
+
+            if(!empty($input['from']) && !empty($input['to'])){
+                $data = News::model()
+                ->where('created_at', '>=' , $input['from'])
+                ->where('created_at', '<=',  $input['to'])
+                ->orderBy('view','desc')
+                ->get();
+            }
+        
+            return Excel::download(new Top10News($data, $from, $to, $title), 'ListTop10News_' . $date . '.xlsx');
+ 
+         } catch (\Exception $th) {
+             throw new HttpException(500, $th->getMessage());
+         }
     }
 }
 
