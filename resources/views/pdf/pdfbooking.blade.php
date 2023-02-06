@@ -120,9 +120,7 @@
                 </div>
             @endforeach
 
-            <h3 class="text-color-blue">
-                Lịch sử tiêm  
-            </h3>
+         
       
 
             {{-- <div class="medical-content">

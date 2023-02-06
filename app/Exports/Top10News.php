@@ -15,6 +15,7 @@ class Top10News implements FromView
     protected $_title;
 
 
+
     /**
      * OrderDetailExport constructor.
      */
@@ -24,6 +25,7 @@ class Top10News implements FromView
         $this->_from = $from;
         $this->_to = $to;
         $this->_title = $title;
+
 
     }
 
@@ -36,7 +38,8 @@ class Top10News implements FromView
             'data' => $this->_data,
             'from' => $this->_from,
             'to' => $this->_to,
-            'title' => $this->_title
+            'title' => $this->_title,
+
 
         ]);
     }
