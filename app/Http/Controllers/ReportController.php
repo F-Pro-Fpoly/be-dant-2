@@ -235,9 +235,11 @@ class ReportController extends BaseController
                 $data = News::model()
                 ->where('created_at', '>=' , $input['from'])
                 ->where('created_at', '<=' ,  $input['to'])
-                ->orderBy('view','desc')
+                ->orderBy('view','desc')->limit(10)
                 ->get();
             }
+
+     
         
              return Excel::download(new Top10News($data, $from, $to, $title), 'ListTop10News_' . $date . '.xlsx');
  
