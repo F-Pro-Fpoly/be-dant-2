@@ -11,15 +11,23 @@
 <table>
     <thead>
     <tr>
-        <th colspan="12" style="text-align: center;font-weight: bold;">Tổng doanh thu theo từng chuyên khoa</th>
+        <th colspan="10" style="text-align: center;font-weight: bold;">
+            {{!empty($title) ? $title : 'Booking'}}
+        </th>
+        <th colspan="4" style="text-align: center;font-weight: bold;">
+                <p>{{!empty($from) ? 'Từ ngày:'.$from : ''}}</p>
+        </th>
+        <th colspan="4" style="text-align: center;font-weight: bold;">
+                <p>{{!empty($to) ? 'Đến ngày: '.$to : ''}}</p>
+        </th>
     </tr>
     <tr>
 
     </tr>
     <tr class="header-table">
-        {{-- <th colspan="2" style="text-align: left; font-weight: bold;">Mã chuyên khoa</th> --}}
-        <th colspan="2" style="text-align: left; font-weight: bold;">Tên chuyên khoa</th>
-        <th colspan="2" style="text-align: left; font-weight: bold;">Tổng doanh thu</th>
+        <th colspan="2" style="text-align: left; font-weight: bold; border: 1px solid #777;">STT</th>
+        <th colspan="2" style="text-align: left; font-weight: bold; border: 1px solid #777;">Tên Tin</th>
+       
 
     </tr>
     </thead>
@@ -27,10 +35,9 @@
     @if(!empty($data))
         @foreach($data as $key => $item)
             <tr>
-                {{-- <td colspan="2" style="border: 1px solid #777; text-align: left">{{!empty($item['specialists_name']) ? $item['code'] : ''}}</td> --}}
-                <td colspan="2" style="border: 1px solid #777; text-align: left">{{ !empty($item['specialists_name']) ? $item['specialists_name'] : ''}}</td>
-                <td colspan="2" style="border: 1px solid #777; text-align: right">{{!empty($item['price']) ? number_format($item['price']) . " đ" : ''}}</td>
-
+                <td colspan="2" style="border: 1px solid #777; text-align: left">{{$key +1}}</td>
+                <td colspan="2" style="border: 1px solid #777; text-align: left">{{ !empty($item['name']) ? $item['name'] : ''}}</td>
+               
             </tr>
         @endforeach
     @endif

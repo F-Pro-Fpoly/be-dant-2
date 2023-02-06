@@ -215,11 +215,11 @@ class ReportController extends BaseController
     {
         
        date_default_timezone_set('Asia/Ho_Chi_Minh');
-       $input = $request->all();
+        $input = $request->all();
         $from = $input['from'];
         $to = $input['to'];
         $date  = date('d_m_Y', time());
-       $title ='Danh sách top 10 lượt xem nhiều nhất';
+        $title ='Danh sách top 10 lượt xem nhiều nhất';
        
          try {
             if(empty($input['from'])){
@@ -232,12 +232,12 @@ class ReportController extends BaseController
             if(!empty($input['from']) && !empty($input['to'])){
                 $data = News::model()
                 ->where('created_at', '>=' , $input['from'])
-                ->where('created_at', '<=',  $input['to'])
+                ->where('created_at', '<=' ,  $input['to'])
                 ->orderBy('view','desc')
                 ->get();
             }
         
-            return Excel::download(new Top10News($data, $from, $to, $title), 'ListTop10News_' . $date . '.xlsx');
+             return Excel::download(new Top10News($data, $from, $to, $title), 'ListTop10News_' . $date . '.xlsx');
  
          } catch (\Exception $th) {
              throw new HttpException(500, $th->getMessage());
