@@ -18,7 +18,7 @@ class Top10News implements FromView
     /**
      * OrderDetailExport constructor.
      */
-    public function __construct($data, $from, $to,$title, )
+    public function __construct($data, $from, $to,$title)
     {
         $this->_data = $data;
         $this->_from = $from;
