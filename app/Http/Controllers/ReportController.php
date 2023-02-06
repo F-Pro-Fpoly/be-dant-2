@@ -211,6 +211,8 @@ class ReportController extends BaseController
             return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
         }
     }
+
+
     public function NewTopView(Request $request)
     {
         
@@ -239,9 +241,10 @@ class ReportController extends BaseController
         
              return Excel::download(new Top10News($data, $from, $to, $title), 'ListTop10News_' . $date . '.xlsx');
  
-         } catch (\Exception $th) {
-             throw new HttpException(500, $th->getMessage());
-         }
+        } catch (\Exception $ex) {
+            $ex_handle = new TM_Error($ex);
+            return $this->response->error($ex_handle->getMessage(), $ex_handle->getStatusCode());
+        }
     }
 }
 
