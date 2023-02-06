@@ -22,7 +22,7 @@ class BookingWithDay implements FromView
         $this->_data = $data;
         $this->_from = $from;
         $this->_to = $to;
-        $this->title = $title;
+        $this->_title = $title;
     }
 
     /**
@@ -34,7 +34,7 @@ class BookingWithDay implements FromView
             'data' => $this->_data,
             'from' => $this->_from,
             'to' => $this->_to,
-            'title' => $this->title
+            'title' => $this->_title
         ]);
     }
 }
